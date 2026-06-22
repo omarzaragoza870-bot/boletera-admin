@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Boletera</title>
+</head>
+<body>
+
+    <h1>Panel Administrativo</h1>
+
+    <button onclick="consultarEventos()">
+        Ver Eventos
+    </button>
+
+    <pre id="resultado"></pre>
+
+    <script>
+        async function consultarEventos() {
+
+            const respuesta =
+                await fetch("http://localhost:3000/api/eventos");
+
+            const eventos =
+                await respuesta.json();
+
+            document.getElementById("resultado").textContent =
+                JSON.stringify(eventos, null, 2);
+        }
+    </script>
+
+</body>
+</html>
