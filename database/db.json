@@ -207,6 +207,43 @@
           "activa": true
         }
       ]
+    },
+    {
+      "id": 1782258572586,
+      "nombre": "dedede",
+      "lugar": "frasds",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2026-07-03",
+          "hora": "10:00",
+          "categorias": {
+            "general": {
+              "preventa": 300,
+              "precio": 454,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "precio": 454,
+          "boletosDisponibles": 0,
+          "activa": true
+        }
+      ]
     }
   ]
 }
