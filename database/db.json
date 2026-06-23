@@ -54,6 +54,34 @@
           "precio": 450,
           "boletosDisponibles": 100,
           "activa": true
+        },
+        {
+          "id": 1782257024563,
+          "fecha": "2026-06-05",
+          "hora": "08:30",
+          "categorias": {
+            "general": {
+              "preventa": 450,
+              "precio": 600,
+              "boletos": 30
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "precio": 600,
+          "boletosDisponibles": 30,
+          "activa": true
         }
       ]
     },
@@ -123,16 +151,59 @@
               "boletos": 0
             }
           },
+          "descuentos": [],
+          "precio": 450,
+          "boletosDisponibles": 40,
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782258075713,
+      "nombre": "asdsa",
+      "lugar": "adsadsada",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2026-06-10",
+          "hora": "22:45",
+          "categorias": {
+            "general": {
+              "preventa": 300,
+              "precio": 450,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
           "descuentos": [
             {
-              "codigo": "DC100",
+              "codigo": "sdsss",
+              "tipo": "porcentaje",
+              "valor": 12,
+              "activo": true
+            },
+            {
+              "codigo": "ddss",
               "tipo": "monto",
               "valor": 100,
               "activo": true
             }
           ],
           "precio": 450,
-          "boletosDisponibles": 40,
+          "boletosDisponibles": 0,
           "activa": true
         }
       ]

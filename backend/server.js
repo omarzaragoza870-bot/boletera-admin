@@ -486,6 +486,100 @@ app.put("/api/configuracion/nombre", (req, res) => {
 
 });
 
+app.delete("/api/eventos/:eventoId/funciones/:funcionId/descuentos/:index", (req, res) => {
+
+  const db = leerDB();
+
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const index = Number(req.params.index);
+
+  const evento = db.eventos.find(
+    item => item.id === eventoId
+  );
+
+  if (!evento) {
+    return res.status(404).json({
+      mensaje: "Evento no encontrado"
+    });
+  }
+
+  const funcion = evento.funciones.find(
+    item => item.id === funcionId
+  );
+
+  if (!funcion) {
+    return res.status(404).json({
+      mensaje: "Función no encontrada"
+    });
+  }
+
+  if (!funcion.descuentos) {
+    funcion.descuentos = [];
+  }
+
+  funcion.descuentos.splice(index, 1);
+
+  guardarDB(db);
+
+  res.json({
+    mensaje: "Descuento eliminado correctamente"
+  });
+
+});
+
+app.post("/api/eventos/:eventoId/funciones/:funcionId/descuentos", (req, res) => {
+
+  const db = leerDB();
+
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+
+  const evento = db.eventos.find(
+    item => item.id === eventoId
+  );
+
+  if (!evento) {
+    return res.status(404).json({
+      mensaje: "Evento no encontrado"
+    });
+  }
+
+  const funcion = evento.funciones.find(
+    item => item.id === funcionId
+  );
+
+  if (!funcion) {
+    return res.status(404).json({
+      mensaje: "Función no encontrada"
+    });
+  }
+
+  const {
+    codigo,
+    tipo,
+    valor
+  } = req.body;
+
+  if (!funcion.descuentos) {
+    funcion.descuentos = [];
+  }
+
+  funcion.descuentos.push({
+    codigo,
+    tipo,
+    valor: Number(valor),
+    activo: true
+  });
+
+  guardarDB(db);
+
+  res.json({
+    mensaje: "Descuento agregado correctamente"
+  });
+
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

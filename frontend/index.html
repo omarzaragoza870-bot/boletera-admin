@@ -686,6 +686,49 @@
     </div>
 </div>
 
+<div id="modalAgregarDescuento" class="modal oculto">
+    <div class="modal-contenido">
+
+        <h2>Agregar descuento</h2>
+
+        <p class="modal-description">
+            Agrega un código promocional a esta función.
+        </p>
+
+        <input id="descuentoEventoId" type="hidden">
+        <input id="descuentoFuncionId" type="hidden">
+
+        <input
+            id="nuevoCodigoDescuento"
+            placeholder="Código">
+
+        <select id="nuevoTipoDescuento">
+            <option value="porcentaje">%</option>
+            <option value="monto">$</option>
+        </select>
+
+        <input
+            id="nuevoValorDescuento"
+            type="number"
+            placeholder="Valor">
+
+        <div class="modal-acciones">
+            <button
+                class="btn-primary"
+                onclick="guardarDescuentoGuardado(this)">
+                Guardar descuento
+            </button>
+
+            <button
+                class="btn-secundario"
+                onclick="cerrarModalAgregarDescuento()">
+                Cancelar
+            </button>
+        </div>
+
+    </div>
+</div>
+
 <div id="modalConfirmacion" class="modal oculto">
     <div class="modal-contenido">
         <h2 id="confirmacionTitulo">Confirmar acción</h2>
