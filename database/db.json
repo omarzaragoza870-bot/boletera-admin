@@ -1,6 +1,141 @@
 {
   "configuracion": {
+    "nombreSistema": "Re5iliart",
     "botActivo": true
   },
-  "eventos": []
+  "eventos": [
+    {
+      "id": 1782168880852,
+      "nombre": "divina comedi",
+      "lugar": "felix",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2026-06-16",
+          "hora": "20:00",
+          "precio": 450,
+          "boletosDisponibles": 300,
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782170890834,
+      "nombre": "Opcion Multiple",
+      "lugar": "varsovia",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2026-05-25",
+          "hora": "20:30",
+          "categorias": {
+            "general": {
+              "preventa": 300,
+              "precio": 450,
+              "boletos": 100
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "precio": 450,
+          "boletosDisponibles": 100,
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782171050625,
+      "nombre": "sencillamente hipocrita",
+      "lugar": "varsovia",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2025-09-20",
+          "hora": "20:00",
+          "categorias": {
+            "general": {
+              "preventa": 300,
+              "precio": 400,
+              "boletos": 70
+            },
+            "preferente": {
+              "activa": true,
+              "preventa": 400,
+              "precio": 600,
+              "boletos": 20
+            },
+            "vip": {
+              "activa": true,
+              "preventa": 600,
+              "precio": 800,
+              "boletos": 10
+            }
+          },
+          "precio": 400,
+          "boletosDisponibles": 100,
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782251310287,
+      "nombre": "divina",
+      "lugar": "varsovia",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2002-03-20",
+          "hora": "14:03",
+          "categorias": {
+            "general": {
+              "preventa": 300,
+              "precio": 450,
+              "boletos": 30
+            },
+            "preferente": {
+              "activa": true,
+              "preventa": 400,
+              "precio": 600,
+              "boletos": 10
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [
+            {
+              "codigo": "DC100",
+              "tipo": "monto",
+              "valor": 100,
+              "activo": true
+            }
+          ],
+          "precio": 450,
+          "boletosDisponibles": 40,
+          "activa": true
+        }
+      ]
+    }
+  ]
 }
