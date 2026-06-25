@@ -15,13 +15,13 @@
         <div class="logo" id="nombreSistemaSidebar">🎟️ Boletera Admin</div>
 
         <div class="sidebar-section">Principal</div>
-        <div class="menu-item active">🏠 Dashboard</div>
-        <div class="menu-item">🎟️ Eventos</div>
-        <div class="menu-item">🕒 Funciones</div>
+        <div class="menu-item active" id="menuDashboard" onclick="mostrarSeccion('dashboard')">🏠 Dashboard</div>
+        <div class="menu-item" id="menuEventos" onclick="mostrarSeccion('eventos')">🎟️ Eventos</div>
+        <div class="menu-item" id="menuFunciones" onclick="mostrarSeccion('funciones')">🕒 Funciones</div>
 
         <div class="sidebar-section">Operación</div>
-        <div class="menu-item">💰 Ventas</div>
-        <div class="menu-item">⚙️ Configuración</div>
+        <div class="menu-item" id="menuVentas" onclick="mostrarSeccion('ventas')">💰 Ventas</div>
+        <div class="menu-item" id="menuConfiguracion" onclick="mostrarSeccion('configuracion')">⚙️ Configuración</div>
     </aside>
 
     <main class="main">
@@ -58,7 +58,8 @@
             </div>
         </div>
 
-        <section class="grid">
+        <section id="seccionDashboard" class="app-section">
+<section class="grid">
             <div class="stat-card">
                 <div class="card-header">
                     <div class="card-title-group">
@@ -116,7 +117,22 @@
             </div>
         </section>
 
-        <section class="content-grid content-grid-full">
+            <div class="panel dashboard-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Resumen</h2>
+                        <p class="panel-subtitle">Vista general del negocio.</p>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    Selecciona Eventos para administrar tu cartelera.
+                </div>
+            </div>
+        </section>
+
+        <section id="seccionEventos" class="app-section oculto">
+<section class="content-grid content-grid-full">
 
             <div class="panel">
                 <div class="panel-header">
@@ -147,7 +163,71 @@
             </div>
 
         </section>
+        </section>
 
+        <section id="seccionFunciones" class="app-section oculto">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Funciones</h2>
+                        <p class="panel-subtitle">Aquí organizaremos funciones por fecha, disponibilidad y zonas.</p>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    Próximo paso: vista dedicada para funciones.
+                </div>
+            </div>
+        </section>
+
+        <section id="seccionVentas" class="app-section oculto">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Ventas</h2>
+                        <p class="panel-subtitle">Módulo futuro para ventas, pagos y clientes.</p>
+                    </div>
+                </div>
+
+                <div class="empty-state">
+                    Este módulo se construirá después de terminar la cartelera.
+                </div>
+            </div>
+        </section>
+
+        <section id="seccionConfiguracion" class="app-section oculto">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Configuración</h2>
+                        <p class="panel-subtitle">Ajustes generales de la boletera.</p>
+                    </div>
+                </div>
+
+                <div class="bot-control configuracion-bot">
+                    <div>
+                        <span class="bot-label">Estado del bot</span>
+                        <strong id="estadoBotConfig">Cargando...</strong>
+                    </div>
+
+                    <button
+                        id="botSwitchConfig"
+                        class="switch"
+                        onclick="cambiarEstadoBot()"
+                        title="Cambiar estado del bot">
+
+                        <span></span>
+
+                    </button>
+                </div>
+
+                <div class="topbar-actions configuracion-actions">
+                    <button class="btn-secundario" onclick="abrirEditarNombreSistema()">
+                        ✏️ Editar nombre del sistema
+                    </button>
+                </div>
+            </div>
+        </section>
     </main>
 
 </div>
@@ -229,17 +309,20 @@
                 </div>
 
                 <label class="switch-mini">
-                    <input type="checkbox" id="activarPreferente">
+                    <input
+                            type="checkbox"
+                            id="activarPreferente"
+                            onchange="toggleCamposCategoria('activarPreferente', 'camposPreferente')">
                     <span></span>
                 </label>
             </div>
 
-            <div class="form-grid">
+                <div id="camposPreferente" class="form-grid campos-opcionales oculto">
 
                 <input
                     id="preferentePreventa"
                     type="number"
-                    placeholder="Preventa">
+                    placeholder="Preventa">    
 
                 <input
                     id="preferentePrecio"
@@ -262,12 +345,15 @@
                 </div>
 
                 <label class="switch-mini">
-                    <input type="checkbox" id="activarVip">
+                    <input
+                        type="checkbox"
+                        id="activarVip"
+                        onchange="toggleCamposCategoria('activarVip', 'camposVip')">
                     <span></span>
                 </label>
             </div>
 
-            <div class="form-grid">
+                <div id="camposVip" class="form-grid campos-opcionales oculto">
 
                 <input
                     id="vipPreventa"
@@ -288,51 +374,60 @@
 
             <hr>
 
-<div class="categoria-header">
-
+<div class="categoria-header categoria-descuentos">
     <div>
         <h3>🎁 Descuentos</h3>
-        <p>Códigos promocionales para esta función.</p>
+        <p>Activa esta sección si manejarás códigos promocionales.</p>
     </div>
 
+    <label class="switch-mini">
+        <input
+            type="checkbox"
+            id="activarDescuentos"
+            onchange="toggleCamposCategoria('activarDescuentos', 'camposDescuentos')">
+        <span></span>
+    </label>
 </div>
 
-<div class="form-grid">
+<div id="camposDescuentos" class="campos-opcionales oculto">
 
-    <input
-        id="codigoDescuento"
-        placeholder="Código">
+    <div class="form-grid">
 
-    <select id="tipoDescuento">
+        <input
+            id="codigoDescuento"
+            placeholder="Código">
 
-        <option value="porcentaje">
-            %
-        </option>
+        <select id="tipoDescuento">
 
-        <option value="monto">
-            $
-        </option>
+            <option value="porcentaje">
+                %
+            </option>
 
-    </select>
+            <option value="monto">
+                $
+            </option>
 
-    <input
-        id="valorDescuento"
-        type="number"
-        placeholder="Valor">
+        </select>
+
+        <input
+            id="valorDescuento"
+            type="number"
+            placeholder="Valor">
+
+    </div>
+
+    <button
+        class="btn-secundario"
+        type="button"
+        onclick="agregarDescuentoTemp()">
+
+        + Agregar descuento
+
+    </button>
+
+    <div id="listaDescuentos"></div>
 
 </div>
-
-<button
-    class="btn-secundario"
-    type="button"
-    onclick="agregarDescuentoTemp()">
-
-    + Agregar descuento
-
-</button>
-
-<div id="listaDescuentos"></div>
-
             <div class="modal-acciones modal-acciones-premium">
 
                 <button
@@ -770,6 +865,16 @@
     </span>
 
 </div>
+<!-- SCRIPTS MODULARES -->
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/configuracion.js"></script>
+<script src="js/descuentos.js"></script>
+<script src="js/funciones.js"></script>
+<script src="js/eventos.js"></script>
+<script src="js/modales.js"></script>
 <script src="js/app.js"></script>
 
 </body>

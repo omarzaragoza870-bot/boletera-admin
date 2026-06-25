@@ -17,7 +17,8 @@
           "hora": "20:00",
           "precio": 450,
           "boletosDisponibles": 300,
-          "activa": true
+          "activa": true,
+          "descuentosActivos": false
         }
       ]
     },
@@ -204,7 +205,8 @@
           ],
           "precio": 450,
           "boletosDisponibles": 0,
-          "activa": true
+          "activa": true,
+          "descuentosActivos": false
         }
       ]
     },
@@ -241,6 +243,43 @@
           "descuentos": [],
           "precio": 454,
           "boletosDisponibles": 0,
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782408074111,
+      "nombre": "dada",
+      "lugar": "dsas",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2027-03-03",
+          "hora": "17:30",
+          "categorias": {
+            "general": {
+              "preventa": 450,
+              "precio": 600,
+              "boletos": 100
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "precio": 600,
+          "boletosDisponibles": 100,
           "activa": true
         }
       ]

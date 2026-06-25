@@ -1,0 +1,104 @@
+/* =============================
+   EVENTOS / FUNCIONES
+   ============================= */
+
+.evento{
+            border:1px solid var(--border);
+            border-radius:18px;
+            padding:18px;
+            margin-top:14px;
+            background:white;
+        }
+
+        .evento-header{
+            display:flex;
+            justify-content:space-between;
+            gap:16px;
+            align-items:flex-start;
+            padding-bottom:14px;
+            border-bottom:1px solid #f1f5f9;
+        }
+
+        .evento h3{
+            margin:0 0 8px;
+            font-size:18px;
+        }
+
+        .evento-meta{
+            color:var(--muted);
+            margin:0 0 8px;
+            font-size:14px;
+        }
+
+        .acciones-evento,
+        .acciones-funcion{
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+        }
+
+        .funciones-lista{
+            margin-top:14px;
+            display:grid;
+            gap:12px;
+        }
+
+        .funcion{
+            background:#f8fafc;
+            border-left:4px solid var(--primary);
+            padding:14px;
+            border-radius:14px;
+        }
+
+        .funcion-grid{
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0, 1fr));
+            gap:10px;
+            margin-bottom:12px;
+        }
+
+        .funcion-item{
+            background:white;
+            border:1px solid #eef2ff;
+            border-radius:12px;
+            padding:10px;
+            font-size:13px;
+        }
+
+        .funcion-label{
+            display:block;
+            color:var(--muted);
+            font-size:11px;
+            margin-bottom:4px;
+        }
+
+        .status-ok,
+        .status-off{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            font-weight:800;
+            font-size:13px;
+            padding:7px 10px;
+            border-radius:999px;
+        }
+
+        .status-ok{
+            color:#047857;
+            background:#ecfdf5;
+        }
+
+        .status-off{
+            color:#b91c1c;
+            background:#fef2f2;
+        }
+
+        .empty-state{
+            padding:30px;
+            text-align:center;
+            color:var(--muted);
+            border:1px dashed #cbd5e1;
+            border-radius:16px;
+            margin-top:14px;
+            background:#f8fafc;
+        }
