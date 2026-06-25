@@ -580,6 +580,40 @@ app.post("/api/eventos/:eventoId/funciones/:funcionId/descuentos", (req, res) =>
 
 });
 
+app.patch("/api/eventos/:eventoId/funciones/:funcionId/descuentos/toggle", (req, res) => {
+
+  const db = leerDB();
+
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+
+  if (!evento) {
+    return res.status(404).json({
+      mensaje: "Evento no encontrado"
+    });
+  }
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+
+  if (!funcion) {
+    return res.status(404).json({
+      mensaje: "Función no encontrada"
+    });
+  }
+
+  funcion.descuentosActivos =
+    !Boolean(funcion.descuentosActivos);
+
+  guardarDB(db);
+
+  res.json({
+    mensaje: "Estado de descuentos actualizado"
+  });
+
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
