@@ -256,3 +256,235 @@ function obtenerTipoRegistroDesdeEvento(evento, funcion){
         "funcion"
     );
 }
+
+/* ============================================================
+   ALPHA v1.4.1: CONFIGURACION DE DRAWER POR TIPO
+
+   Nota:
+   - No cambia la forma en que Función guarda boletaje.
+   - Solo centraliza cómo se muestran los registros operativos.
+============================================================ */
+
+const DRAWER_REGISTRO_CONFIG = {
+    activacion: {
+        titulo: "Detalle de activación",
+        campos: [
+            { icono: "👤", etiqueta: "Contacto", key: "contacto" },
+            { icono: "📱", etiqueta: "Teléfono", key: "telefono" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de activación"
+    },
+
+    clase: {
+        titulo: "Detalle de clase",
+        campos: [
+            { icono: "👤", etiqueta: "Contacto", key: "contacto" },
+            { icono: "📍", etiqueta: "Sede", key: "lugarEvento" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de clase"
+    },
+
+    ensayo: {
+        titulo: "Detalle de ensayo",
+        campos: [
+            { icono: "👤", etiqueta: "Responsable", key: "contacto" },
+            { icono: "📍", etiqueta: "Lugar", key: "lugarEvento" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de ensayo"
+    },
+
+    grabacion: {
+        titulo: "Detalle de grabación",
+        campos: [
+            { icono: "👤", etiqueta: "Contacto", key: "contacto" },
+            { icono: "📱", etiqueta: "Teléfono", key: "telefono" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de grabación"
+    },
+
+    especial: {
+        titulo: "Detalle de evento especial",
+        campos: [
+            { icono: "👤", etiqueta: "Contacto", key: "contacto" },
+            { icono: "📍", etiqueta: "Lugar", key: "lugarEvento" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de evento especial"
+    },
+
+    traslado: {
+        titulo: "Detalle de traslado",
+        campos: [
+            { icono: "👤", etiqueta: "Responsable", key: "contacto" },
+            { icono: "📱", etiqueta: "Teléfono", key: "telefono" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de traslado"
+    },
+
+    mantenimiento: {
+        titulo: "Detalle de mantenimiento",
+        campos: [
+            { icono: "👤", etiqueta: "Responsable", key: "contacto" },
+            { icono: "📱", etiqueta: "Teléfono", key: "telefono" },
+            { icono: "📝", etiqueta: "Notas", key: "notas" }
+        ],
+        checklistTitulo: "Checklist de mantenimiento"
+    }
+};
+
+function obtenerValorRegistroDrawer(evento, funcion, key){
+
+    if(key === "lugarEvento"){
+        return evento?.lugar || "";
+    }
+
+    return funcion?.[key] || evento?.[key] || "";
+}
+
+function crearFilaDetalleRegistro(icono, etiqueta, valor){
+
+    if(!valor){
+        return "";
+    }
+
+    return `
+        <div class="agenda-categoria-mini agenda-detalle-row">
+            <span>${icono} ${escaparTexto(etiqueta)}</span>
+            <strong>${escaparTexto(valor)}</strong>
+        </div>
+    `;
+}
+
+function crearChecklistRegistroAgenda(evento, funcion, tipoRegistro){
+
+    const config =
+        DRAWER_REGISTRO_CONFIG[tipoRegistro];
+
+    const checklist =
+        funcion?.checklist || evento?.checklist || [];
+
+    if(!Array.isArray(checklist) || checklist.length === 0){
+        return "";
+    }
+
+    const titulo =
+        config?.checklistTitulo || "Checklist";
+
+    const items =
+        checklist
+            .slice(0, 5)
+            .map(item => {
+                const texto =
+                    typeof item === "string"
+                    ? item
+                    : item.texto || item.nombre || "";
+
+                const completado =
+                    Boolean(item.completado);
+
+                return `
+                    <div class="agenda-checklist-item ${completado ? "completado" : ""}">
+                        <span>${completado ? "☑" : "☐"}</span>
+                        <strong>${escaparTexto(texto)}</strong>
+                    </div>
+                `;
+            })
+            .join("");
+
+    return `
+        <div class="agenda-drawer-bloque">
+            <h4>${escaparTexto(titulo)}</h4>
+            <div class="agenda-checklist-lista">
+                ${items}
+            </div>
+        </div>
+    `;
+}
+
+function crearTimelineRegistroAgenda(evento, funcion){
+
+    const timeline =
+        funcion?.timeline || evento?.timeline || [];
+
+    if(!Array.isArray(timeline) || timeline.length === 0){
+        return "";
+    }
+
+    const ultimo =
+        timeline[timeline.length - 1];
+
+    const mensaje =
+        ultimo.mensaje || "Registro actualizado";
+
+    return `
+        <div class="agenda-timeline-mini">
+            <span>🕓 Último movimiento</span>
+            <strong>${escaparTexto(mensaje)}</strong>
+        </div>
+    `;
+}
+
+function crearDetalleOperativoAgenda(evento, funcion){
+
+    const tipoRegistro =
+        funcion?.tipoRegistro || evento?.tipoRegistro || "activacion";
+
+    const tipoVisual =
+        TIPOS_REGISTRO[tipoRegistro] || TIPOS_REGISTRO.activacion;
+
+    const config =
+        DRAWER_REGISTRO_CONFIG[tipoRegistro] || DRAWER_REGISTRO_CONFIG.activacion;
+
+    let html = `
+        <div class="agenda-drawer-bloque">
+            <h4>${escaparTexto(config.titulo)}</h4>
+
+            <div class="agenda-categoria-mini agenda-detalle-row">
+                <span>${tipoVisual.icono} Tipo</span>
+                <strong>${escaparTexto(tipoVisual.nombre)}</strong>
+            </div>
+        </div>
+    `;
+
+    const campos =
+        config.campos || [];
+
+    const filas =
+        campos.map(campo => {
+            const valor =
+                obtenerValorRegistroDrawer(evento, funcion, campo.key);
+
+            return crearFilaDetalleRegistro(
+                campo.icono,
+                campo.etiqueta,
+                valor
+            );
+        }).join("");
+
+    if(filas){
+        html += `
+            <div class="agenda-drawer-bloque">
+                <h4>Información</h4>
+                ${filas}
+            </div>
+        `;
+    }
+
+    html += crearChecklistRegistroAgenda(
+        evento,
+        funcion,
+        tipoRegistro
+    );
+
+    html += crearTimelineRegistroAgenda(
+        evento,
+        funcion
+    );
+
+    return html;
+}

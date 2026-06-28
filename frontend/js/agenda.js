@@ -257,30 +257,35 @@ function crearFuncionAgendaCard(evento, funcion){
             );
         }
     }else{
-        detalleHTML = `
-            <div class="agenda-categoria-mini">
-                <span>${tipoVisual.icono} Tipo</span>
-                <strong>${escaparTexto(tipoVisual.nombre)}</strong>
-            </div>
 
-            ${
-                funcion.contacto
-                ? `<div class="agenda-categoria-mini"><span>👤 Contacto</span><strong>${escaparTexto(funcion.contacto)}</strong></div>`
-                : ""
-            }
+        if(typeof crearDetalleOperativoAgenda === "function"){
+            detalleHTML = crearDetalleOperativoAgenda(evento, funcion);
+        }else{
+            detalleHTML = `
+                <div class="agenda-categoria-mini">
+                    <span>${tipoVisual.icono} Tipo</span>
+                    <strong>${escaparTexto(tipoVisual.nombre)}</strong>
+                </div>
 
-            ${
-                funcion.telefono
-                ? `<div class="agenda-categoria-mini"><span>📱 Teléfono</span><strong>${escaparTexto(funcion.telefono)}</strong></div>`
-                : ""
-            }
+                ${
+                    funcion.contacto
+                    ? `<div class="agenda-categoria-mini"><span>👤 Contacto</span><strong>${escaparTexto(funcion.contacto)}</strong></div>`
+                    : ""
+                }
 
-            ${
-                funcion.notas
-                ? `<div class="agenda-categoria-mini"><span>📝 Notas</span><strong>${escaparTexto(funcion.notas)}</strong></div>`
-                : ""
-            }
-        `;
+                ${
+                    funcion.telefono
+                    ? `<div class="agenda-categoria-mini"><span>📱 Teléfono</span><strong>${escaparTexto(funcion.telefono)}</strong></div>`
+                    : ""
+                }
+
+                ${
+                    funcion.notas
+                    ? `<div class="agenda-categoria-mini"><span>📝 Notas</span><strong>${escaparTexto(funcion.notas)}</strong></div>`
+                    : ""
+                }
+            `;
+        }
     }
 
     return `
