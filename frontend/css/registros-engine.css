@@ -1,0 +1,65 @@
+/* ============================================================
+   ALPHA v1.4: MOTOR DE REGISTROS
+============================================================ */
+
+/* El textarea del formulario genérico ocupa toda la fila.
+   (La clase .input-full no estaba definida en ningún CSS.) */
+.form-grid .input-full{
+    grid-column:1 / -1;
+}
+
+.registro-preview-box{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    margin-top:18px;
+    padding:16px;
+    border-radius:18px;
+    background:rgba(79,124,255,.10);
+    border:1px solid rgba(79,124,255,.18);
+}
+
+.registro-preview-box > span{
+    width:44px;
+    height:44px;
+    flex:0 0 44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:15px;
+    background:rgba(15,23,42,.72);
+    font-size:23px;
+}
+
+.registro-preview-box strong{
+    display:block;
+    color:white;
+    margin-bottom:4px;
+}
+
+.registro-preview-box p{
+    margin:0;
+    color:#94a3b8;
+    font-size:13px;
+    line-height:1.35;
+}
+
+@media(max-width:720px){
+    .registro-preview-box{
+        padding:12px;
+        gap:10px;
+        border-radius:14px;
+    }
+
+    .registro-preview-box > span{
+        width:34px;
+        height:34px;
+        flex-basis:34px;
+        font-size:18px;
+        border-radius:11px;
+    }
+
+    .registro-preview-box p{
+        font-size:11px;
+    }
+}

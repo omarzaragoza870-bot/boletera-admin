@@ -1,13 +1,13 @@
 /* ============================================================
 
-   ALPHA v1.1: REGISTROS OPERATIVOS
+   ALPHA v1.4: MOTOR DE REGISTROS
 
    RESPONSABILIDAD:
-   - Abrir selector de Nuevo Registro.
-   - Enrutar cada tipo de registro.
-   - Mantener el flujo actual de Función usando el formulario existente.
-   - Preparar base para Activación, Clase, Ensayo, Grabación,
-     Evento Especial, Traslado y Mantenimiento.
+   - Centralizar tipos operativos.
+   - Abrir formulario genérico para todos los tipos no boleteros.
+   - Guardar registros en backend usando /api/registros.
+   - Mantener Función con el flujo actual de evento/función.
+   - Preparar timeline y checklist base.
 
 ============================================================ */
 
@@ -15,42 +15,50 @@ const TIPOS_REGISTRO = {
     funcion: {
         icono: "🎭",
         nombre: "Función",
-        clase: "tipo-funcion"
+        clase: "tipo-funcion",
+        descripcion: "Obra o presentación abierta al público."
     },
     activacion: {
         icono: "📍",
         nombre: "Activación",
-        clase: "tipo-activacion"
+        clase: "tipo-activacion",
+        descripcion: "Marca, plaza o evento promocional."
     },
     clase: {
         icono: "🎓",
         nombre: "Clase",
-        clase: "tipo-clase"
+        clase: "tipo-clase",
+        descripcion: "Taller, curso, masterclass o capacitación."
     },
     ensayo: {
         icono: "🎤",
         nombre: "Ensayo",
-        clase: "tipo-ensayo"
+        clase: "tipo-ensayo",
+        descripcion: "Preparación artística o técnica."
     },
     grabacion: {
         icono: "🎬",
         nombre: "Grabación",
-        clase: "tipo-grabacion"
+        clase: "tipo-grabacion",
+        descripcion: "Video, streaming, contenido o sesión."
     },
     especial: {
         icono: "🎪",
         nombre: "Evento especial",
-        clase: "tipo-especial"
+        clase: "tipo-especial",
+        descripcion: "Actividad única o evento no recurrente."
     },
     traslado: {
         icono: "🚚",
         nombre: "Traslado",
-        clase: "tipo-traslado"
+        clase: "tipo-traslado",
+        descripcion: "Equipo, staff, utilería o logística."
     },
     mantenimiento: {
         icono: "🛠️",
         nombre: "Mantenimiento",
-        clase: "tipo-mantenimiento"
+        clase: "tipo-mantenimiento",
+        descripcion: "Reparaciones o revisión técnica."
     }
 };
 
@@ -66,15 +74,17 @@ function abrirSelectorNuevoRegistro(){
 
 function cerrarSelectorNuevoRegistro(){
 
-    document
-        .getElementById("modalNuevoRegistro")
-        .classList
-        .add("oculto");
+    const modal =
+        document.getElementById("modalNuevoRegistro");
+
+    if(modal){
+        modal.classList.add("oculto");
+    }
 
     document.body.classList.remove("modal-abierto");
 }
 
-// Alias para mantener el patron de modales del resto del sistema.
+// Alias para mantener compatibilidad con botones existentes.
 function abrirModalNuevoRegistro(){ abrirSelectorNuevoRegistro(); }
 function cerrarModalNuevoRegistro(){ cerrarSelectorNuevoRegistro(); }
 
@@ -82,8 +92,6 @@ function seleccionarTipoRegistro(tipo){
 
     if(tipo === "funcion"){
 
-        // Pasamos de un modal al otro SIN soltar el bloqueo de scroll:
-        // solo ocultamos este modal y abrimos el de Nuevo Evento.
         document
             .getElementById("modalNuevoRegistro")
             .classList
@@ -94,15 +102,142 @@ function seleccionarTipoRegistro(tipo){
         return;
     }
 
-    cerrarSelectorNuevoRegistro();
+    document
+        .getElementById("modalNuevoRegistro")
+        .classList
+        .add("oculto");
+
+    abrirModalRegistroGenerico(tipo);
+}
+
+function abrirModalRegistroGenerico(tipo){
 
     const info =
-        TIPOS_REGISTRO[tipo];
+        TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.activacion;
 
-    mostrarToast(
-        `${info.icono} ${info.nombre}: este formulario entra en el siguiente paso.`,
-        "success"
-    );
+    limpiarFormularioRegistroGenerico();
+
+    document.getElementById("registroGenericoTipo").value =
+        tipo;
+
+    document.getElementById("registroGenericoIcono").textContent =
+        info.icono;
+
+    document.getElementById("registroGenericoTitulo").textContent =
+        `Nuevo registro · ${info.nombre}`;
+
+    document.getElementById("registroGenericoDescripcion").textContent =
+        info.descripcion;
+
+    document.getElementById("registroGenericoPreviewIcono").textContent =
+        info.icono;
+
+    document.getElementById("registroGenericoPreviewTitulo").textContent =
+        `${info.nombre} operativo`;
+
+    document.body.classList.add("modal-abierto");
+
+    document
+        .getElementById("modalRegistroGenerico")
+        .classList
+        .remove("oculto");
+}
+
+function cerrarModalRegistroGenerico(){
+
+    document
+        .getElementById("modalRegistroGenerico")
+        .classList
+        .add("oculto");
+
+    document.body.classList.remove("modal-abierto");
+}
+
+function limpiarFormularioRegistroGenerico(){
+
+    [
+        "registroGenericoTipo",
+        "registroGenericoNombre",
+        "registroGenericoLugar",
+        "registroGenericoFecha",
+        "registroGenericoHora",
+        "registroGenericoContacto",
+        "registroGenericoTelefono",
+        "registroGenericoNotas"
+    ].forEach(id => {
+        const campo =
+            document.getElementById(id);
+
+        if(campo){
+            campo.value = "";
+        }
+    });
+}
+
+async function guardarRegistroGenerico(){
+
+    const tipo =
+        document.getElementById("registroGenericoTipo").value;
+
+    const nombre =
+        document.getElementById("registroGenericoNombre").value.trim();
+
+    const lugar =
+        document.getElementById("registroGenericoLugar").value.trim();
+
+    const fecha =
+        document.getElementById("registroGenericoFecha").value;
+
+    const hora =
+        document.getElementById("registroGenericoHora").value;
+
+    const contacto =
+        document.getElementById("registroGenericoContacto").value.trim();
+
+    const telefono =
+        document.getElementById("registroGenericoTelefono").value.trim();
+
+    const notas =
+        document.getElementById("registroGenericoNotas").value.trim();
+
+    if(!nombre || !lugar || !fecha || !hora){
+        mostrarToast("Completa nombre, lugar, fecha y hora", "warning");
+        return;
+    }
+
+    const respuesta =
+        await fetch(`${API_URL}/api/registros`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                tipoRegistro: tipo,
+                nombre,
+                lugar,
+                fecha,
+                hora,
+                contacto,
+                telefono,
+                notas
+            })
+        });
+
+    const resultado =
+        await respuesta.json();
+
+    if(!respuesta.ok){
+        mostrarToast(resultado.mensaje || "No se pudo guardar", "error");
+        return;
+    }
+
+    cerrarModalRegistroGenerico();
+
+    mostrarToast(resultado.mensaje || "Registro guardado", "success");
+
+    cargarEventos();
+
+    mostrarSeccion("funciones");
 }
 
 function obtenerTipoRegistroVisual(funcion){
@@ -111,4 +246,13 @@ function obtenerTipoRegistroVisual(funcion){
         funcion.tipoRegistro || "funcion";
 
     return TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.funcion;
+}
+
+function obtenerTipoRegistroDesdeEvento(evento, funcion){
+
+    return (
+        funcion?.tipoRegistro ||
+        evento?.tipoRegistro ||
+        "funcion"
+    );
 }

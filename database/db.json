@@ -302,6 +302,96 @@
           "activa": true
         }
       ]
+    },
+    {
+      "id": 1782684354226,
+      "tipoRegistro": "activacion",
+      "nombre": "casa ideas",
+      "lugar": "lomas verdes",
+      "imagen": "",
+      "activo": true,
+      "contacto": "Mariana",
+      "telefono": "5574368966",
+      "notas": "Vestuario Mexico",
+      "funciones": [
+        {
+          "id": 1,
+          "tipoRegistro": "activacion",
+          "fecha": "2026-06-29",
+          "hora": "13:30",
+          "categorias": {
+            "general": {
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "precio": 0,
+          "boletosDisponibles": 0,
+          "contacto": "Mariana",
+          "telefono": "5574368966",
+          "notas": "Vestuario Mexico",
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782685715479,
+      "tipoRegistro": "activacion",
+      "nombre": "feelbot",
+      "lugar": "miyana",
+      "imagen": "",
+      "activo": true,
+      "contacto": "omar vera",
+      "telefono": "5612087041",
+      "notas": "comoda tenis pantalon de mezclilla",
+      "funciones": [
+        {
+          "id": 1,
+          "tipoRegistro": "activacion",
+          "fecha": "2026-06-30",
+          "hora": "18:30",
+          "categorias": {
+            "general": {
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "precio": 0,
+          "boletosDisponibles": 0,
+          "contacto": "omar vera",
+          "telefono": "5612087041",
+          "notas": "comoda tenis pantalon de mezclilla",
+          "activa": true
+        }
+      ]
     }
   ]
 }

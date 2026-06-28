@@ -24,9 +24,185 @@ function guardarDB(data) {
   );
 }
 
+
+function crearCategoriasVacias() {
+  return {
+    general: {
+      preventa: 0,
+      precio: 0,
+      boletos: 0
+    },
+    preferente: {
+      activa: false,
+      preventa: 0,
+      precio: 0,
+      boletos: 0
+    },
+    vip: {
+      activa: false,
+      preventa: 0,
+      precio: 0,
+      boletos: 0
+    }
+  };
+}
+
+function normalizarTipoRegistro(tipo) {
+  const tiposPermitidos = [
+    "funcion",
+    "activacion",
+    "clase",
+    "ensayo",
+    "grabacion",
+    "especial",
+    "traslado",
+    "mantenimiento"
+  ];
+
+  return tiposPermitidos.includes(tipo) ? tipo : "funcion";
+}
+
+function crearTimeline(tipoRegistro) {
+  return [
+    {
+      id: Date.now(),
+      tipo: "creacion",
+      mensaje: `Registro creado (${tipoRegistro})`,
+      fecha: new Date().toISOString()
+    }
+  ];
+}
+
+function crearChecklistBase(tipoRegistro) {
+  const checklists = {
+    activacion: [
+      "Confirmar lugar",
+      "Confirmar contacto",
+      "Confirmar material"
+    ],
+    clase: [
+      "Confirmar profesor",
+      "Confirmar grupo",
+      "Confirmar material"
+    ],
+    ensayo: [
+      "Confirmar elenco",
+      "Confirmar espacio",
+      "Confirmar horario"
+    ],
+    grabacion: [
+      "Confirmar equipo",
+      "Confirmar locacion",
+      "Confirmar guion"
+    ],
+    especial: [
+      "Confirmar responsables",
+      "Confirmar horario",
+      "Confirmar logística"
+    ],
+    traslado: [
+      "Confirmar punto de salida",
+      "Confirmar destino",
+      "Confirmar responsable"
+    ],
+    mantenimiento: [
+      "Identificar problema",
+      "Asignar responsable",
+      "Confirmar reparación"
+    ]
+  };
+
+  return (checklists[tipoRegistro] || []).map((texto, index) => ({
+    id: index + 1,
+    texto,
+    completado: false
+  }));
+}
+
+
 app.get("/", (req, res) => {
   res.send("Servidor de boletera funcionando");
 });
+
+
+app.post("/api/registros", (req, res) => {
+
+  const db = leerDB();
+
+  const {
+    tipoRegistro,
+    nombre,
+    lugar,
+    fecha,
+    hora,
+    contacto,
+    telefono,
+    notas
+  } = req.body;
+
+  const tipoFinal = normalizarTipoRegistro(tipoRegistro);
+
+  if (!nombre || !lugar || !fecha || !hora) {
+    return res.status(400).json({
+      mensaje: "Faltan datos obligatorios"
+    });
+  }
+
+  if (!db.eventos) {
+    db.eventos = [];
+  }
+
+  const nuevoRegistro = {
+    id: Date.now(),
+    tipoRegistro: tipoFinal,
+    nombre,
+    lugar,
+    imagen: "",
+    activo: true,
+    contacto: contacto || "",
+    telefono: telefono || "",
+    notas: notas || "",
+    checklist: crearChecklistBase(tipoFinal),
+    documentos: [],
+    contactos: contacto ? [
+      {
+        id: 1,
+        nombre: contacto,
+        telefono: telefono || ""
+      }
+    ] : [],
+    timeline: crearTimeline(tipoFinal),
+    funciones: [
+      {
+        id: 1,
+        tipoRegistro: tipoFinal,
+        fecha,
+        hora,
+        categorias: crearCategoriasVacias(),
+        descuentos: [],
+        descuentosActivos: true,
+        precio: 0,
+        boletosDisponibles: 0,
+        contacto: contacto || "",
+        telefono: telefono || "",
+        notas: notas || "",
+        checklist: crearChecklistBase(tipoFinal),
+        timeline: crearTimeline(tipoFinal),
+        activa: true
+      }
+    ]
+  };
+
+  db.eventos.push(nuevoRegistro);
+
+  guardarDB(db);
+
+  res.json({
+    mensaje: "Registro creado correctamente",
+    registro: nuevoRegistro
+  });
+});
+
 
 app.get("/api/configuracion", (req, res) => {
   const db = leerDB();
@@ -92,13 +268,19 @@ app.post("/api/eventos", (req, res) => {
 
   const nuevoEvento = {
     id: Date.now(),
+    tipoRegistro: "funcion",
     nombre,
     lugar,
     imagen: imagen || "",
     activo: true,
+    checklist: [],
+    documentos: [],
+    contactos: [],
+    timeline: crearTimeline("funcion"),
     funciones: [
       {
         id: 1,
+        tipoRegistro: "funcion",
         fecha,
         hora,
 

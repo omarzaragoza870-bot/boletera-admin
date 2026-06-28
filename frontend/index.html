@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/ui-premium.css">
     <link rel="stylesheet" href="css/sidebar-header-compact.css">
     <link rel="stylesheet" href="css/mobile-real-drawer-compact.css">
+    <link rel="stylesheet" href="css/registros-engine.css">
 </head>
 
 <body>
@@ -611,6 +612,89 @@
             <div class="modal-acciones modal-acciones-premium">
                 <button class="btn-secundario" onclick="cerrarModalNuevoRegistro()">
                     Cancelar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="modalRegistroGenerico" class="modal oculto">
+    <div class="modal-contenido modal-evento modal-evento-premium">
+        <div class="modal-evento-scroll">
+
+            <div class="modal-evento-title">
+                <div id="registroGenericoIcono" class="modal-evento-icon">📌</div>
+
+                <div>
+                    <h2 id="registroGenericoTitulo">Nuevo registro</h2>
+                    <p id="registroGenericoDescripcion" class="modal-description">
+                        Completa la información básica del registro.
+                    </p>
+                </div>
+            </div>
+
+            <input id="registroGenericoTipo" type="hidden">
+
+            <div class="form-grid">
+
+                <input
+                    id="registroGenericoNombre"
+                    placeholder="Nombre del registro">
+
+                <input
+                    id="registroGenericoLugar"
+                    placeholder="Lugar o sede">
+
+                <input
+                    id="registroGenericoFecha"
+                    type="date"
+                    placeholder="Fecha">
+
+                <input
+                    id="registroGenericoHora"
+                    type="time"
+                    placeholder="Hora">
+
+                <input
+                    id="registroGenericoContacto"
+                    placeholder="Contacto">
+
+                <input
+                    id="registroGenericoTelefono"
+                    placeholder="Teléfono">
+
+                <textarea
+                    id="registroGenericoNotas"
+                    class="input-full"
+                    rows="4"
+                    placeholder="Notas, pendientes o detalles importantes"></textarea>
+
+            </div>
+
+            <div class="registro-preview-box">
+                <span id="registroGenericoPreviewIcono">📌</span>
+
+                <div>
+                    <strong id="registroGenericoPreviewTitulo">Motor de Registros</strong>
+                    <p>
+                        Este registro se guardará en Agenda con icono, tipo, timeline y checklist base.
+                    </p>
+                </div>
+            </div>
+
+            <div class="modal-acciones modal-acciones-premium">
+                <button
+                    class="btn-secundario"
+                    onclick="cerrarModalRegistroGenerico()">
+                    Cancelar
+                </button>
+
+                <button
+                    class="btn-primary"
+                    onclick="guardarRegistroGenerico()">
+                    Guardar registro
                 </button>
             </div>
 

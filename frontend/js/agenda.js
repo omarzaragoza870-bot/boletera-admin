@@ -112,17 +112,20 @@ function crearDiaAgenda(
             const boletos =
                 calcularBoletosFuncion(item.funcion);
 
-            const claseEstado =
-                item.funcion.activa === false
-                ? "pausada"
-                : boletos <= 0
-                    ? "sin-boletos"
-                    : "";
-
             const tipoVisual =
                 typeof obtenerTipoRegistroVisual === "function"
                 ? obtenerTipoRegistroVisual(item.funcion)
                 : { icono: "🎭", clase: "tipo-funcion" };
+
+            const esFuncionBoletaje =
+                (item.funcion.tipoRegistro || "funcion") === "funcion";
+
+            const claseEstado =
+                item.funcion.activa === false
+                ? "pausada"
+                : esFuncionBoletaje && boletos <= 0
+                    ? "sin-boletos"
+                    : "";
 
             return `
                 <span
@@ -155,7 +158,7 @@ function crearDiaAgenda(
             <div class="agenda-dia-footer">
                 ${
                     funciones.length > 0
-                    ? `${funciones.length} función${funciones.length === 1 ? "" : "es"}`
+                    ? `${funciones.length}`
                     : ""
                 }
             </div>
@@ -219,35 +222,72 @@ function cerrarAgendaDia(){
 
 function crearFuncionAgendaCard(evento, funcion){
 
-    const categorias =
-        obtenerCategorias(funcion);
+    const tipoVisual =
+        typeof obtenerTipoRegistroVisual === "function"
+        ? obtenerTipoRegistroVisual(funcion)
+        : { icono: "🎭", nombre: "Función" };
 
-    let categoriasHTML = "";
+    const tipoRegistro =
+        funcion.tipoRegistro || "funcion";
 
-    categoriasHTML += crearCategoriaAgendaMini(
-        "🎫 General",
-        categorias.general
-    );
+    const esFuncion =
+        tipoRegistro === "funcion";
 
-    if(categorias.preferente?.activa){
-        categoriasHTML += crearCategoriaAgendaMini(
-            "🎟️ Preferente",
-            categorias.preferente
+    let detalleHTML = "";
+
+    if(esFuncion){
+        const categorias = obtenerCategorias(funcion);
+
+        detalleHTML += crearCategoriaAgendaMini(
+            "🎫 General",
+            categorias.general
         );
-    }
 
-    if(categorias.vip?.activa){
-        categoriasHTML += crearCategoriaAgendaMini(
-            "⭐ VIP",
-            categorias.vip
-        );
+        if(categorias.preferente?.activa){
+            detalleHTML += crearCategoriaAgendaMini(
+                "🎟️ Preferente",
+                categorias.preferente
+            );
+        }
+
+        if(categorias.vip?.activa){
+            detalleHTML += crearCategoriaAgendaMini(
+                "⭐ VIP",
+                categorias.vip
+            );
+        }
+    }else{
+        detalleHTML = `
+            <div class="agenda-categoria-mini">
+                <span>${tipoVisual.icono} Tipo</span>
+                <strong>${escaparTexto(tipoVisual.nombre)}</strong>
+            </div>
+
+            ${
+                funcion.contacto
+                ? `<div class="agenda-categoria-mini"><span>👤 Contacto</span><strong>${escaparTexto(funcion.contacto)}</strong></div>`
+                : ""
+            }
+
+            ${
+                funcion.telefono
+                ? `<div class="agenda-categoria-mini"><span>📱 Teléfono</span><strong>${escaparTexto(funcion.telefono)}</strong></div>`
+                : ""
+            }
+
+            ${
+                funcion.notas
+                ? `<div class="agenda-categoria-mini"><span>📝 Notas</span><strong>${escaparTexto(funcion.notas)}</strong></div>`
+                : ""
+            }
+        `;
     }
 
     return `
         <div class="agenda-funcion-card">
             <div class="agenda-funcion-top">
                 <div>
-                    <h3>${escaparTexto(evento.nombre)}</h3>
+                    <h3>${tipoVisual.icono} ${escaparTexto(evento.nombre)}</h3>
                     <p>📍 ${escaparTexto(evento.lugar)}</p>
                 </div>
 
@@ -257,25 +297,20 @@ function crearFuncionAgendaCard(evento, funcion){
             </div>
 
             <span class="${funcion.activa ? "status-ok" : "status-off"}">
-                ${funcion.activa ? "🟢 Función activa" : "🔴 Función pausada"}
+                ${funcion.activa ? "🟢 Registro activo" : "🔴 Registro pausado"}
             </span>
 
             <div class="agenda-categorias-mini">
-                ${categoriasHTML}
+                ${detalleHTML}
             </div>
 
             <div class="agenda-funcion-actions">
-                <button
-                    class="btn-secundario"
-                    onclick="cerrarAgendaDia(); abrirEditarFuncion(${evento.id}, ${funcion.id})">
-                    ✏️ Editar
-                </button>
-
-                <button
-                    class="btn-secundario btn-descuentos-funcion"
-                    onclick="cerrarAgendaDia(); abrirGestionDescuentos(${evento.id}, ${funcion.id})">
-                    🎁 Descuentos
-                </button>
+                ${
+                    esFuncion
+                    ? `<button class="btn-secundario" onclick="cerrarAgendaDia(); abrirEditarFuncion(${evento.id}, ${funcion.id})">✏️ Editar</button>
+                       <button class="btn-secundario btn-descuentos-funcion" onclick="cerrarAgendaDia(); abrirGestionDescuentos(${evento.id}, ${funcion.id})">🎁 Descuentos</button>`
+                    : `<button class="btn-secundario" onclick="mostrarToast('La edición de activaciones entra en el siguiente paso.', 'success')">✏️ Editar</button>`
+                }
 
                 <button
                     class="btn-secundario"

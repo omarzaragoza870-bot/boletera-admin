@@ -161,6 +161,7 @@
 .agenda-mascaras{
     display:flex;
     align-items:center;
+    justify-content:center;
     gap:6px;
     flex-wrap:wrap;
     margin-top:8px;
@@ -201,6 +202,7 @@
     color:#64748b;
     font-size:11px;
     margin-top:8px;
+    text-align:center;
 }
 
 .agenda-resumen-grid{

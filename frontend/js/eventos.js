@@ -133,6 +133,13 @@ function aplicarFiltrosEventos(eventos){
     let resultado =
         eventos.filter(evento => {
 
+            // La lista de "Eventos disponibles" es SOLO para eventos con
+            // boletaje (tipo función). Las activaciones y demás registros
+            // operativos viven en la Agenda, no aquí. Los eventos viejos
+            // (sin tipoRegistro) cuentan como función.
+            const esEventoBoletaje =
+                (evento.tipoRegistro || "funcion") === "funcion";
+
             const coincideTexto =
                 evento.nombre
                     .toLowerCase()
@@ -152,7 +159,7 @@ function aplicarFiltrosEventos(eventos){
                     evento.activo === false
                 );
 
-            return coincideTexto && coincideEstado;
+            return esEventoBoletaje && coincideTexto && coincideEstado;
         });
 
     resultado =
