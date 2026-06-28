@@ -48,7 +48,7 @@ function pintarDescuentosTemp(){
 
         contenedor.innerHTML += `
             <div class="descuento-chip">
-                ${descuento.codigo} - ${
+                ${escaparTexto(descuento.codigo)} - ${
                     descuento.tipo === "porcentaje"
                     ? `${descuento.valor}%`
                     : `$${descuento.valor}`

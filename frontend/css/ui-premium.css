@@ -12,7 +12,6 @@
 
 ============================================================ */
 
-
 /* ============================= */
 /* BASE VISUAL PREMIUM */
 /* ============================= */
@@ -122,6 +121,7 @@ body{
 .eventos-filtros-minimal select{
     appearance:none;
     -webkit-appearance:none;
+    padding-left:16px;
     background-color:rgba(8,13,28,.72);
     background-image:
         linear-gradient(45deg, transparent 50%, #94a3b8 50%),
@@ -357,10 +357,14 @@ button{
     }
 
     .evento-pro-acciones{
-        grid-template-columns:1fr;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .evento-pro-acciones button{
+        min-height:40px;
+        padding:8px 10px;
     }
 }
-
 
 /* ============================================================
 
@@ -381,23 +385,24 @@ button{
 
 .drawer-descuentos{
     width:min(460px, 94vw);
-    height:100vh;
+    max-height:88vh;
     background:linear-gradient(145deg, rgba(15,23,42,.98), rgba(17,28,51,.96));
-    border-left:1px solid rgba(148,163,184,.18);
-    box-shadow:-24px 0 60px rgba(0,0,0,.38);
+    border:1px solid rgba(148,163,184,.18);
+    border-radius:24px;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
     padding:24px;
     overflow-y:auto;
-    animation:drawerIn .22s ease;
+    animation:drawerIn .2s ease;
 }
 
 @keyframes drawerIn{
     from{
-        transform:translateX(30px);
+        transform:translateY(12px) scale(.98);
         opacity:0;
     }
 
     to{
-        transform:translateX(0);
+        transform:translateY(0) scale(1);
         opacity:1;
     }
 }
@@ -415,6 +420,12 @@ button{
     color:white;
     font-size:26px;
     letter-spacing:-.04em;
+}
+
+/* El subtitulo base trae margin-top:-8px (para otros modales);
+   aqui lo reseteamos para que no se encime con el titulo. */
+.drawer-header .modal-description{
+    margin:4px 0 0;
 }
 
 .drawer-toolbar{

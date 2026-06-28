@@ -55,22 +55,46 @@ const TIPOS_REGISTRO = {
 };
 
 function abrirSelectorNuevoRegistro(){
-    mostrarSeccion("nuevoRegistro");
+
+    document.body.classList.add("modal-abierto");
+
+    document
+        .getElementById("modalNuevoRegistro")
+        .classList
+        .remove("oculto");
 }
 
 function cerrarSelectorNuevoRegistro(){
-    mostrarSeccion("funciones");
+
+    document
+        .getElementById("modalNuevoRegistro")
+        .classList
+        .add("oculto");
+
+    document.body.classList.remove("modal-abierto");
 }
+
+// Alias para mantener el patron de modales del resto del sistema.
+function abrirModalNuevoRegistro(){ abrirSelectorNuevoRegistro(); }
+function cerrarModalNuevoRegistro(){ cerrarSelectorNuevoRegistro(); }
 
 function seleccionarTipoRegistro(tipo){
 
-    cerrarSelectorNuevoRegistro();
-
     if(tipo === "funcion"){
+
+        // Pasamos de un modal al otro SIN soltar el bloqueo de scroll:
+        // solo ocultamos este modal y abrimos el de Nuevo Evento.
+        document
+            .getElementById("modalNuevoRegistro")
+            .classList
+            .add("oculto");
+
         mostrarSeccion("eventos");
         abrirModalNuevoEvento();
         return;
     }
+
+    cerrarSelectorNuevoRegistro();
 
     const info =
         TIPOS_REGISTRO[tipo];

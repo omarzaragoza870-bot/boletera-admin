@@ -360,7 +360,7 @@ function crearTarjetaEventoPro(evento){
                     <button
                         class="btn-danger"
                         onclick="eliminarEvento(${evento.id})">
-                        🗑️
+                        🗑️ Eliminar
                     </button>
                 </div>
 
@@ -512,13 +512,6 @@ function crearFuncionesHTML(evento){
             );
         }
 
-        const descuentosHTML =
-            crearHTMLDescuentos(
-                funcion.descuentos,
-                evento.id,
-                funcion.id
-            );
-
         funcionesHTML += `
             <div class="funcion">
 
@@ -537,8 +530,6 @@ function crearFuncionesHTML(evento){
                 <div class="categorias-grid">
                     ${categoriasHTML}
                 </div>
-
-                ${descuentosHTML}
 
                 <p class="${funcion.activa ? "status-ok" : "status-off"}">
                     ${funcion.activa ? "🟢 Función activa" : "🔴 Función inactiva"}

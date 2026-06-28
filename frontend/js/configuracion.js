@@ -67,8 +67,10 @@ function sincronizarEstadoBot(botActivo){
     actualizarTexto("estadoBotConfig", textoBot);
     actualizarTexto("estadoCardBot", textoCard);
 
+    // Los tres switches del bot ahora son el mismo componente (checkbox).
     actualizarSwitch("botSwitch", botActivo);
     actualizarSwitch("botSwitchConfig", botActivo);
+    actualizarSwitch("botSwitchSidebar", botActivo);
 }
 
 function actualizarTexto(id, texto){
@@ -90,11 +92,7 @@ function actualizarSwitch(id, activo){
         return;
     }
 
-    if(activo){
-        switchBot.classList.add("activo");
-    }else{
-        switchBot.classList.remove("activo");
-    }
+    switchBot.checked = activo;
 }
 
 async function cambiarEstadoBot(){

@@ -265,6 +265,43 @@
           "activa": true
         }
       ]
+    },
+    {
+      "id": 1782671427858,
+      "nombre": "Sencillamente Hipocrita",
+      "lugar": "Teatro Varsovia",
+      "imagen": "",
+      "activo": true,
+      "funciones": [
+        {
+          "id": 1,
+          "fecha": "2026-09-19",
+          "hora": "20:30",
+          "categorias": {
+            "general": {
+              "preventa": 300,
+              "precio": 400,
+              "boletos": 100
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "precio": 400,
+          "boletosDisponibles": 100,
+          "activa": true
+        }
+      ]
     }
   ]
 }

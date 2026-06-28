@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="css/agenda.css">
     <link rel="stylesheet" href="css/alpha-v1-1-operaciones.css">
     <link rel="stylesheet" href="css/alpha-v1-2-nuevo-registro.css">
-    <link rel="stylesheet" href="css/mobile-sidebar-drawer.css">
     <link rel="stylesheet" href="css/funciones.css">
     <link rel="stylesheet" href="css/modales.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -29,7 +28,6 @@
 
 <div id="overlayMenuMovil" class="overlay-menu-movil" onclick="cerrarMenuMovil()"></div>
 
-
 <div class="app">
 
     <aside class="sidebar">
@@ -44,6 +42,23 @@
         <div class="sidebar-section">Operación</div>
         <div class="menu-item" id="menuVentas" onclick="mostrarSeccion('ventas')">💰 Ventas</div>
         <div class="menu-item" id="menuConfiguracion" onclick="mostrarSeccion('configuracion')">⚙️ Configuración</div>
+
+        <!-- ============================= -->
+        <!-- CONTROL DEL BOT EN LA BARRA LATERAL -->
+        <!-- ============================= -->
+        <div class="sidebar-control-panel">
+            <div class="sidebar-bot-row">
+                <span>Estado del bot</span>
+                <label class="switch-mini">
+                    <input id="botSwitchSidebar" type="checkbox" checked onchange="toggleBotDesdeSidebar(this.checked)">
+                    <span></span>
+                </label>
+            </div>
+
+            <button class="sidebar-edit-btn" onclick="abrirEditarNombreSistema()">
+                ✏️ Editar nombre
+            </button>
+        </div>
     </aside>
 
     <main class="main">
@@ -68,37 +83,20 @@
                     <strong id="estadoBot">Cargando...</strong>
                 </div>
 
-                <button
-                    id="botSwitch"
-                    class="switch"
-                    onclick="cambiarEstadoBot()"
-                    title="Cambiar estado del bot">
-
+                <label class="switch-mini" title="Cambiar estado del bot">
+                    <input
+                        type="checkbox"
+                        id="botSwitch"
+                        onchange="cambiarEstadoBot()">
                     <span></span>
-
-                </button>
+                </label>
             </div>
         </div>
 
         <section id="seccionDashboard" class="app-section">
 
             <!-- ============================= -->
-            <!-- KPIs 
-            <div class="sidebar-control-panel">
-                <div class="sidebar-bot-row">
-                    <span>Bot Encendido</span>
-                    <label class="switch-mini">
-                        <input id="botSwitchSidebar" type="checkbox" checked onchange="toggleBotDesdeSidebar(this.checked)">
-                        <i></i>
-                    </label>
-                </div>
-
-                <button class="sidebar-edit-btn" onclick="editarNombreSistema()">
-                    ✏️ Editar nombre
-                </button>
-            </div>
-
-PRINCIPALES -->
+            <!-- KPIs PRINCIPALES -->
             <!-- ============================= -->
             <section class="grid">
                 <div class="stat-card">
@@ -228,7 +226,7 @@ PRINCIPALES -->
                     <div class="acciones-rapidas">
                         <button
                             class="btn-primary"
-                            onclick="mostrarSeccion('nuevoRegistro')">
+                            onclick="abrirSelectorNuevoRegistro()">
                             ➕ Nuevo registro
                         </button>
 
@@ -414,7 +412,7 @@ PRINCIPALES -->
 
                         <button
                             class="btn-primary"
-                            onclick="mostrarSeccion('nuevoRegistro')">
+                            onclick="abrirSelectorNuevoRegistro()">
                             ➕ Nuevo registro
                         </button>
                     </div>
@@ -492,22 +490,73 @@ PRINCIPALES -->
 
         </section>
 
+        
 
-        <section id="seccionNuevoRegistro" class="app-section oculto">
-            <section class="nuevo-registro-page">
-
-                <button class="btn-volver-operaciones" onclick="mostrarSeccion('funciones')">
-                    ← Volver al Centro de Operaciones
-                </button>
-
-                <div class="nuevo-registro-hero">
+        <section id="seccionVentas" class="app-section oculto">
+            <div class="panel">
+                <div class="panel-header">
                     <div>
-                        <h2>Nuevo registro</h2>
-                        <p>¿Qué quieres organizar hoy?</p>
+                        <h2>Ventas</h2>
+                        <p class="panel-subtitle">Módulo futuro para ventas, pagos y clientes.</p>
                     </div>
-                    <div class="nuevo-registro-ilustracion">📅➕</div>
                 </div>
 
+                <div class="empty-state">
+                    Este módulo se construirá después de terminar la cartelera.
+                </div>
+            </div>
+        </section>
+
+        <section id="seccionConfiguracion" class="app-section oculto">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Configuración</h2>
+                        <p class="panel-subtitle">Ajustes generales de la boletera.</p>
+                    </div>
+                </div>
+
+                <div class="bot-control configuracion-bot">
+                    <div>
+                        <span class="bot-label">Estado del bot</span>
+                        <strong id="estadoBotConfig">Cargando...</strong>
+                    </div>
+
+                    <label class="switch-mini" title="Cambiar estado del bot">
+                        <input
+                            type="checkbox"
+                            id="botSwitchConfig"
+                            onchange="cambiarEstadoBot()">
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="topbar-actions configuracion-actions">
+                    <button class="btn-secundario" onclick="abrirEditarNombreSistema()">
+                        ✏️ Editar nombre del sistema
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</div>
+
+<div id="modalNuevoRegistro" class="modal oculto">
+    <div class="modal-contenido modal-evento modal-evento-premium">
+        <div class="modal-evento-scroll">
+
+            <div class="modal-evento-title">
+                <div class="modal-evento-icon">📅</div>
+                <div>
+                    <h2>Nuevo registro</h2>
+                    <p class="modal-description">
+                        ¿Qué quieres organizar hoy?
+                    </p>
+                </div>
+            </div>
+
+            <div class="nuevo-registro-page">
                 <div class="registro-grupo">
                     <h3>⭐ Más usados</h3>
                     <div class="registro-grid registro-grid-2">
@@ -557,60 +606,16 @@ PRINCIPALES -->
                         <p>Podrás agregar varias fechas, horarios, sedes, recursos y tareas después.</p>
                     </div>
                 </div>
-
-            </section>
-        </section>
-
-        <section id="seccionVentas" class="app-section oculto">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2>Ventas</h2>
-                        <p class="panel-subtitle">Módulo futuro para ventas, pagos y clientes.</p>
-                    </div>
-                </div>
-
-                <div class="empty-state">
-                    Este módulo se construirá después de terminar la cartelera.
-                </div>
             </div>
-        </section>
 
-        <section id="seccionConfiguracion" class="app-section oculto">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2>Configuración</h2>
-                        <p class="panel-subtitle">Ajustes generales de la boletera.</p>
-                    </div>
-                </div>
-
-                <div class="bot-control configuracion-bot">
-                    <div>
-                        <span class="bot-label">Estado del bot</span>
-                        <strong id="estadoBotConfig">Cargando...</strong>
-                    </div>
-
-                    <button
-                        id="botSwitchConfig"
-                        class="switch"
-                        onclick="cambiarEstadoBot()"
-                        title="Cambiar estado del bot">
-
-                        <span></span>
-
-                    </button>
-                </div>
-
-                <div class="topbar-actions configuracion-actions">
-                    <button class="btn-secundario" onclick="abrirEditarNombreSistema()">
-                        ✏️ Editar nombre del sistema
-                    </button>
-                </div>
+            <div class="modal-acciones modal-acciones-premium">
+                <button class="btn-secundario" onclick="cerrarModalNuevoRegistro()">
+                    Cancelar
+                </button>
             </div>
-        </section>
-    </main>
 
+        </div>
+    </div>
 </div>
 
 <div id="modalNuevoEvento" class="modal oculto">
@@ -1162,11 +1167,10 @@ PRINCIPALES -->
     </div>
 </div>
 
-
 <!-- ============================= -->
 <!-- MODAL / DRAWER GESTION DESCUENTOS -->
 <!-- ============================= -->
-<div id="modalGestionDescuentos" class="modal oculto modal-drawer-backdrop">
+<div id="modalGestionDescuentos" class="modal oculto">
     <div class="drawer-descuentos">
 
         <div class="drawer-header">
@@ -1277,7 +1281,6 @@ PRINCIPALES -->
 </div>
 
 
-
 <!-- ============================= -->
 <!-- DRAWER AGENDA DIA -->
 <div id="modalAgendaDia" class="modal oculto modal-drawer-backdrop">
@@ -1325,12 +1328,9 @@ PRINCIPALES -->
 <script src="js/state.js"></script>
 
 
-
 <script src="js/dashboard.js"></script>
 <script src="js/agenda.js"></script>
 <script src="js/registros.js"></script>
-
-
 
 
 
@@ -1345,7 +1345,6 @@ PRINCIPALES -->
 <script src="js/modales.js"></script>
 <script src="js/app.js"></script>
 
-<script src="js/navigation-override.js"></script>
 <script src="js/mobile-menu.js"></script>
 <script src="js/sidebar-controls.js"></script>
 </body>

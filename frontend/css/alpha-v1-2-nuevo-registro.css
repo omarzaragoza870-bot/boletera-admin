@@ -1,226 +1,109 @@
-
-.nuevo-registro-page{display:grid;gap:28px}
-.btn-volver-operaciones{width:max-content;background:transparent;border:none;color:#cbd5e1;font-weight:900;padding:0}
-.btn-volver-operaciones:hover{background:transparent;color:#fff}
-.nuevo-registro-hero{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 0;border-bottom:1px solid rgba(148,163,184,.16)}
-.nuevo-registro-hero h2{color:white;font-size:42px;margin:0 0 8px;letter-spacing:-.06em}
-.nuevo-registro-hero p{color:#94a3b8;font-size:18px;margin:0}
-.nuevo-registro-ilustracion{width:150px;height:120px;display:flex;align-items:center;justify-content:center;border-radius:34px;background:linear-gradient(135deg,rgba(79,124,255,.18),rgba(34,197,94,.12));border:1px solid rgba(148,163,184,.16);font-size:58px;box-shadow:0 22px 60px rgba(37,99,235,.18)}
-.registro-grupo{display:grid;gap:14px}
-.registro-grupo h3{color:white;font-size:20px;margin:0}
-.registro-grid{display:grid;gap:16px}
-.registro-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.registro-grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-.registro-opcion{min-height:124px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;padding:20px;border-radius:22px;background:rgba(15,23,42,.78);color:#f8fafc;border:1px solid rgba(148,163,184,.16);box-shadow:0 16px 38px rgba(0,0,0,.18);text-align:left;transition:.22s ease}
-.registro-opcion:hover{transform:translateY(-3px);border-color:rgba(79,124,255,.44);box-shadow:0 20px 44px rgba(37,99,235,.16)}
-.registro-opcion span{width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:30px;background:#eef2ff}
-.registro-opcion strong{display:block;color:white;font-size:19px;margin-bottom:6px;letter-spacing:-.03em}
-.registro-opcion small{color:#94a3b8;font-size:14px;line-height:1.35}
-.registro-opcion b{color:#94a3b8;font-size:28px}
-.registro-info{display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:20px;background:rgba(79,124,255,.10);border:1px solid rgba(79,124,255,.18);color:#dbeafe}
-.registro-info span{font-size:24px}.registro-info strong{color:white}.registro-info p{margin:4px 0 0;color:#94a3b8}
-@media(max-width:1100px){.registro-grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:720px){.nuevo-registro-hero{align-items:flex-start;padding:20px 0}.nuevo-registro-ilustracion{width:80px;height:70px;font-size:34px;border-radius:22px}.nuevo-registro-hero h2{font-size:30px}.nuevo-registro-hero p{font-size:15px}.registro-grid-2,.registro-grid-4{grid-template-columns:1fr}.registro-opcion{min-height:92px;padding:16px;border-radius:18px}.registro-opcion span{width:50px;height:50px;font-size:24px;border-radius:16px}.registro-info{align-items:flex-start}}
-
-
 /* ============================================================
+   NUEVO REGISTRO — estilos de la pantalla de Agenda
 
-   ALPHA v1.2.1: MOBILE COMPACT
+   MODULAR / responsabilidad única:
+   - Solo estiliza el selector de "Nuevo registro"
+     (.nuevo-registro-page, .registro-grupo, .registro-grid,
+      .registro-opcion, .registro-info).
 
-   Ajuste específico para móvil:
-   - Cards más bajas.
-   - Íconos más pequeños.
-   - Menos padding.
-   - Menos separación vertical.
-   - Mejor lectura tipo app.
+   NOTAS:
+   - El selector de "Nuevo registro" ahora se abre como MODAL
+     (#modalNuevoRegistro), igual que Nuevo Evento. Estas clases
+     viven dentro de ese modal.
+   - Esto define la VISTA AMPLIA (laptop / web / tablet horizontal).
+   - La VISTA COMPACTA (celular / tablet vertical) la maneja
+     mobile-real-drawer-compact.css. No se duplica aquí.
+   - Los colores por tipo (.tipo-funcion, etc.) viven en
+     alpha-v1-1-operaciones.css.
 
+   Reconstruido y deduplicado: antes eran 842 líneas con el mismo
+   selector repetido 4-6 veces. Aquí queda 1 sola fuente de verdad.
 ============================================================ */
 
-@media(max-width:720px){
-
-    .nuevo-registro-page{
-        gap:18px;
-    }
-
-    .btn-volver-operaciones{
-        font-size:13px;
-    }
-
-    .nuevo-registro-hero{
-        gap:12px;
-        padding:14px 0 16px;
-    }
-
-    .nuevo-registro-hero h2{
-        font-size:26px;
-        margin-bottom:4px;
-    }
-
-    .nuevo-registro-hero p{
-        font-size:13px;
-    }
-
-    .nuevo-registro-ilustracion{
-        width:58px;
-        height:52px;
-        font-size:26px;
-        border-radius:18px;
-        box-shadow:0 12px 28px rgba(37,99,235,.14);
-    }
-
-    .registro-grupo{
-        gap:9px;
-    }
-
-    .registro-grupo h3{
-        font-size:15px;
-    }
-
-    .registro-grid{
-        gap:9px;
-    }
-
-    .registro-opcion{
-        min-height:72px;
-        padding:11px 12px;
-        gap:10px;
-        border-radius:15px;
-        grid-template-columns:auto 1fr auto;
-    }
-
-    .registro-opcion span{
-        width:40px;
-        height:40px;
-        min-width:40px;
-        font-size:20px;
-        border-radius:13px;
-    }
-
-    .registro-opcion strong{
-        font-size:14px;
-        margin-bottom:2px;
-    }
-
-    .registro-opcion small{
-        font-size:11px;
-        line-height:1.22;
-    }
-
-    .registro-opcion b{
-        font-size:20px;
-    }
-
-    .registro-info{
-        padding:12px 14px;
-        gap:10px;
-        border-radius:15px;
-    }
-
-    .registro-info span{
-        font-size:18px;
-    }
-
-    .registro-info strong{
-        font-size:13px;
-    }
-
-    .registro-info p{
-        font-size:11px;
-        line-height:1.25;
-    }
-}
-
-@media(max-width:420px){
-
-    .nuevo-registro-hero h2{
-        font-size:24px;
-    }
-
-    .nuevo-registro-ilustracion{
-        display:none;
-    }
-
-    .registro-opcion{
-        min-height:66px;
-    }
-
-    .registro-opcion small{
-        display:-webkit-box;
-        -webkit-line-clamp:2;
-        -webkit-box-orient:vertical;
-        overflow:hidden;
-    }
-}
-
-
-/* ============================================================
-
-   ALPHA v1.2.2: UI ALIGN CARDS
-
-   Objetivo:
-   - Alinear la ilustración superior.
-   - Igualar tamaños de cards.
-   - Ajustar tipografía para que se parezca a Eventos.
-   - Evitar que textos largos rompan el layout.
-   - Mantener versión web y móvil responsive.
-
-============================================================ */
-
-/* Hero más limpio */
-.nuevo-registro-hero{
+.nuevo-registro-page{
     display:grid;
-    grid-template-columns:1fr auto;
-    align-items:end;
-    min-height:170px;
+    gap:18px;
 }
 
-.nuevo-registro-hero h2{
-    font-size:34px;
-    line-height:1;
-    font-weight:900;
+/* Grupos */
+.registro-grupo{
+    display:grid;
+    gap:9px;
 }
 
-.nuevo-registro-hero p{
-    font-size:16px;
-}
-
-.nuevo-registro-ilustracion{
-    align-self:end;
-    transform:translateY(-10px);
-}
-
-/* Títulos de grupos iguales al resto del sistema */
 .registro-grupo h3{
-    font-size:18px;
-    line-height:1.2;
+    margin:0;
+    color:#fff;
+    font-size:15px;
     font-weight:900;
+    line-height:1.2;
 }
 
-/* Cards web */
+/* Rejillas */
+.registro-grid{
+    display:grid;
+    gap:10px;
+}
+
+.registro-grid-2{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+
+.registro-grid-4{
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+}
+
+/* Tarjeta de opción */
 .registro-opcion{
-    height:118px;
-    min-height:118px;
-    grid-template-columns:64px 1fr 24px;
+    height:76px;
+    display:grid;
+    grid-template-columns:42px 1fr 16px;
+    align-items:center;
+    gap:10px;
+    padding:12px 13px;
+    border-radius:16px;
+    background:rgba(15,23,42,.78);
+    color:#f8fafc;
+    border:1px solid rgba(148,163,184,.16);
+    box-shadow:0 10px 24px rgba(0,0,0,.14);
+    text-align:left;
     overflow:hidden;
+    transition:.22s ease;
+}
+
+.registro-opcion:hover{
+    transform:translateY(-3px);
+    border-color:rgba(79,124,255,.44);
+    box-shadow:0 20px 44px rgba(37,99,235,.16);
 }
 
 .registro-opcion span{
-    width:56px;
-    height:56px;
-    font-size:26px;
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    border-radius:12px;
+    background:#eef2ff;
 }
 
 .registro-opcion strong{
-    font-size:17px;
-    line-height:1.15;
+    display:block;
+    color:#fff;
+    font-size:13.5px;
+    line-height:1.1;
+    margin-bottom:2px;
+    letter-spacing:-.03em;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
 .registro-opcion small{
-    font-size:13px;
-    line-height:1.3;
+    color:#94a3b8;
+    font-size:10.5px;
+    line-height:1.2;
     display:-webkit-box;
     -webkit-line-clamp:2;
     -webkit-box-orient:vertical;
@@ -229,614 +112,28 @@
 
 .registro-opcion b{
     justify-self:end;
-    font-size:22px;
+    color:#94a3b8;
+    font-size:16px;
 }
 
-/* En operación las 4 cards deben medir exactamente igual */
-.registro-grid-4 .registro-opcion{
-    grid-template-columns:56px 1fr 20px;
-    padding:18px;
-}
-
-/* Info inferior */
+/* Aviso inferior */
 .registro-info{
-    min-height:82px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-height:52px;
+    padding:10px 13px;
+    border-radius:15px;
+    background:rgba(79,124,255,.10);
+    border:1px solid rgba(79,124,255,.18);
+    color:#dbeafe;
 }
 
-/* Desktop ancho */
-@media(min-width:1101px){
-    .registro-grid-4{
-        grid-template-columns:repeat(4, minmax(0, 1fr));
-    }
-}
-
-/* Tablet */
-@media(max-width:1100px){
-    .registro-grid-4{
-        grid-template-columns:repeat(2, minmax(0, 1fr));
-    }
-
-    .registro-opcion{
-        height:108px;
-        min-height:108px;
-    }
-}
-
-/* Móvil: modo lista tipo app */
-@media(max-width:720px){
-
-    .nuevo-registro-page{
-        gap:16px;
-    }
-
-    .nuevo-registro-hero{
-        min-height:auto;
-        grid-template-columns:1fr auto;
-        align-items:center;
-        padding:12px 0 14px;
-    }
-
-    .nuevo-registro-hero h2{
-        font-size:25px;
-        line-height:1.05;
-    }
-
-    .nuevo-registro-hero p{
-        font-size:13px;
-    }
-
-    .nuevo-registro-ilustracion{
-        width:54px;
-        height:50px;
-        font-size:24px;
-        transform:none;
-    }
-
-    .registro-grupo h3{
-        font-size:14px;
-    }
-
-    .registro-grid{
-        gap:8px;
-    }
-
-    .registro-opcion{
-        height:64px;
-        min-height:64px;
-        padding:9px 11px;
-        gap:10px;
-        border-radius:14px;
-        grid-template-columns:42px 1fr 18px;
-    }
-
-    .registro-opcion span{
-        width:38px;
-        height:38px;
-        min-width:38px;
-        font-size:19px;
-        border-radius:12px;
-    }
-
-    .registro-opcion strong{
-        font-size:13px;
-        line-height:1.1;
-        margin-bottom:2px;
-    }
-
-    .registro-opcion small{
-        font-size:10.5px;
-        line-height:1.2;
-        -webkit-line-clamp:1;
-    }
-
-    .registro-opcion b{
-        font-size:18px;
-    }
-
-    .registro-info{
-        min-height:auto;
-        padding:11px 12px;
-    }
-}
-
-/* Móvil pequeño */
-@media(max-width:420px){
-
-    .nuevo-registro-ilustracion{
-        display:flex;
-        width:48px;
-        height:44px;
-        font-size:22px;
-    }
-
-    .registro-opcion{
-        height:60px;
-        min-height:60px;
-    }
-
-    .registro-opcion small{
-        -webkit-line-clamp:1;
-    }
-}
-
-
-/* ============================================================
-
-   ALPHA v1.2.3: MOBILE HEADER FIX
-
-   Corrige el header de Nuevo Registro en móvil:
-   - El icono ya no queda flotando a la derecha.
-   - El título y subtítulo no se enciman ni se cortan.
-   - En móvil la ilustración se oculta para priorizar claridad.
-
-============================================================ */
-
-@media(max-width:720px){
-
-    .nuevo-registro-page{
-        gap:16px;
-    }
-
-    .btn-volver-operaciones{
-        font-size:12px;
-        line-height:1.2;
-        margin-bottom:4px;
-    }
-
-    .nuevo-registro-hero{
-        display:block;
-        padding:12px 0 14px;
-        min-height:auto;
-        border-bottom:1px solid rgba(148,163,184,.16);
-    }
-
-    .nuevo-registro-hero h2{
-        font-size:26px;
-        line-height:1.05;
-        margin:0 0 5px;
-        letter-spacing:-.04em;
-        max-width:100%;
-    }
-
-    .nuevo-registro-hero p{
-        font-size:13px;
-        line-height:1.3;
-        margin:0;
-        max-width:100%;
-    }
-
-    .nuevo-registro-ilustracion{
-        display:none !important;
-    }
-}
-
-/* Ajuste extra para pantallas muy estrechas */
-@media(max-width:420px){
-
-    .nuevo-registro-hero h2{
-        font-size:24px;
-    }
-
-    .nuevo-registro-hero p{
-        font-size:12px;
-    }
-}
-
-
-/* ============================================================
-
-   ALPHA v1.2.5: LAYOUT CLEANUP
-
-   Corrige:
-   - Error visual del header en mobile.
-   - Header principal se oculta en mobile.
-   - Estado del bot queda compacto arriba derecha.
-   - Nuevo Registro queda más compacto en web.
-   - Se elimina visualmente la ilustración grande.
-   - Cards más proporcionadas y cercanas a Eventos.
-
-============================================================ */
-
-/* Ocultar ilustración grande: estaba rompiendo proporción */
-.nuevo-registro-ilustracion{
-    display:none !important;
-}
-
-/* Compactar página web */
-.nuevo-registro-page{
-    gap:22px;
-}
-
-.nuevo-registro-hero{
-    display:block !important;
-    min-height:auto !important;
-    padding:32px 0 18px !important;
-}
-
-.nuevo-registro-hero h2{
-    font-size:32px !important;
-    line-height:1.05 !important;
-    margin:0 0 8px !important;
-}
-
-.nuevo-registro-hero p{
-    font-size:15px !important;
-}
-
-.registro-grupo{
-    gap:12px;
-}
-
-.registro-grupo h3{
-    font-size:17px !important;
-}
-
-.registro-opcion{
-    height:96px !important;
-    min-height:96px !important;
-    padding:16px 18px !important;
-    grid-template-columns:52px 1fr 20px !important;
-    gap:14px !important;
-}
-
-.registro-opcion span{
-    width:48px !important;
-    height:48px !important;
-    font-size:23px !important;
-    border-radius:16px !important;
-}
-
-.registro-opcion strong{
-    font-size:16px !important;
-}
-
-.registro-opcion small{
-    font-size:12px !important;
-    line-height:1.25 !important;
-}
-
-.registro-opcion b{
-    font-size:20px !important;
-}
-
-.registro-info{
-    min-height:66px !important;
-    padding:14px 18px !important;
-}
-
-/* Desktop: no tanta separación entre header y contenido */
-.btn-volver-operaciones{
-    margin-top:2px;
-    margin-bottom:-6px;
-}
-
-/* Mobile specific */
-@media(max-width:820px){
-
-    /* En móvil el header grande del sistema no debe aparecer en contenido.
-       El nombre vive dentro del menú lateral. */
-    .main > .topbar,
-    .main > .dashboard-hero,
-    .main > .hero,
-    .main > .app-header,
-    .main > .system-header,
-    .main > .panel:first-child:has(.bot-status),
-    .main > .panel:first-child:has(#estadoBotTexto){
-        display:none !important;
-    }
-
-    /* Fallback si el header principal es el primer panel visible */
-    body:not(.menu-movil-abierto) .main > .panel:first-child{
-        margin-top:0;
-    }
-
-    /* Botón menú izquierda */
-    .btn-menu-movil{
-        top:12px !important;
-        left:12px !important;
-        width:42px !important;
-        height:42px !important;
-    }
-
-    /* Estado bot flotante derecha */
-    .bot-float-mobile{
-        display:flex !important;
-    }
-
-    .main{
-        padding-top:68px !important;
-    }
-
-    .nuevo-registro-page{
-        gap:15px !important;
-    }
-
-    .btn-volver-operaciones{
-        font-size:12px !important;
-        margin:0 !important;
-    }
-
-    .nuevo-registro-hero{
-        padding:10px 0 12px !important;
-        border-bottom:1px solid rgba(148,163,184,.16);
-    }
-
-    .nuevo-registro-hero h2{
-        font-size:25px !important;
-        margin-bottom:4px !important;
-    }
-
-    .nuevo-registro-hero p{
-        font-size:12px !important;
-    }
-
-    .registro-grupo h3{
-        font-size:14px !important;
-    }
-
-    .registro-grid{
-        gap:8px !important;
-    }
-
-    .registro-opcion{
-        height:58px !important;
-        min-height:58px !important;
-        padding:9px 10px !important;
-        border-radius:14px !important;
-        grid-template-columns:38px 1fr 16px !important;
-        gap:9px !important;
-    }
-
-    .registro-opcion span{
-        width:34px !important;
-        height:34px !important;
-        min-width:34px !important;
-        font-size:17px !important;
-        border-radius:11px !important;
-    }
-
-    .registro-opcion strong{
-        font-size:12.5px !important;
-        margin-bottom:1px !important;
-    }
-
-    .registro-opcion small{
-        font-size:10px !important;
-        line-height:1.15 !important;
-        -webkit-line-clamp:1 !important;
-    }
-
-    .registro-opcion b{
-        font-size:16px !important;
-    }
-
-    .registro-info{
-        padding:10px 12px !important;
-        border-radius:14px !important;
-    }
-}
-
-/* Ocultar bot flotante en desktop por defecto */
-.bot-float-mobile{
-    display:none;
-}
-
-
-/* ============================================================
-   ALPHA v1.2.6: COMPACT WEB + MOBILE
-============================================================ */
-
-#seccionNuevoRegistro{
-    max-width:980px;
-    margin:0 auto;
-}
-
-.nuevo-registro-page{
-    gap:18px !important;
-}
-
-.btn-volver-operaciones{
-    font-size:13px !important;
-    margin-bottom:-2px !important;
-}
-
-.nuevo-registro-hero{
-    padding:18px 0 12px !important;
-}
-
-.nuevo-registro-hero h2{
-    font-size:28px !important;
-    margin-bottom:4px !important;
-}
-
-.nuevo-registro-hero p{
-    font-size:13px !important;
-}
-
-.registro-grupo{
-    gap:9px !important;
-}
-
-.registro-grupo h3{
-    font-size:15px !important;
-}
-
-.registro-grid{
-    gap:10px !important;
-}
-
-.registro-grid-2{
-    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
-}
-
-.registro-grid-4{
-    grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
-}
-
-.registro-opcion{
-    height:76px !important;
-    min-height:76px !important;
-    padding:12px 13px !important;
-    border-radius:16px !important;
-    grid-template-columns:42px 1fr 16px !important;
-    gap:10px !important;
-    box-shadow:0 10px 24px rgba(0,0,0,.14) !important;
-}
-
-.registro-opcion span{
-    width:38px !important;
-    height:38px !important;
-    min-width:38px !important;
-    font-size:18px !important;
-    border-radius:12px !important;
-}
-
-.registro-opcion strong{
-    font-size:13.5px !important;
-    margin-bottom:2px !important;
-    line-height:1.1 !important;
-}
-
-.registro-opcion small{
-    font-size:10.5px !important;
-    line-height:1.2 !important;
-    -webkit-line-clamp:2 !important;
-}
-
-.registro-opcion b{
-    font-size:16px !important;
-}
-
-.registro-info{
-    min-height:52px !important;
-    padding:10px 13px !important;
-    border-radius:15px !important;
-}
-
-.registro-info span{
-    font-size:18px !important;
-}
-
-.registro-info strong{
-    font-size:13px !important;
-}
-
-.registro-info p{
-    font-size:11px !important;
-}
-
-@media(max-width:1100px){
-    #seccionNuevoRegistro{
-        max-width:100%;
-    }
-
-    .registro-grid-4{
-        grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
-    }
-}
-
-@media(max-width:720px){
-    #seccionNuevoRegistro{
-        max-width:100%;
-    }
-
-    .nuevo-registro-page{
-        gap:13px !important;
-    }
-
-    .btn-volver-operaciones{
-        font-size:11.5px !important;
-    }
-
-    .nuevo-registro-hero{
-        padding:8px 0 10px !important;
-    }
-
-    .nuevo-registro-hero h2{
-        font-size:22px !important;
-        margin-bottom:2px !important;
-    }
-
-    .nuevo-registro-hero p{
-        font-size:11.5px !important;
-    }
-
-    .registro-grupo{
-        gap:7px !important;
-    }
-
-    .registro-grupo h3{
-        font-size:13px !important;
-    }
-
-    .registro-grid-2,
-    .registro-grid-4{
-        grid-template-columns:1fr !important;
-    }
-
-    .registro-grid{
-        gap:6px !important;
-    }
-
-    .registro-opcion{
-        height:50px !important;
-        min-height:50px !important;
-        padding:7px 9px !important;
-        border-radius:12px !important;
-        grid-template-columns:32px 1fr 14px !important;
-        gap:8px !important;
-    }
-
-    .registro-opcion span{
-        width:30px !important;
-        height:30px !important;
-        min-width:30px !important;
-        font-size:15px !important;
-        border-radius:9px !important;
-    }
-
-    .registro-opcion strong{
-        font-size:11.5px !important;
-        margin-bottom:0 !important;
-    }
-
-    .registro-opcion small{
-        font-size:9.5px !important;
-        line-height:1.12 !important;
-        -webkit-line-clamp:1 !important;
-    }
-
-    .registro-opcion b{
-        font-size:14px !important;
-    }
-
-    .registro-info{
-        padding:8px 10px !important;
-        border-radius:12px !important;
-        gap:8px !important;
-    }
-
-    .registro-info span{
-        font-size:15px !important;
-    }
-
-    .registro-info strong{
-        font-size:11.5px !important;
-    }
-
-    .registro-info p{
-        font-size:9.5px !important;
-        margin-top:1px !important;
-    }
-}
-
-@media(max-width:390px){
-    .registro-opcion{
-        height:48px !important;
-        min-height:48px !important;
-    }
-
-    .registro-opcion small{
-        display:none !important;
-    }
+.registro-info span{ font-size:18px; }
+.registro-info strong{ color:#fff; font-size:13px; }
+.registro-info p{ margin:4px 0 0; color:#94a3b8; font-size:11px; }
+
+/* Tablet / ventana media: las 4 de Operación pasan a 2 columnas */
+@media (max-width: 1100px){
+    .registro-grid-4{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
 }

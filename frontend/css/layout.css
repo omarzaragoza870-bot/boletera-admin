@@ -114,32 +114,3 @@
             color:var(--muted);
             margin-bottom:4px;
         }
-
-        .switch{
-            width:56px;
-            height:30px;
-            border-radius:999px;
-            padding:3px;
-            background:#cbd5e1;
-            border:none;
-            position:relative;
-            flex:0 0 auto;
-        }
-
-        .switch span{
-            display:block;
-            width:24px;
-            height:24px;
-            background:white;
-            border-radius:50%;
-            transition:.25s ease;
-            box-shadow:0 2px 8px rgba(0,0,0,.2);
-        }
-
-        .switch.activo{
-            background:#22c55e;
-        }
-
-        .switch.activo span{
-            transform:translateX(26px);
-        }

@@ -53,24 +53,81 @@ function mostrarToast(
 }
 
 
+/* ============================================================
+   NAVEGACION ENTRE SECCIONES
+
+   Esta es la UNICA definicion de mostrarSeccion.
+   (Antes existia una copia en navigation-override.js que la
+    pisaba; eso ya quedo eliminado.)
+
+   Notas del mapeo:
+   - Hay 6 secciones pero solo 5 menus en el sidebar.
+   - "nuevoRegistro" no tiene menu propio: se navega desde
+     Agenda, por eso deja activo el menu de Funciones/Agenda.
+============================================================ */
+
+// Todas las secciones que pueden ocultarse.
+const SECCIONES_APP = [
+    "Dashboard",
+    "Eventos",
+    "Funciones",
+    "Ventas",
+    "Configuracion",
+    "NuevoRegistro"
+];
+
+// Todos los menus del sidebar.
+const MENUS_APP = [
+    "Dashboard",
+    "Eventos",
+    "Funciones",
+    "Ventas",
+    "Configuracion"
+];
+
+// Que seccion y que menu se activan para cada vista.
+const MAPA_NAVEGACION = {
+    dashboard:     { seccion: "Dashboard",     menu: "Dashboard" },
+    eventos:       { seccion: "Eventos",       menu: "Eventos" },
+    funciones:     { seccion: "Funciones",     menu: "Funciones" },
+    ventas:        { seccion: "Ventas",        menu: "Ventas" },
+    configuracion: { seccion: "Configuracion", menu: "Configuracion" },
+    // nuevoRegistro no tiene menu propio -> resalta Agenda.
+    nuevoRegistro: { seccion: "NuevoRegistro", menu: "Funciones" }
+};
+
+
 function mostrarSeccion(seccion){
-    const secciones = ["Dashboard", "Eventos", "Funciones", "Ventas", "Configuracion"];
 
-    secciones.forEach(nombre => {
+    // 1. Ocultar todas las secciones.
+    SECCIONES_APP.forEach(nombre => {
         const bloque = document.getElementById(`seccion${nombre}`);
-        const menu = document.getElementById(`menu${nombre}`);
-
         if(bloque){ bloque.classList.add("oculto"); }
+    });
+
+    // 2. Quitar el estado activo de todos los menus.
+    MENUS_APP.forEach(nombre => {
+        const menu = document.getElementById(`menu${nombre}`);
         if(menu){ menu.classList.remove("active"); }
     });
 
-    const nombreSeccion = seccion.charAt(0).toUpperCase() + seccion.slice(1);
-    const bloqueActivo = document.getElementById(`seccion${nombreSeccion}`);
-    const menuActivo = document.getElementById(`menu${nombreSeccion}`);
+    // 3. Resolver destino (con fallback a dashboard).
+    const destino =
+        MAPA_NAVEGACION[seccion] || MAPA_NAVEGACION.dashboard;
+
+    // 4. Mostrar la seccion destino.
+    const bloqueActivo =
+        document.getElementById(`seccion${destino.seccion}`);
 
     if(bloqueActivo){ bloqueActivo.classList.remove("oculto"); }
+
+    // 5. Activar el menu correspondiente.
+    const menuActivo =
+        document.getElementById(`menu${destino.menu}`);
+
     if(menuActivo){ menuActivo.classList.add("active"); }
 }
+
 
 function toggleCamposCategoria(switchId, contenedorId){
     const activo = document.getElementById(switchId)?.checked;

@@ -253,14 +253,6 @@ select:focus{
     color:var(--muted);
 }
 
-.switch{
-    background:#334155;
-}
-
-.switch.activo{
-    background:linear-gradient(135deg, #22c55e, #16a34a);
-}
-
 /* ============================= */
 /* EVENTOS PRO */
 /* ============================= */
@@ -453,14 +445,6 @@ select:focus{
     color:#94a3b8;
 }
 
-.switch-mini span{
-    background:#334155;
-}
-
-.switch-mini input:checked + span{
-    background:linear-gradient(135deg, #4f7cff, #2563eb);
-}
-
 /* ============================= */
 /* DESCUENTOS */
 /* ============================= */
@@ -468,6 +452,14 @@ select:focus{
 .descuentos-funcion{
     background:rgba(245,158,11,.08);
     border:1px solid rgba(245,158,11,.20);
+    border-radius:16px;
+    padding:12px 14px;
+    margin:12px 0;
+}
+
+/* En la versión compacta (solo encabezado) no sobra espacio abajo. */
+.descuentos-funcion-compacto .descuentos-header{
+    margin-bottom:0;
 }
 
 .descuento-chip{
