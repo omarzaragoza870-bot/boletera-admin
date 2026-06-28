@@ -5,24 +5,6 @@
   },
   "eventos": [
     {
-      "id": 1782168880852,
-      "nombre": "divina comedi",
-      "lugar": "felix",
-      "imagen": "",
-      "activo": true,
-      "funciones": [
-        {
-          "id": 1,
-          "fecha": "2026-06-16",
-          "hora": "20:00",
-          "precio": 450,
-          "boletosDisponibles": 300,
-          "activa": true,
-          "descuentosActivos": false
-        }
-      ]
-    },
-    {
       "id": 1782170890834,
       "nombre": "Opcion Multiple",
       "lugar": "varsovia",

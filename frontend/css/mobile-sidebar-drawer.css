@@ -1,0 +1,112 @@
+
+.btn-menu-movil{display:none}
+.overlay-menu-movil{display:none}
+
+@media(max-width:820px){
+    .btn-menu-movil{
+        position:fixed;
+        top:14px;
+        left:14px;
+        z-index:1200;
+        width:44px;
+        height:44px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:14px;
+        background:rgba(15,23,42,.94);
+        border:1px solid rgba(148,163,184,.18);
+        color:white;
+        font-size:22px;
+        box-shadow:0 16px 36px rgba(0,0,0,.28);
+        backdrop-filter:blur(16px);
+    }
+
+    .overlay-menu-movil{
+        position:fixed;
+        inset:0;
+        z-index:1090;
+        display:block;
+        background:rgba(2,6,23,.62);
+        backdrop-filter:blur(4px);
+        opacity:0;
+        pointer-events:none;
+        transition:.22s ease;
+    }
+
+    .menu-movil-abierto .overlay-menu-movil{
+        opacity:1;
+        pointer-events:auto;
+    }
+
+    .sidebar{
+        position:fixed !important;
+        top:0;
+        left:0;
+        z-index:1100;
+        width:280px !important;
+        max-width:82vw;
+        height:100vh;
+        transform:translateX(-105%);
+        transition:.25s ease;
+        border-right:1px solid rgba(148,163,184,.18);
+        box-shadow:28px 0 70px rgba(0,0,0,.42);
+    }
+
+    .menu-movil-abierto .sidebar{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0 !important;
+        width:100% !important;
+        padding:72px 14px 24px !important;
+    }
+
+    .layout,.app{
+        display:block !important;
+    }
+
+    .topbar,.panel,.agenda-header,.eventos-pro-header{
+        border-radius:20px;
+    }
+
+    .dashboard-title h1,.topbar h1{
+        font-size:30px;
+    }
+}
+
+
+@media(max-width:820px){
+    .bot-float-mobile{
+        position:fixed;
+        top:12px;
+        right:12px;
+        z-index:1200;
+        height:42px;
+        padding:0 12px;
+        align-items:center;
+        gap:8px;
+        border-radius:14px;
+        background:rgba(15,23,42,.94);
+        border:1px solid rgba(148,163,184,.18);
+        color:white;
+        box-shadow:0 16px 36px rgba(0,0,0,.28);
+        backdrop-filter:blur(16px);
+        font-size:12px;
+    }
+
+    .bot-dot-mobile{
+        width:10px;
+        height:10px;
+        border-radius:999px;
+        background:#22c55e;
+        box-shadow:0 0 0 3px rgba(34,197,94,.12);
+    }
+}
+
+@media(min-width:821px){
+    .bot-float-mobile{
+        display:none !important;
+    }
+}

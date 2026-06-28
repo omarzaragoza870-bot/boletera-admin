@@ -81,51 +81,22 @@ function crearHTMLDescuentos(
     funcionId
 ){
 
-    if(!descuentos || descuentos.length === 0){
-        return "";
-    }
+    const totalDescuentos =
+        descuentos ? descuentos.length : 0;
 
-    let descuentosHTML = "";
-
-    descuentos.forEach((descuento, index) => {
-
-        descuentosHTML += `
-            <div class="descuento-chip">
-                🎁 ${escaparTexto(descuento.codigo)} - ${
-                    descuento.tipo === "porcentaje"
-                    ? `${Number(descuento.valor || 0)}%`
-                    : `$${Number(descuento.valor || 0)}`
-                }
+    return `
+        <div class="descuentos-funcion descuentos-funcion-compacto">
+            <div class="descuentos-header">
+                <h4>🎁 Descuentos</h4>
 
                 <button
                     type="button"
-                    title="Eliminar descuento"
-                    onclick="eliminarDescuentoGuardado(${eventoId}, ${funcionId}, ${index})">
+                    class="btn-secundario btn-mini btn-descuentos-funcion"
+                    onclick="abrirGestionDescuentos(${eventoId}, ${funcionId})">
 
-                    🗑️
+                    ${totalDescuentos > 0 ? `${totalDescuentos} descuentos` : "Administrar"}
 
                 </button>
-            </div>
-        `;
-    });
-
-    return `
-        <div class="descuentos-funcion">
-            <div class="descuentos-header">
-    <h4>🎁 Descuentos</h4>
-
-    <button
-        type="button"
-        class="btn-secundario btn-mini"
-        onclick="abrirModalAgregarDescuento(${eventoId}, ${funcionId})">
-
-        + Descuento
-
-    </button>
-</div>
-
-            <div class="descuentos-lista">
-                ${descuentosHTML}
             </div>
         </div>
     `;
@@ -241,4 +212,180 @@ async function guardarDescuentoGuardado(boton){
     cargarEventos();
 
     terminarCarga(boton);
+}
+
+
+
+/* ============================================================
+
+   RC-2.3 GESTION DE DESCUENTOS
+
+   RESPONSABILIDAD:
+   - Abrir panel lateral de descuentos por función.
+   - Listar descuentos existentes.
+   - Permitir agregar descuento desde el panel.
+   - Permitir eliminar descuentos existentes.
+
+============================================================ */
+
+function abrirGestionDescuentos(eventoId, funcionId){
+
+    const evento =
+        eventosActuales.find(item => item.id === eventoId);
+
+    if(!evento){
+        mostrarToast("Evento no encontrado", "error");
+        return;
+    }
+
+    const funcion =
+        evento.funciones.find(item => item.id === funcionId);
+
+    if(!funcion){
+        mostrarToast("Función no encontrada", "error");
+        return;
+    }
+
+    document.getElementById("gestionDescuentoEventoId").value =
+        eventoId;
+
+    document.getElementById("gestionDescuentoFuncionId").value =
+        funcionId;
+
+    const subtitulo =
+        document.getElementById("drawerDescuentosSubtitulo");
+
+    if(subtitulo){
+        subtitulo.textContent =
+            `${evento.nombre} · ${funcion.fecha} ${funcion.hora}`;
+    }
+
+    pintarGestionDescuentos(evento, funcion);
+
+    document.body.classList.add("modal-abierto");
+
+    document
+        .getElementById("modalGestionDescuentos")
+        .classList
+        .remove("oculto");
+}
+
+
+function cerrarGestionDescuentos(){
+
+    document
+        .getElementById("modalGestionDescuentos")
+        .classList
+        .add("oculto");
+
+    document.body.classList.remove("modal-abierto");
+}
+
+
+function pintarGestionDescuentos(evento, funcion){
+
+    const contenedor =
+        document.getElementById("drawerListaDescuentos");
+
+    if(!contenedor){
+        return;
+    }
+
+    const descuentos =
+        funcion.descuentos || [];
+
+    if(descuentos.length === 0){
+        contenedor.innerHTML = `
+            <div class="empty-state">
+                Esta función todavía no tiene descuentos.
+            </div>
+        `;
+        return;
+    }
+
+    contenedor.innerHTML = "";
+
+    descuentos.forEach((descuento, index) => {
+
+        const valorTexto =
+            descuento.tipo === "porcentaje"
+            ? `${Number(descuento.valor || 0)}%`
+            : `$${Number(descuento.valor || 0)}`;
+
+        contenedor.innerHTML += `
+            <div class="drawer-descuento-card">
+
+                <div class="drawer-descuento-top">
+                    <div>
+                        <strong class="drawer-descuento-codigo">
+                            ${escaparTexto(descuento.codigo)}
+                        </strong>
+
+                        <p class="drawer-descuento-meta">
+                            Tipo: ${descuento.tipo === "porcentaje" ? "Porcentaje" : "Monto fijo"}
+                        </p>
+                    </div>
+
+                    <span class="drawer-descuento-valor">
+                        🎁 ${valorTexto}
+                    </span>
+                </div>
+
+                <div class="drawer-descuento-actions">
+                    <button
+                        class="btn-danger"
+                        onclick="eliminarDescuentoDesdeGestion(${evento.id}, ${funcion.id}, ${index})">
+                        🗑️ Eliminar
+                    </button>
+                </div>
+
+            </div>
+        `;
+    });
+}
+
+
+function abrirAgregarDescuentoDesdeGestion(){
+
+    const eventoId =
+        document.getElementById("gestionDescuentoEventoId").value;
+
+    const funcionId =
+        document.getElementById("gestionDescuentoFuncionId").value;
+
+    cerrarGestionDescuentos();
+
+    abrirModalAgregarDescuento(eventoId, funcionId);
+}
+
+
+async function eliminarDescuentoDesdeGestion(
+    eventoId,
+    funcionId,
+    index
+){
+
+    abrirConfirmacion(
+        "Eliminar descuento",
+        "¿Seguro que quieres eliminar este descuento?",
+        async function(){
+
+            const respuesta =
+                await fetch(
+                    `${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}/descuentos/${index}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+            const resultado =
+                await respuesta.json();
+
+            mostrarToast(resultado.mensaje, "success");
+
+            cerrarGestionDescuentos();
+
+            cargarEventos();
+        }
+    );
 }

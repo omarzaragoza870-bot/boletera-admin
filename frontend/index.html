@@ -4,20 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boletera Admin</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- CSS OFICIAL RC-1 -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/componentes.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/eventos.css">
+    <link rel="stylesheet" href="css/agenda.css">
+    <link rel="stylesheet" href="css/alpha-v1-1-operaciones.css">
+    <link rel="stylesheet" href="css/alpha-v1-2-nuevo-registro.css">
+    <link rel="stylesheet" href="css/mobile-sidebar-drawer.css">
+    <link rel="stylesheet" href="css/funciones.css">
+    <link rel="stylesheet" href="css/modales.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/theme-dark-premium.css">
+    <link rel="stylesheet" href="css/ui-premium.css">
+    <link rel="stylesheet" href="css/sidebar-header-compact.css">
+    <link rel="stylesheet" href="css/mobile-real-drawer-compact.css">
 </head>
 
 <body>
 
+<button id="btnMenuMovil" class="btn-menu-movil" onclick="abrirMenuMovil()" title="Abrir menú">☰</button>
+
+<div id="overlayMenuMovil" class="overlay-menu-movil" onclick="cerrarMenuMovil()"></div>
+
+
 <div class="app">
 
     <aside class="sidebar">
+            <button id="btnCerrarMenuMovil" class="btn-cerrar-menu-movil" onclick="cerrarMenuMovil()">✕</button>
         <div class="logo" id="nombreSistemaSidebar">🎟️ Boletera Admin</div>
 
         <div class="sidebar-section">Principal</div>
         <div class="menu-item active" id="menuDashboard" onclick="mostrarSeccion('dashboard')">🏠 Dashboard</div>
         <div class="menu-item" id="menuEventos" onclick="mostrarSeccion('eventos')">🎟️ Eventos</div>
-        <div class="menu-item" id="menuFunciones" onclick="mostrarSeccion('funciones')">🕒 Funciones</div>
+        <div class="menu-item" id="menuFunciones" onclick="mostrarSeccion('funciones')">📅 Agenda</div>
 
         <div class="sidebar-section">Operación</div>
         <div class="menu-item" id="menuVentas" onclick="mostrarSeccion('ventas')">💰 Ventas</div>
@@ -59,125 +81,484 @@
         </div>
 
         <section id="seccionDashboard" class="app-section">
-<section class="grid">
-            <div class="stat-card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <span class="card-icon">🎟️</span>
-                        <span class="card-title">Eventos</span>
-                    </div>
+
+            <!-- ============================= -->
+            <!-- KPIs 
+            <div class="sidebar-control-panel">
+                <div class="sidebar-bot-row">
+                    <span>Bot Encendido</span>
+                    <label class="switch-mini">
+                        <input id="botSwitchSidebar" type="checkbox" checked onchange="toggleBotDesdeSidebar(this.checked)">
+                        <i></i>
+                    </label>
                 </div>
 
-                <div>
-                    <div class="number" id="totalEventos">0</div>
-                    <div class="card-subtitle">Eventos registrados</div>
-                </div>
+                <button class="sidebar-edit-btn" onclick="editarNombreSistema()">
+                    ✏️ Editar nombre
+                </button>
             </div>
 
-            <div class="stat-card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <span class="card-icon">🕒</span>
-                        <span class="card-title">Funciones</span>
+PRINCIPALES -->
+            <!-- ============================= -->
+            <section class="grid">
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="card-icon">🎟️</span>
+                            <span class="card-title">Eventos</span>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <div class="number" id="totalFunciones">0</div>
-                    <div class="card-subtitle">Funciones programadas</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <span class="card-icon">🎫</span>
-                        <span class="card-title">Boletos</span>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="number" id="totalBoletos">0</div>
-                    <div class="card-subtitle">Boletos disponibles</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <span class="card-icon">🤖</span>
-                        <span class="card-title">Bot</span>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="number" id="estadoCardBot">--</div>
-                    <div class="card-subtitle">Estado actual</div>
-                </div>
-            </div>
-        </section>
-
-            <div class="panel dashboard-panel">
-                <div class="panel-header">
                     <div>
-                        <h2>Resumen</h2>
-                        <p class="panel-subtitle">Vista general del negocio.</p>
+                        <div class="number" id="totalEventos">0</div>
+                        <div class="card-subtitle">Eventos registrados</div>
                     </div>
                 </div>
 
-                <div class="empty-state">
-                    Selecciona Eventos para administrar tu cartelera.
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="card-icon">🕒</span>
+                            <span class="card-title">Funciones</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="number" id="totalFunciones">0</div>
+                        <div class="card-subtitle">Funciones programadas</div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="card-icon">🎫</span>
+                            <span class="card-title">Boletos</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="number" id="totalBoletos">0</div>
+                        <div class="card-subtitle">Boletos disponibles</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <span class="card-icon">🤖</span>
+                            <span class="card-title">Bot</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="number" id="estadoCardBot">--</div>
+                        <div class="card-subtitle">Estado actual</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================= -->
+            <!-- DASHBOARD EJECUTIVO -->
+            <!-- ============================= -->
+            <section class="dashboard-grid">
+
+                <div class="panel dashboard-widget dashboard-widget-large">
+                    <div class="panel-header">
+                        <div>
+                            <h2>📅 Próximos eventos</h2>
+                            <p class="panel-subtitle">
+                                Las siguientes funciones activas ordenadas por fecha.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="listaProximosEventos" class="dashboard-lista"></div>
+                </div>
+
+                <div class="panel dashboard-widget">
+                    <div class="panel-header">
+                        <div>
+                            <h2>🎫 Disponibilidad</h2>
+                            <p class="panel-subtitle">
+                                Boletos disponibles por categoría.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="dashboardDisponibilidad" class="dashboard-metricas"></div>
+                </div>
+
+                <div class="panel dashboard-widget">
+                    <div class="panel-header">
+                        <div>
+                            <h2>🎁 Promociones</h2>
+                            <p class="panel-subtitle">
+                                Descuentos configurados en funciones.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="dashboardPromociones" class="dashboard-promos"></div>
+                </div>
+
+                <div class="panel dashboard-widget">
+                    <div class="panel-header">
+                        <div>
+                            <h2>📝 Actividad reciente</h2>
+                            <p class="panel-subtitle">
+                                Resumen automático del estado actual.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="dashboardActividad" class="dashboard-actividad"></div>
+                </div>
+
+                <div class="panel dashboard-widget dashboard-widget-wide">
+                    <div class="panel-header">
+                        <div>
+                            <h2>⚡ Acciones rápidas</h2>
+                            <p class="panel-subtitle">
+                                Atajos para operar la boletera.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="acciones-rapidas">
+                        <button
+                            class="btn-primary"
+                            onclick="mostrarSeccion('nuevoRegistro')">
+                            ➕ Nuevo registro
+                        </button>
+
+                        <button
+                            class="btn-secundario"
+                            onclick="mostrarSeccion('eventos')">
+                            🎟️ Ver eventos
+                        </button>
+
+                        <button
+                            class="btn-secundario"
+                            onclick="mostrarSeccion('funciones')">
+                            🕒 Ver funciones
+                        </button>
+
+                        <button
+                            class="btn-secundario"
+                            onclick="mostrarSeccion('configuracion')">
+                            ⚙️ Configuración
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
         </section>
 
         <section id="seccionEventos" class="app-section oculto">
-<section class="content-grid content-grid-full">
 
-            <div class="panel">
-                <div class="panel-header">
+            <!-- ============================= -->
+            <!-- RC-2 EVENTOS PRO -->
+            <!-- ============================= -->
+            <section class="eventos-pro">
+
+                <div class="panel eventos-pro-header">
                     <div>
-                        <h2>Eventos</h2>
-                        <p class="panel-subtitle">Administra eventos, funciones y disponibilidad</p>
+                        <h2>🎟️ Eventos</h2>
+                        <p class="panel-subtitle">
+                            Administra tu cartelera, funciones y disponibilidad.
+                        </p>
                     </div>
 
                     <div class="panel-actions">
-                        <button class="btn-secundario" onclick="cargarEventos()">
+                        <button
+                            class="btn-secundario"
+                            onclick="cargarEventos()">
                             🔄 Actualizar
                         </button>
 
-                        <button class="btn-primary" onclick="abrirModalNuevoEvento()">
-                            ➕ Nuevo evento
+                        <button
+                            class="btn-primary"
+                            onclick="abrirModalNuevoEvento()">
+                            ➕ Nuevo registro
                         </button>
                     </div>
                 </div>
 
-                <div class="toolbar">
-                    <input
-                        id="buscadorEventos"
-                        placeholder="🔍 Buscar evento..."
-                        oninput="cargarEventos()">
+                <!-- BARRA DE FILTROS -->
+                <div class="panel eventos-toolbar-pro eventos-toolbar-minimal">
+
+                    <div class="eventos-filtros-grid eventos-filtros-minimal">
+                        <input
+                            id="buscadorEventos"
+                            placeholder="🔍 Buscar evento..."
+                            oninput="cargarEventos()">
+
+                        <select
+                            id="filtroEstadoEventos"
+                            onchange="cargarEventos()">
+                            <option value="todos">Todos los estados</option>
+                            <option value="activos">Activos</option>
+                            <option value="inactivos">Inactivos</option>
+                        </select>
+
+                        <select
+                            id="ordenEventos"
+                            onchange="cargarEventos()">
+                            <option value="recientes">Más recientes</option>
+                            <option value="nombre">Nombre A-Z</option>
+                            <option value="funciones">Más funciones</option>
+                            <option value="boletos">Más boletos</option>
+                        </select>
+                    </div>
+
+                    <div class="eventos-vistas">
+                        <button
+                            id="btnVistaTarjetas"
+                            title="Vista tarjetas"
+                            class="btn-secundario vista-activa"
+                            onclick="cambiarVistaEventos('tarjetas')">
+                            ▦
+                        </button>
+
+                        <button
+                            id="btnVistaTabla"
+                            title="Vista tabla"
+                            class="btn-secundario"
+                            onclick="cambiarVistaEventos('tabla')">
+                            ☰
+                        </button>
+                    </div>
+
                 </div>
 
-                <div id="listaEventos"></div>
-            </div>
+                <!-- RESUMEN DEL MODULO EVENTOS -->
+                <div class="eventos-resumen-grid">
+                    <div class="evento-resumen-card">
+                        <span>🎟️</span>
+                        <div>
+                            <strong id="eventosProTotal">0</strong>
+                            <small>Total eventos</small>
+                        </div>
+                    </div>
 
-        </section>
-        </section>
+                    <div class="evento-resumen-card">
+                        <span>🟢</span>
+                        <div>
+                            <strong id="eventosProActivos">0</strong>
+                            <small>Eventos activos</small>
+                        </div>
+                    </div>
 
-        <section id="seccionFunciones" class="app-section oculto">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2>Funciones</h2>
-                        <p class="panel-subtitle">Aquí organizaremos funciones por fecha, disponibilidad y zonas.</p>
+                    <div class="evento-resumen-card">
+                        <span>🕒</span>
+                        <div>
+                            <strong id="eventosProFunciones">0</strong>
+                            <small>Funciones</small>
+                        </div>
+                    </div>
+
+                    <div class="evento-resumen-card">
+                        <span>🎫</span>
+                        <div>
+                            <strong id="eventosProBoletos">0</strong>
+                            <small>Boletos disponibles</small>
+                        </div>
                     </div>
                 </div>
 
-                <div class="empty-state">
-                    Próximo paso: vista dedicada para funciones.
+                <!-- LISTA / TABLA -->
+                <div
+                    id="listaEventos"
+                    class="eventos-lista-pro">
                 </div>
-            </div>
+
+            </section>
+
+        </section>
+
+        <section id="seccionFunciones" class="app-section oculto">
+
+            <!-- ============================= -->
+            <!-- ALPHA v1: AGENDA PREMIUM -->
+            <!-- ============================= -->
+            <section class="agenda-premium">
+
+                <div class="panel agenda-header">
+                    <div>
+                        <h2>📅 Agenda</h2>
+                        <p class="panel-subtitle">
+                            Visualiza tus funciones y activaciones en calendario.
+                        </p>
+                    </div>
+
+                    <div class="agenda-header-actions">
+                        <button class="btn-secundario" onclick="irMesActualAgenda()">
+                            Hoy
+                        </button>
+
+                        <button
+                            class="btn-secundario btn-icon"
+                            onclick="cambiarMesAgenda(-1)"
+                            title="Mes anterior">
+                            ‹
+                        </button>
+
+                        <button
+                            class="btn-secundario btn-icon"
+                            onclick="cambiarMesAgenda(1)"
+                            title="Mes siguiente">
+                            ›
+                        </button>
+
+                        <button
+                            class="btn-primary"
+                            onclick="mostrarSeccion('nuevoRegistro')">
+                            ➕ Nuevo registro
+                        </button>
+                    </div>
+                </div>
+
+                <div class="agenda-layout">
+
+                    <div class="panel agenda-calendario-panel">
+
+                        <div class="agenda-calendario-top">
+                            <div>
+                                <h3 id="agendaTituloMes">Mes</h3>
+                                <p class="panel-subtitle">
+                                    Los días con función se marcan con máscaras de teatro.
+                                </p>
+                            </div>
+
+                            <div class="agenda-leyenda">
+                                <span><i class="leyenda-dot agenda-activo"></i> Activo</span>
+                                <span><i class="leyenda-dot agenda-pausado"></i> Pausado</span>
+                                <span><i class="leyenda-dot agenda-sin-boletos"></i> Sin boletos</span>
+                            </div>
+                        </div>
+
+                        <div class="agenda-dias-semana">
+                            <span>LUN</span>
+                            <span>MAR</span>
+                            <span>MIÉ</span>
+                            <span>JUE</span>
+                            <span>VIE</span>
+                            <span>SÁB</span>
+                            <span>DOM</span>
+                        </div>
+
+                        <div id="agendaCalendario" class="agenda-calendario"></div>
+
+                    </div>
+
+                    <aside class="panel agenda-resumen-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h2>🎭 Resumen</h2>
+                                <p class="panel-subtitle">
+                                    Vista rápida del mes seleccionado.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="agenda-resumen-grid">
+                            <div class="agenda-resumen-card">
+                                <strong id="agendaTotalFunciones">0</strong>
+                                <span>Funciones</span>
+                            </div>
+
+                            <div class="agenda-resumen-card">
+                                <strong id="agendaTotalEventos">0</strong>
+                                <span>Eventos</span>
+                            </div>
+
+                            <div class="agenda-resumen-card">
+                                <strong id="agendaTotalBoletos">0</strong>
+                                <span>Boletos</span>
+                            </div>
+                        </div>
+
+                        <div class="agenda-proximas">
+                            <h3>Próximas funciones</h3>
+                            <div id="agendaProximasFunciones"></div>
+                        </div>
+                    </aside>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <section id="seccionNuevoRegistro" class="app-section oculto">
+            <section class="nuevo-registro-page">
+
+                <button class="btn-volver-operaciones" onclick="mostrarSeccion('funciones')">
+                    ← Volver al Centro de Operaciones
+                </button>
+
+                <div class="nuevo-registro-hero">
+                    <div>
+                        <h2>Nuevo registro</h2>
+                        <p>¿Qué quieres organizar hoy?</p>
+                    </div>
+                    <div class="nuevo-registro-ilustracion">📅➕</div>
+                </div>
+
+                <div class="registro-grupo">
+                    <h3>⭐ Más usados</h3>
+                    <div class="registro-grid registro-grid-2">
+                        <button class="registro-opcion tipo-funcion" onclick="seleccionarTipoRegistro('funcion')">
+                            <span>🎭</span><div><strong>Función</strong><small>Obra o presentación abierta al público.</small></div><b>→</b>
+                        </button>
+                        <button class="registro-opcion tipo-activacion" onclick="seleccionarTipoRegistro('activacion')">
+                            <span>📍</span><div><strong>Activación</strong><small>Marca, plaza o evento promocional.</small></div><b>→</b>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="registro-grupo">
+                    <h3>⚙ Operación</h3>
+                    <div class="registro-grid registro-grid-4">
+                        <button class="registro-opcion tipo-ensayo" onclick="seleccionarTipoRegistro('ensayo')">
+                            <span>🎤</span><div><strong>Ensayo</strong><small>Preparación artística o técnica.</small></div><b>→</b>
+                        </button>
+                        <button class="registro-opcion tipo-grabacion" onclick="seleccionarTipoRegistro('grabacion')">
+                            <span>🎬</span><div><strong>Grabación</strong><small>Video, streaming o contenido.</small></div><b>→</b>
+                        </button>
+                        <button class="registro-opcion tipo-traslado" onclick="seleccionarTipoRegistro('traslado')">
+                            <span>🚚</span><div><strong>Traslado</strong><small>Equipo, staff, utilería o logística.</small></div><b>→</b>
+                        </button>
+                        <button class="registro-opcion tipo-mantenimiento" onclick="seleccionarTipoRegistro('mantenimiento')">
+                            <span>🛠️</span><div><strong>Mantenimiento</strong><small>Reparaciones o revisión técnica.</small></div><b>→</b>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="registro-grupo">
+                    <h3>🎓 Formación y especiales</h3>
+                    <div class="registro-grid registro-grid-2">
+                        <button class="registro-opcion tipo-clase" onclick="seleccionarTipoRegistro('clase')">
+                            <span>🎓</span><div><strong>Clase</strong><small>Taller, curso, masterclass o capacitación.</small></div><b>→</b>
+                        </button>
+                        <button class="registro-opcion tipo-especial" onclick="seleccionarTipoRegistro('especial')">
+                            <span>🎪</span><div><strong>Evento especial</strong><small>Actividad única o evento no recurrente.</small></div><b>→</b>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="registro-info">
+                    <span>ℹ️</span>
+                    <div>
+                        <strong>Un registro puede tener más de una fecha</strong>
+                        <p>Podrás agregar varias fechas, horarios, sedes, recursos y tareas después.</p>
+                    </div>
+                </div>
+
+            </section>
         </section>
 
         <section id="seccionVentas" class="app-section oculto">
@@ -781,6 +1162,53 @@
     </div>
 </div>
 
+
+<!-- ============================= -->
+<!-- MODAL / DRAWER GESTION DESCUENTOS -->
+<!-- ============================= -->
+<div id="modalGestionDescuentos" class="modal oculto modal-drawer-backdrop">
+    <div class="drawer-descuentos">
+
+        <div class="drawer-header">
+            <div>
+                <h2>🎁 Descuentos</h2>
+                <p id="drawerDescuentosSubtitulo" class="modal-description">
+                    Administra los códigos promocionales de esta función.
+                </p>
+            </div>
+
+            <button
+                class="btn-secundario btn-icon"
+                onclick="cerrarGestionDescuentos()"
+                title="Cerrar">
+                ✕
+            </button>
+        </div>
+
+        <input id="gestionDescuentoEventoId" type="hidden">
+        <input id="gestionDescuentoFuncionId" type="hidden">
+
+        <div class="drawer-toolbar">
+            <div class="drawer-status">
+                <span>Estado</span>
+                <strong id="drawerDescuentosEstado">Activo</strong>
+            </div>
+
+            <button
+                class="btn-primary"
+                onclick="abrirAgregarDescuentoDesdeGestion()">
+                + Agregar descuento
+            </button>
+        </div>
+
+        <div
+            id="drawerListaDescuentos"
+            class="drawer-lista-descuentos">
+        </div>
+
+    </div>
+</div>
+
 <div id="modalAgregarDescuento" class="modal oculto">
     <div class="modal-contenido">
 
@@ -848,6 +1276,34 @@
     </div>
 </div>
 
+
+
+<!-- ============================= -->
+<!-- DRAWER AGENDA DIA -->
+<div id="modalAgendaDia" class="modal oculto modal-drawer-backdrop">
+    <div class="drawer-agenda-dia">
+
+        <div class="drawer-header">
+            <div>
+                <h2 id="agendaDrawerTitulo">Agenda</h2>
+                <p id="agendaDrawerSubtitulo" class="modal-description">
+                    Funciones programadas para este día.
+                </p>
+            </div>
+
+            <button
+                class="btn-secundario btn-icon"
+                onclick="cerrarAgendaDia()"
+                title="Cerrar">
+                ✕
+            </button>
+        </div>
+
+        <div id="agendaDrawerFunciones" class="agenda-drawer-lista"></div>
+
+    </div>
+</div>
+
 <div id="toast" class="toast oculto">
 
     <span
@@ -865,8 +1321,20 @@
     </span>
 
 </div>
-<!-- SCRIPTS MODULARES -->
+<!-- SCRIPTS OFICIALES RC-1 -->
 <script src="js/state.js"></script>
+
+
+
+<script src="js/dashboard.js"></script>
+<script src="js/agenda.js"></script>
+<script src="js/registros.js"></script>
+
+
+
+
+
+
 <script src="js/utils.js"></script>
 <script src="js/api.js"></script>
 <script src="js/ui.js"></script>
@@ -877,5 +1345,8 @@
 <script src="js/modales.js"></script>
 <script src="js/app.js"></script>
 
+<script src="js/navigation-override.js"></script>
+<script src="js/mobile-menu.js"></script>
+<script src="js/sidebar-controls.js"></script>
 </body>
 </html>

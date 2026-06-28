@@ -2,7 +2,7 @@
    MODALES Y CONFIRMACION
    ============================= */
 
-let accionConfirmada = null;
+var accionConfirmada = null;
 
 /* =============================
    MODALES

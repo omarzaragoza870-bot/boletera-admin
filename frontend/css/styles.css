@@ -1,9 +1,12 @@
-/* Archivo maestro de estilos.
-   Solo importa los módulos CSS separados. */
-
+/* Archivo puente de compatibilidad RC-1 */
 @import url("base.css");
 @import url("layout.css");
 @import url("componentes.css");
+@import url("dashboard.css");
 @import url("eventos.css");
+@import url("funciones.css");
 @import url("modales.css");
 @import url("responsive.css");
+
+@import url("theme-dark-premium.css");
+@import url("ui-premium.css");
