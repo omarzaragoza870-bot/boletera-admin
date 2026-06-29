@@ -362,53 +362,51 @@ function crearFilaDetalleRegistro(icono, etiqueta, valor){
 
 function crearChecklistRegistroAgenda(evento, funcion, tipoRegistro){
 
-    const config =
-        DRAWER_REGISTRO_CONFIG[tipoRegistro];
+    const config = DRAWER_REGISTRO_CONFIG[tipoRegistro];
+    const checklist = funcion?.checklist || evento?.checklist || [];
+    const titulo = config?.checklistTitulo || "Checklist";
 
-    const checklist =
-        funcion?.checklist || evento?.checklist || [];
+    const items = Array.isArray(checklist) && checklist.length > 0
+        ? checklist.map((item, index) => {
+            const texto = typeof item === "string" ? item : item.texto || item.nombre || "";
+            const itemId = Number(item.id || index + 1);
+            const completado = Boolean(item.completado);
 
-    if(!Array.isArray(checklist) || checklist.length === 0){
-        return "";
-    }
-
-    const titulo =
-        config?.checklistTitulo || "Checklist";
-
-    const items =
-        checklist
-            .slice(0, 5)
-            .map(item => {
-                const texto =
-                    typeof item === "string"
-                    ? item
-                    : item.texto || item.nombre || "";
-
-                const completado =
-                    Boolean(item.completado);
-
-                return `
-                    <button
-                        class="agenda-checklist-item ${completado ? "completado" : ""}"
-                        onclick="toggleChecklistRegistroAgenda(${evento.id}, ${funcion.id}, ${Number(item.id || index + 1)}, this)"
-                        title="Marcar / desmarcar">
-                        <span>${completado ? "☑" : "☐"}</span>
-                        <strong>${escaparTexto(texto)}</strong>
+            return `
+                <div class="agenda-checklist-editable-item ${completado ? "completado" : ""}">
+                    <button class="agenda-checklist-toggle" onclick="toggleChecklistRegistroAgenda(${evento.id}, ${funcion.id}, ${itemId}, this)" title="Marcar / desmarcar">
+                        ${completado ? "☑" : "☐"}
                     </button>
-                `;
-            })
-            .join("");
+
+                    <strong>${escaparTexto(texto)}</strong>
+
+                    <button class="agenda-checklist-action" onclick="editarItemChecklistRegistro(${evento.id}, ${funcion.id}, ${itemId}, '${escaparTexto(texto)}')" title="Editar">
+                        ✏️
+                    </button>
+
+                    <button class="agenda-checklist-action danger" onclick="eliminarItemChecklistRegistro(${evento.id}, ${funcion.id}, ${itemId})" title="Eliminar">
+                        🗑️
+                    </button>
+                </div>
+            `;
+        }).join("")
+        : `<div class="agenda-checklist-empty">Agrega cosas que debas llevar o preparar.</div>`;
 
     return `
         <div class="agenda-drawer-bloque">
             <h4>${escaparTexto(titulo)}</h4>
+
+            <div class="agenda-checklist-add">
+                <input id="nuevoChecklistTexto-${evento.id}-${funcion.id}" placeholder="Ej. Cable HDMI, vestuario, contrato...">
+                <button onclick="agregarItemChecklistRegistro(${evento.id}, ${funcion.id})">+ Agregar</button>
+            </div>
+
             <div class="agenda-checklist-lista">
                 ${items}
             </div>
         </div>
     `;
 }
-
 function crearTimelineRegistroAgenda(evento, funcion){
 
     const timeline =
@@ -515,18 +513,24 @@ async function toggleChecklistRegistroAgenda(eventoId, funcionId, itemId, boton)
             return;
         }
 
-        // Actualización optimista del botón que se tocó.
+        // Actualización optimista, acorde a la estructura v1.4.3:
+        // el ícono ☐/☑ es el texto del propio botón y la clase
+        // .completado vive en el contenedor del ítem (el padre).
         if(boton){
 
+            const item =
+                boton.closest(".agenda-checklist-editable-item");
+
             const completado =
-                boton.classList.toggle("completado");
+                item
+                    ? !item.classList.contains("completado")
+                    : true;
 
-            const icono =
-                boton.querySelector("span");
-
-            if(icono){
-                icono.textContent = completado ? "☑" : "☐";
+            if(item){
+                item.classList.toggle("completado", completado);
             }
+
+            boton.textContent = completado ? "☑" : "☐";
         }
 
         // Refrescamos los datos en segundo plano para que el
@@ -536,4 +540,126 @@ async function toggleChecklistRegistroAgenda(eventoId, funcionId, itemId, boton)
     }catch(error){
         mostrarToast("Error de conexión al actualizar el checklist.", "error");
     }
+}
+
+/* ============================================================
+   ALPHA v1.4.3: CHECKLIST EDITABLE POR USUARIO
+============================================================ */
+
+async function agregarItemChecklistRegistro(eventoId, funcionId){
+    const input = document.getElementById(`nuevoChecklistTexto-${eventoId}-${funcionId}`);
+    const texto = input?.value?.trim();
+
+    if(!texto){
+        mostrarToast("Escribe el pendiente", "warning");
+        return;
+    }
+
+    const respuesta = await fetch(`${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}/checklist`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ texto })
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok){
+        mostrarToast(resultado.mensaje || "No se pudo agregar", "error");
+        return;
+    }
+
+    mostrarToast(resultado.mensaje || "Pendiente agregado", "success");
+    await refrescarDrawerChecklist(eventoId, funcionId);
+}
+
+function editarItemChecklistRegistro(eventoId, funcionId, itemId, textoActual){
+
+    abrirPrompt(
+        "Editar pendiente",
+        textoActual,
+        async function(nuevoTexto){
+
+            const respuesta =
+                await fetch(
+                    `${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}/checklist/${itemId}`,
+                    {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ texto: nuevoTexto })
+                    }
+                );
+
+            const resultado =
+                await respuesta.json();
+
+            if(!respuesta.ok){
+                mostrarToast(resultado.mensaje || "No se pudo editar", "error");
+                return;
+            }
+
+            mostrarToast(resultado.mensaje || "Pendiente actualizado", "success");
+            await refrescarDrawerChecklist(eventoId, funcionId);
+        }
+    );
+}
+
+function eliminarItemChecklistRegistro(eventoId, funcionId, itemId){
+
+    abrirConfirmacion(
+        "Eliminar pendiente",
+        "¿Seguro que quieres eliminar este pendiente?",
+        async function(){
+
+            const respuesta =
+                await fetch(
+                    `${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}/checklist/${itemId}`,
+                    { method: "DELETE" }
+                );
+
+            const resultado =
+                await respuesta.json();
+
+            if(!respuesta.ok){
+                mostrarToast(resultado.mensaje || "No se pudo eliminar", "error");
+                return;
+            }
+
+            mostrarToast(resultado.mensaje || "Pendiente eliminado", "success");
+            await refrescarDrawerChecklist(eventoId, funcionId);
+        }
+    );
+}
+
+async function refrescarDrawerChecklist(eventoId, funcionId){
+
+    await cargarEventos();
+
+    const evento =
+        eventosActuales.find(item => Number(item.id) === Number(eventoId));
+
+    const funcion =
+        evento?.funciones?.find(item => Number(item.id) === Number(funcionId));
+
+    const contenedor =
+        document.getElementById("agendaDrawerFunciones");
+
+    if(!funcion?.fecha || !contenedor){
+        return;
+    }
+
+    // Repintamos TODOS los registros de ese día con datos frescos,
+    // directo en el contenedor del drawer (sin reabrir el modal).
+    const delDia =
+        (typeof agruparFuncionesPorFecha === "function")
+            ? (agruparFuncionesPorFecha(eventosActuales)[funcion.fecha] || [])
+            : [];
+
+    contenedor.innerHTML = "";
+
+    delDia
+        .sort((a, b) => String(a.funcion.hora).localeCompare(String(b.funcion.hora)))
+        .forEach(item => {
+            contenedor.innerHTML +=
+                crearFuncionAgendaCard(item.evento, item.funcion);
+        });
 }

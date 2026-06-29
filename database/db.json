@@ -568,6 +568,455 @@
           "activa": true
         }
       ]
+    },
+    {
+      "id": 1782759328858,
+      "tipoRegistro": "activacion",
+      "nombre": "feelbot",
+      "lugar": "miyana",
+      "imagen": "",
+      "activo": true,
+      "contacto": "omar vera",
+      "telefono": "5612087041",
+      "notas": "Llegar 30 min antes",
+      "checklist": [],
+      "documentos": [],
+      "contactos": [
+        {
+          "id": 1,
+          "nombre": "omar vera",
+          "telefono": "5612087041"
+        }
+      ],
+      "timeline": [
+        {
+          "id": 1782759328858,
+          "tipo": "creacion",
+          "mensaje": "Registro creado (activacion)",
+          "fecha": "2026-06-29T18:55:28.858Z"
+        },
+        {
+          "id": 1782759342966,
+          "tipo": "checklist",
+          "mensaje": "Pendiente agregado: Cable hdmi",
+          "fecha": "2026-06-29T18:55:42.964Z"
+        },
+        {
+          "id": 1782759349348,
+          "tipo": "checklist",
+          "mensaje": "Pendiente agregado: tenis",
+          "fecha": "2026-06-29T18:55:49.346Z"
+        },
+        {
+          "id": 1782759352235,
+          "tipo": "checklist",
+          "mensaje": "Pendiente agregado: falda",
+          "fecha": "2026-06-29T18:55:52.233Z"
+        },
+        {
+          "id": 1782759407001,
+          "tipo": "checklist",
+          "mensaje": "Completado: Cable hdmi",
+          "fecha": "2026-06-29T18:56:47.001Z"
+        },
+        {
+          "id": 1782759408530,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: Cable hdmi",
+          "fecha": "2026-06-29T18:56:48.530Z"
+        },
+        {
+          "id": 1782759409252,
+          "tipo": "checklist",
+          "mensaje": "Completado: Cable hdmi",
+          "fecha": "2026-06-29T18:56:49.252Z"
+        },
+        {
+          "id": 1782759409646,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: Cable hdmi",
+          "fecha": "2026-06-29T18:56:49.646Z"
+        },
+        {
+          "id": 1782759410808,
+          "tipo": "checklist",
+          "mensaje": "Completado: falda",
+          "fecha": "2026-06-29T18:56:50.808Z"
+        },
+        {
+          "id": 1782759422116,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: falda",
+          "fecha": "2026-06-29T18:57:02.116Z"
+        },
+        {
+          "id": 1782759422717,
+          "tipo": "checklist",
+          "mensaje": "Completado: tenis",
+          "fecha": "2026-06-29T18:57:02.717Z"
+        },
+        {
+          "id": 1782759423307,
+          "tipo": "checklist",
+          "mensaje": "Completado: Cable hdmi",
+          "fecha": "2026-06-29T18:57:03.307Z"
+        },
+        {
+          "id": 1782759593197,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: tenis",
+          "fecha": "2026-06-29T18:59:53.197Z"
+        },
+        {
+          "id": 1782760041738,
+          "tipo": "checklist",
+          "mensaje": "Completado: tenis",
+          "fecha": "2026-06-29T19:07:21.738Z"
+        },
+        {
+          "id": 1782760042582,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: tenis",
+          "fecha": "2026-06-29T19:07:22.582Z"
+        },
+        {
+          "id": 1782760043494,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: Cable hdmi",
+          "fecha": "2026-06-29T19:07:23.494Z"
+        },
+        {
+          "id": 1782760048474,
+          "tipo": "checklist",
+          "mensaje": "Completado: Cable hdmi",
+          "fecha": "2026-06-29T19:07:28.474Z"
+        },
+        {
+          "id": 1782761674689,
+          "tipo": "checklist",
+          "mensaje": "Pendiente eliminado: Cable hdmi",
+          "fecha": "2026-06-29T19:34:34.688Z"
+        }
+      ],
+      "funciones": [
+        {
+          "id": 1,
+          "tipoRegistro": "activacion",
+          "fecha": "2026-06-18",
+          "hora": "12:59",
+          "categorias": {
+            "general": {
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "descuentosActivos": true,
+          "precio": 0,
+          "boletosDisponibles": 0,
+          "contacto": "omar vera",
+          "telefono": "5612087041",
+          "notas": "Llegar 30 min antes",
+          "checklist": [
+            {
+              "id": 1782759349346,
+              "texto": "tenis",
+              "completado": false
+            },
+            {
+              "id": 1782759352233,
+              "texto": "falda",
+              "completado": false
+            }
+          ],
+          "timeline": [
+            {
+              "id": 1782759328858,
+              "tipo": "creacion",
+              "mensaje": "Registro creado (activacion)",
+              "fecha": "2026-06-29T18:55:28.858Z"
+            },
+            {
+              "id": 1782759342965,
+              "tipo": "checklist",
+              "mensaje": "Pendiente agregado: Cable hdmi",
+              "fecha": "2026-06-29T18:55:42.964Z"
+            },
+            {
+              "id": 1782759349347,
+              "tipo": "checklist",
+              "mensaje": "Pendiente agregado: tenis",
+              "fecha": "2026-06-29T18:55:49.346Z"
+            },
+            {
+              "id": 1782759352234,
+              "tipo": "checklist",
+              "mensaje": "Pendiente agregado: falda",
+              "fecha": "2026-06-29T18:55:52.233Z"
+            },
+            {
+              "id": 1782759407001,
+              "tipo": "checklist",
+              "mensaje": "Completado: Cable hdmi",
+              "fecha": "2026-06-29T18:56:47.001Z"
+            },
+            {
+              "id": 1782759408530,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: Cable hdmi",
+              "fecha": "2026-06-29T18:56:48.530Z"
+            },
+            {
+              "id": 1782759409252,
+              "tipo": "checklist",
+              "mensaje": "Completado: Cable hdmi",
+              "fecha": "2026-06-29T18:56:49.252Z"
+            },
+            {
+              "id": 1782759409646,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: Cable hdmi",
+              "fecha": "2026-06-29T18:56:49.646Z"
+            },
+            {
+              "id": 1782759410808,
+              "tipo": "checklist",
+              "mensaje": "Completado: falda",
+              "fecha": "2026-06-29T18:56:50.808Z"
+            },
+            {
+              "id": 1782759422116,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: falda",
+              "fecha": "2026-06-29T18:57:02.116Z"
+            },
+            {
+              "id": 1782759422717,
+              "tipo": "checklist",
+              "mensaje": "Completado: tenis",
+              "fecha": "2026-06-29T18:57:02.717Z"
+            },
+            {
+              "id": 1782759423307,
+              "tipo": "checklist",
+              "mensaje": "Completado: Cable hdmi",
+              "fecha": "2026-06-29T18:57:03.307Z"
+            },
+            {
+              "id": 1782759593197,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: tenis",
+              "fecha": "2026-06-29T18:59:53.197Z"
+            },
+            {
+              "id": 1782760041738,
+              "tipo": "checklist",
+              "mensaje": "Completado: tenis",
+              "fecha": "2026-06-29T19:07:21.738Z"
+            },
+            {
+              "id": 1782760042582,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: tenis",
+              "fecha": "2026-06-29T19:07:22.582Z"
+            },
+            {
+              "id": 1782760043494,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: Cable hdmi",
+              "fecha": "2026-06-29T19:07:23.494Z"
+            },
+            {
+              "id": 1782760048474,
+              "tipo": "checklist",
+              "mensaje": "Completado: Cable hdmi",
+              "fecha": "2026-06-29T19:07:28.474Z"
+            },
+            {
+              "id": 1782761674688,
+              "tipo": "checklist",
+              "mensaje": "Pendiente eliminado: Cable hdmi",
+              "fecha": "2026-06-29T19:34:34.688Z"
+            }
+          ],
+          "activa": true
+        }
+      ]
+    },
+    {
+      "id": 1782759391285,
+      "tipoRegistro": "activacion",
+      "nombre": "casa ideas",
+      "lugar": "miyana",
+      "imagen": "",
+      "activo": true,
+      "contacto": "omar vera",
+      "telefono": "5612087041",
+      "notas": "",
+      "checklist": [],
+      "documentos": [],
+      "contactos": [
+        {
+          "id": 1,
+          "nombre": "omar vera",
+          "telefono": "5612087041"
+        }
+      ],
+      "timeline": [
+        {
+          "id": 1782759391285,
+          "tipo": "creacion",
+          "mensaje": "Registro creado (activacion)",
+          "fecha": "2026-06-29T18:56:31.285Z"
+        },
+        {
+          "id": 1782759404394,
+          "tipo": "checklist",
+          "mensaje": "Pendiente agregado: hdmi",
+          "fecha": "2026-06-29T18:56:44.392Z"
+        },
+        {
+          "id": 1782759412365,
+          "tipo": "checklist",
+          "mensaje": "Completado: hdmi",
+          "fecha": "2026-06-29T18:56:52.365Z"
+        },
+        {
+          "id": 1782759412569,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: hdmi",
+          "fecha": "2026-06-29T18:56:52.569Z"
+        },
+        {
+          "id": 1782759419902,
+          "tipo": "checklist",
+          "mensaje": "Completado: hdmi",
+          "fecha": "2026-06-29T18:56:59.902Z"
+        },
+        {
+          "id": 1782759430037,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: hdmi",
+          "fecha": "2026-06-29T18:57:10.037Z"
+        },
+        {
+          "id": 1782760046249,
+          "tipo": "checklist",
+          "mensaje": "Completado: hdmi",
+          "fecha": "2026-06-29T19:07:26.249Z"
+        },
+        {
+          "id": 1782760046720,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: hdmi",
+          "fecha": "2026-06-29T19:07:26.720Z"
+        }
+      ],
+      "funciones": [
+        {
+          "id": 1,
+          "tipoRegistro": "activacion",
+          "fecha": "2026-06-18",
+          "hora": "21:02",
+          "categorias": {
+            "general": {
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "descuentosActivos": true,
+          "precio": 0,
+          "boletosDisponibles": 0,
+          "contacto": "omar vera",
+          "telefono": "5612087041",
+          "notas": "",
+          "checklist": [
+            {
+              "id": 1782759404392,
+              "texto": "hdmi",
+              "completado": false
+            }
+          ],
+          "timeline": [
+            {
+              "id": 1782759391285,
+              "tipo": "creacion",
+              "mensaje": "Registro creado (activacion)",
+              "fecha": "2026-06-29T18:56:31.285Z"
+            },
+            {
+              "id": 1782759404393,
+              "tipo": "checklist",
+              "mensaje": "Pendiente agregado: hdmi",
+              "fecha": "2026-06-29T18:56:44.392Z"
+            },
+            {
+              "id": 1782759412365,
+              "tipo": "checklist",
+              "mensaje": "Completado: hdmi",
+              "fecha": "2026-06-29T18:56:52.365Z"
+            },
+            {
+              "id": 1782759412569,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: hdmi",
+              "fecha": "2026-06-29T18:56:52.569Z"
+            },
+            {
+              "id": 1782759419902,
+              "tipo": "checklist",
+              "mensaje": "Completado: hdmi",
+              "fecha": "2026-06-29T18:56:59.902Z"
+            },
+            {
+              "id": 1782759430037,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: hdmi",
+              "fecha": "2026-06-29T18:57:10.037Z"
+            },
+            {
+              "id": 1782760046249,
+              "tipo": "checklist",
+              "mensaje": "Completado: hdmi",
+              "fecha": "2026-06-29T19:07:26.249Z"
+            },
+            {
+              "id": 1782760046720,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: hdmi",
+              "fecha": "2026-06-29T19:07:26.720Z"
+            }
+          ],
+          "activa": true
+        }
+      ]
     }
   ]
 }

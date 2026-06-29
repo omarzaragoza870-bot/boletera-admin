@@ -194,3 +194,88 @@ document.addEventListener("DOMContentLoaded", function(){
         cerrarConfirmacion();
     });
 });
+
+
+/* ============================================================
+   PROMPT REUTILIZABLE (input bonito en vez del prompt() del sistema)
+
+   Uso:
+     abrirPrompt("Editar pendiente", textoActual, function(nuevoValor){
+         // lo que pasa al guardar (nuevoValor ya viene validado y trim)
+     });
+============================================================ */
+
+var accionPrompt = null;
+
+function abrirPrompt(titulo, valorInicial, accion){
+
+    document.getElementById("promptTitulo").textContent =
+        titulo;
+
+    const input =
+        document.getElementById("promptInput");
+
+    input.value = valorInicial || "";
+
+    accionPrompt = accion;
+
+    document
+        .getElementById("modalPrompt")
+        .classList
+        .remove("oculto");
+
+    // Foco + seleccionar el texto para editar cómodo.
+    setTimeout(function(){
+        input.focus();
+        input.select();
+    }, 50);
+}
+
+function cerrarPrompt(){
+
+    accionPrompt = null;
+
+    document
+        .getElementById("modalPrompt")
+        .classList
+        .add("oculto");
+}
+
+// Botón principal + tecla Enter del prompt.
+document.addEventListener("DOMContentLoaded", function(){
+
+    const botonGuardar =
+        document.getElementById("btnPromptGuardar");
+
+    const input =
+        document.getElementById("promptInput");
+
+    if(!botonGuardar || !input){ return; }
+
+    async function confirmarPrompt(){
+
+        const valor =
+            input.value.trim();
+
+        if(!valor){
+            mostrarToast("No puede quedar vacío", "warning");
+            return;
+        }
+
+        const accion = accionPrompt;
+
+        cerrarPrompt();
+
+        if(accion){
+            await accion(valor);
+        }
+    }
+
+    botonGuardar.addEventListener("click", confirmarPrompt);
+
+    input.addEventListener("keydown", function(evento){
+        if(evento.key === "Enter"){
+            confirmarPrompt();
+        }
+    });
+});

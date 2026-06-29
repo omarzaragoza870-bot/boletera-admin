@@ -74,49 +74,7 @@ function crearTimeline(tipoRegistro) {
 }
 
 function crearChecklistBase(tipoRegistro) {
-  const checklists = {
-    activacion: [
-      "Confirmar lugar",
-      "Confirmar contacto",
-      "Confirmar material"
-    ],
-    clase: [
-      "Confirmar profesor",
-      "Confirmar grupo",
-      "Confirmar material"
-    ],
-    ensayo: [
-      "Confirmar elenco",
-      "Confirmar espacio",
-      "Confirmar horario"
-    ],
-    grabacion: [
-      "Confirmar equipo",
-      "Confirmar locacion",
-      "Confirmar guion"
-    ],
-    especial: [
-      "Confirmar responsables",
-      "Confirmar horario",
-      "Confirmar logística"
-    ],
-    traslado: [
-      "Confirmar punto de salida",
-      "Confirmar destino",
-      "Confirmar responsable"
-    ],
-    mantenimiento: [
-      "Identificar problema",
-      "Asignar responsable",
-      "Confirmar reparación"
-    ]
-  };
-
-  return (checklists[tipoRegistro] || []).map((texto, index) => ({
-    id: index + 1,
-    texto,
-    completado: false
-  }));
+  return [];
 }
 
 
@@ -868,6 +826,115 @@ app.patch("/api/eventos/:eventoId/funciones/:funcionId/checklist/:itemId/toggle"
     checklist: funcion.checklist
   });
 
+});
+
+
+
+app.post("/api/eventos/:eventoId/funciones/:funcionId/checklist", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const texto = String(req.body.texto || "").trim();
+
+  if (!texto) return res.status(400).json({ mensaje: "Escribe el pendiente" });
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.checklist) funcion.checklist = [];
+
+  const nuevoItem = { id: Date.now(), texto, completado: false };
+  funcion.checklist.push(nuevoItem);
+
+  const movimiento = {
+    id: Date.now() + 1,
+    tipo: "checklist",
+    mensaje: `Pendiente agregado: ${texto}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 2 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Pendiente agregado", item: nuevoItem, checklist: funcion.checklist });
+});
+
+app.put("/api/eventos/:eventoId/funciones/:funcionId/checklist/:itemId", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const itemId = Number(req.params.itemId);
+  const texto = String(req.body.texto || "").trim();
+
+  if (!texto) return res.status(400).json({ mensaje: "Escribe el nuevo nombre del pendiente" });
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.checklist) funcion.checklist = [];
+  const itemChecklist = funcion.checklist.find(item => Number(item.id) === itemId);
+  if (!itemChecklist) return res.status(404).json({ mensaje: "Pendiente no encontrado" });
+
+  const anterior = itemChecklist.texto;
+  itemChecklist.texto = texto;
+
+  const movimiento = {
+    id: Date.now(),
+    tipo: "checklist",
+    mensaje: `Pendiente renombrado: ${anterior} -> ${texto}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 1 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Pendiente actualizado", item: itemChecklist, checklist: funcion.checklist });
+});
+
+app.delete("/api/eventos/:eventoId/funciones/:funcionId/checklist/:itemId", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const itemId = Number(req.params.itemId);
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.checklist) funcion.checklist = [];
+  const index = funcion.checklist.findIndex(item => Number(item.id) === itemId);
+  if (index === -1) return res.status(404).json({ mensaje: "Pendiente no encontrado" });
+
+  const eliminado = funcion.checklist.splice(index, 1)[0];
+
+  const movimiento = {
+    id: Date.now(),
+    tipo: "checklist",
+    mensaje: `Pendiente eliminado: ${eliminado.texto}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 1 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Pendiente eliminado", checklist: funcion.checklist });
 });
 
 

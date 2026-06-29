@@ -234,9 +234,21 @@ async function toggleFuncion(eventoId, funcionId){
 
     const resultado = await respuesta.json();
 
-     mostrarToast(resultado.mensaje, "success");
+    mostrarToast(resultado.mensaje, "success");
 
-    cargarEventos();
+    // Si el drawer de Agenda está abierto, lo refrescamos para que se
+    // vea el cambio (el botón pasa de Pausar a Activar y el estado).
+    const modal =
+        document.getElementById("modalAgendaDia");
+
+    const drawerAbierto =
+        modal && !modal.classList.contains("oculto");
+
+    if(drawerAbierto && typeof refrescarDrawerChecklist === "function"){
+        await refrescarDrawerChecklist(eventoId, funcionId);
+    }else{
+        await cargarEventos();
+    }
 }
 
 
@@ -247,6 +259,16 @@ async function eliminarFuncion(eventoId, funcionId){
         "¿Seguro que quieres eliminar esta función?",
         async function(){
 
+            // Guardamos la fecha ANTES de borrar (después ya no existe).
+            const eventoAntes =
+                eventosActuales.find(item => Number(item.id) === Number(eventoId));
+
+            const funcionAntes =
+                eventoAntes?.funciones?.find(item => Number(item.id) === Number(funcionId));
+
+            const fecha =
+                funcionAntes?.fecha;
+
             const respuesta = await fetch(
                 `${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}`,
                 {
@@ -256,9 +278,29 @@ async function eliminarFuncion(eventoId, funcionId){
 
             const resultado = await respuesta.json();
 
-             mostrarToast(resultado.mensaje, "success");
+            mostrarToast(resultado.mensaje, "success");
 
-            cargarEventos();
+            await cargarEventos();
+
+            // Si el drawer de Agenda está abierto, lo actualizamos: si
+            // quedan registros ese día lo repintamos, si no, lo cerramos.
+            const modal =
+                document.getElementById("modalAgendaDia");
+
+            const drawerAbierto =
+                modal && !modal.classList.contains("oculto");
+
+            if(drawerAbierto && fecha && typeof agruparFuncionesPorFecha === "function"){
+
+                const quedan =
+                    agruparFuncionesPorFecha(eventosActuales)[fecha] || [];
+
+                if(quedan.length > 0 && typeof abrirAgendaDia === "function"){
+                    abrirAgendaDia(fecha);
+                }else if(typeof cerrarAgendaDia === "function"){
+                    cerrarAgendaDia();
+                }
+            }
         }
     );
 }

@@ -38,3 +38,32 @@
         .oculto{
             display:none !important;
         }
+
+        /* La confirmación debe quedar SIEMPRE encima de cualquier otro
+           modal o drawer (ej. al borrar un pendiente desde el drawer de
+           Agenda). Por eso un z-index mayor que .modal (1000) y menor
+           que el toast (9999). */
+        #modalConfirmacion{
+            z-index:2000;
+        }
+
+        /* El prompt (editar texto) comparte el mismo nivel que la
+           confirmación: siempre encima de modales/drawers. */
+        #modalPrompt{
+            z-index:2000;
+        }
+
+        #promptInput{
+            width:100%;
+            box-sizing:border-box;
+            margin:4px 0 16px;
+            padding:12px 14px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+            font-size:15px;
+            outline:none;
+        }
+
+        #promptInput:focus{
+            border-color:#4f7cff;
+        }

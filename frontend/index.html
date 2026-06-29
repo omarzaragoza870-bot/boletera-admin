@@ -1366,6 +1366,34 @@
 
 
 <!-- ============================= -->
+<!-- PROMPT REUTILIZABLE (editar texto) -->
+<div id="modalPrompt" class="modal oculto">
+    <div class="modal-contenido">
+        <h2 id="promptTitulo">Editar</h2>
+
+        <input
+            id="promptInput"
+            type="text"
+            placeholder="Escribe aquí...">
+
+        <div class="modal-acciones">
+            <button
+                id="btnPromptGuardar"
+                class="btn-primary">
+                Guardar
+            </button>
+
+            <button
+                class="btn-secundario"
+                onclick="cerrarPrompt()">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================= -->
 <!-- DRAWER AGENDA DIA -->
 <div id="modalAgendaDia" class="modal oculto modal-drawer-backdrop">
     <div class="drawer-agenda-dia">
