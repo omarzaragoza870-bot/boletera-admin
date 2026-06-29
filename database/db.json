@@ -392,6 +392,182 @@
           "activa": true
         }
       ]
+    },
+    {
+      "id": 1782752423998,
+      "tipoRegistro": "activacion",
+      "nombre": "casa ideas",
+      "lugar": "miyana",
+      "imagen": "",
+      "activo": true,
+      "contacto": "omar vera",
+      "telefono": "5612087041",
+      "notas": "ropa\ntenis\nbotas",
+      "checklist": [
+        {
+          "id": 1,
+          "texto": "Confirmar lugar",
+          "completado": false
+        },
+        {
+          "id": 2,
+          "texto": "Confirmar contacto",
+          "completado": false
+        },
+        {
+          "id": 3,
+          "texto": "Confirmar material",
+          "completado": false
+        }
+      ],
+      "documentos": [],
+      "contactos": [
+        {
+          "id": 1,
+          "nombre": "omar vera",
+          "telefono": "5612087041"
+        }
+      ],
+      "timeline": [
+        {
+          "id": 1782752423999,
+          "tipo": "creacion",
+          "mensaje": "Registro creado (activacion)",
+          "fecha": "2026-06-29T17:00:23.999Z"
+        },
+        {
+          "id": 1782756593879,
+          "tipo": "checklist",
+          "mensaje": "Completado: Confirmar lugar",
+          "fecha": "2026-06-29T18:09:53.879Z"
+        },
+        {
+          "id": 1782756594868,
+          "tipo": "checklist",
+          "mensaje": "Completado: Confirmar contacto",
+          "fecha": "2026-06-29T18:09:54.868Z"
+        },
+        {
+          "id": 1782756595817,
+          "tipo": "checklist",
+          "mensaje": "Completado: Confirmar material",
+          "fecha": "2026-06-29T18:09:55.817Z"
+        },
+        {
+          "id": 1782756601222,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: Confirmar lugar",
+          "fecha": "2026-06-29T18:10:01.222Z"
+        },
+        {
+          "id": 1782756601790,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: Confirmar contacto",
+          "fecha": "2026-06-29T18:10:01.790Z"
+        },
+        {
+          "id": 1782756602152,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: Confirmar material",
+          "fecha": "2026-06-29T18:10:02.152Z"
+        }
+      ],
+      "funciones": [
+        {
+          "id": 1,
+          "tipoRegistro": "activacion",
+          "fecha": "2026-07-01",
+          "hora": "20:30",
+          "categorias": {
+            "general": {
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "preferente": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            },
+            "vip": {
+              "activa": false,
+              "preventa": 0,
+              "precio": 0,
+              "boletos": 0
+            }
+          },
+          "descuentos": [],
+          "descuentosActivos": true,
+          "precio": 0,
+          "boletosDisponibles": 0,
+          "contacto": "omar vera",
+          "telefono": "5612087041",
+          "notas": "ropa\ntenis\nbotas",
+          "checklist": [
+            {
+              "id": 1,
+              "texto": "Confirmar lugar",
+              "completado": false
+            },
+            {
+              "id": 2,
+              "texto": "Confirmar contacto",
+              "completado": false
+            },
+            {
+              "id": 3,
+              "texto": "Confirmar material",
+              "completado": false
+            }
+          ],
+          "timeline": [
+            {
+              "id": 1782752423999,
+              "tipo": "creacion",
+              "mensaje": "Registro creado (activacion)",
+              "fecha": "2026-06-29T17:00:23.999Z"
+            },
+            {
+              "id": 1782756593879,
+              "tipo": "checklist",
+              "mensaje": "Completado: Confirmar lugar",
+              "fecha": "2026-06-29T18:09:53.879Z"
+            },
+            {
+              "id": 1782756594868,
+              "tipo": "checklist",
+              "mensaje": "Completado: Confirmar contacto",
+              "fecha": "2026-06-29T18:09:54.868Z"
+            },
+            {
+              "id": 1782756595817,
+              "tipo": "checklist",
+              "mensaje": "Completado: Confirmar material",
+              "fecha": "2026-06-29T18:09:55.817Z"
+            },
+            {
+              "id": 1782756601222,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: Confirmar lugar",
+              "fecha": "2026-06-29T18:10:01.222Z"
+            },
+            {
+              "id": 1782756601790,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: Confirmar contacto",
+              "fecha": "2026-06-29T18:10:01.790Z"
+            },
+            {
+              "id": 1782756602152,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: Confirmar material",
+              "fecha": "2026-06-29T18:10:02.152Z"
+            }
+          ],
+          "activa": true
+        }
+      ]
     }
   ]
 }

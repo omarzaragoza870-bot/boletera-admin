@@ -388,10 +388,13 @@ function crearChecklistRegistroAgenda(evento, funcion, tipoRegistro){
                     Boolean(item.completado);
 
                 return `
-                    <div class="agenda-checklist-item ${completado ? "completado" : ""}">
+                    <button
+                        class="agenda-checklist-item ${completado ? "completado" : ""}"
+                        onclick="toggleChecklistRegistroAgenda(${evento.id}, ${funcion.id}, ${Number(item.id || index + 1)}, this)"
+                        title="Marcar / desmarcar">
                         <span>${completado ? "☑" : "☐"}</span>
                         <strong>${escaparTexto(texto)}</strong>
-                    </div>
+                    </button>
                 `;
             })
             .join("");
@@ -487,4 +490,50 @@ function crearDetalleOperativoAgenda(evento, funcion){
     );
 
     return html;
+}
+
+/* ============================================================
+   ALPHA v1.4.2: TOGGLE DE CHECKLIST (puente front <-> backend)
+
+   Faltaba esta función: el botón del checklist la llamaba pero
+   no estaba definida. Hace el PATCH al endpoint y actualiza el
+   ítem en el momento (sin recargar el drawer ni perder scroll).
+============================================================ */
+
+async function toggleChecklistRegistroAgenda(eventoId, funcionId, itemId, boton){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                `${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}/checklist/${itemId}/toggle`,
+                { method: "PATCH" }
+            );
+
+        if(!respuesta.ok){
+            mostrarToast("No se pudo actualizar el checklist.", "error");
+            return;
+        }
+
+        // Actualización optimista del botón que se tocó.
+        if(boton){
+
+            const completado =
+                boton.classList.toggle("completado");
+
+            const icono =
+                boton.querySelector("span");
+
+            if(icono){
+                icono.textContent = completado ? "☑" : "☐";
+            }
+        }
+
+        // Refrescamos los datos en segundo plano para que el
+        // estado y el timeline queden correctos al reabrir.
+        await cargarEventos();
+
+    }catch(error){
+        mostrarToast("Error de conexión al actualizar el checklist.", "error");
+    }
 }

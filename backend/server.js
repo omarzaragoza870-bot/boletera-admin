@@ -796,6 +796,81 @@ app.patch("/api/eventos/:eventoId/funciones/:funcionId/descuentos/toggle", (req,
 
 });
 
+
+app.patch("/api/eventos/:eventoId/funciones/:funcionId/checklist/:itemId/toggle", (req, res) => {
+
+  const db = leerDB();
+
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const itemId = Number(req.params.itemId);
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+
+  if (!evento) {
+    return res.status(404).json({
+      mensaje: "Registro no encontrado"
+    });
+  }
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+
+  if (!funcion) {
+    return res.status(404).json({
+      mensaje: "Fecha del registro no encontrada"
+    });
+  }
+
+  if (!funcion.checklist && evento.checklist) {
+    funcion.checklist = JSON.parse(JSON.stringify(evento.checklist));
+  }
+
+  if (!funcion.checklist) {
+    funcion.checklist = [];
+  }
+
+  const itemChecklist = funcion.checklist.find(item => Number(item.id) === itemId);
+
+  if (!itemChecklist) {
+    return res.status(404).json({
+      mensaje: "Item de checklist no encontrado"
+    });
+  }
+
+  itemChecklist.completado = !Boolean(itemChecklist.completado);
+
+  if (!funcion.timeline) {
+    funcion.timeline = [];
+  }
+
+  funcion.timeline.push({
+    id: Date.now(),
+    tipo: "checklist",
+    mensaje: `${itemChecklist.completado ? "Completado" : "Reabierto"}: ${itemChecklist.texto}`,
+    fecha: new Date().toISOString()
+  });
+
+  if (!evento.timeline) {
+    evento.timeline = [];
+  }
+
+  evento.timeline.push({
+    id: Date.now(),
+    tipo: "checklist",
+    mensaje: `${itemChecklist.completado ? "Completado" : "Reabierto"}: ${itemChecklist.texto}`,
+    fecha: new Date().toISOString()
+  });
+
+  guardarDB(db);
+
+  res.json({
+    mensaje: "Checklist actualizado correctamente",
+    checklist: funcion.checklist
+  });
+
+});
+
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

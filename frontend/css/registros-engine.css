@@ -164,3 +164,32 @@
         font-size:10px;
     }
 }
+
+/* ============================================================
+   ALPHA v1.4.2: CHECKLIST EDITABLE
+============================================================ */
+
+button.agenda-checklist-item{
+    width:100%;
+    cursor:pointer;
+    text-align:left;
+}
+
+button.agenda-checklist-item:hover{
+    border-color:rgba(79,124,255,.32);
+    background:rgba(79,124,255,.10);
+    transform:translateY(-1px);
+}
+
+button.agenda-checklist-item:active{
+    transform:translateY(0);
+}
+
+.agenda-checklist-item.completado span{
+    color:#22c55e;
+}
+
+.agenda-checklist-item.completado{
+    background:rgba(34,197,94,.08);
+    border-color:rgba(34,197,94,.16);
+}
