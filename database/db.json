@@ -37,34 +37,6 @@
           "precio": 450,
           "boletosDisponibles": 100,
           "activa": true
-        },
-        {
-          "id": 1782257024563,
-          "fecha": "2026-06-05",
-          "hora": "08:30",
-          "categorias": {
-            "general": {
-              "preventa": 450,
-              "precio": 600,
-              "boletos": 30
-            },
-            "preferente": {
-              "activa": false,
-              "preventa": 0,
-              "precio": 0,
-              "boletos": 0
-            },
-            "vip": {
-              "activa": false,
-              "preventa": 0,
-              "precio": 0,
-              "boletos": 0
-            }
-          },
-          "descuentos": [],
-          "precio": 600,
-          "boletosDisponibles": 30,
-          "activa": true
         }
       ]
     },
@@ -147,50 +119,7 @@
       "lugar": "adsadsada",
       "imagen": "",
       "activo": true,
-      "funciones": [
-        {
-          "id": 1,
-          "fecha": "2026-06-10",
-          "hora": "22:45",
-          "categorias": {
-            "general": {
-              "preventa": 300,
-              "precio": 450,
-              "boletos": 0
-            },
-            "preferente": {
-              "activa": false,
-              "preventa": 0,
-              "precio": 0,
-              "boletos": 0
-            },
-            "vip": {
-              "activa": false,
-              "preventa": 0,
-              "precio": 0,
-              "boletos": 0
-            }
-          },
-          "descuentos": [
-            {
-              "codigo": "sdsss",
-              "tipo": "porcentaje",
-              "valor": 12,
-              "activo": true
-            },
-            {
-              "codigo": "ddss",
-              "tipo": "monto",
-              "valor": 100,
-              "activo": true
-            }
-          ],
-          "precio": 450,
-          "boletosDisponibles": 0,
-          "activa": true,
-          "descuentosActivos": false
-        }
-      ]
+      "funciones": []
     },
     {
       "id": 1782258572586,
@@ -389,7 +318,55 @@
           "contacto": "omar vera",
           "telefono": "5612087041",
           "notas": "comoda tenis pantalon de mezclilla",
-          "activa": true
+          "activa": true,
+          "estado": "confirmado",
+          "timeline": [
+            {
+              "id": 1782828638494,
+              "tipo": "estado",
+              "mensaje": "Estado: Cancelado",
+              "fecha": "2026-06-30T14:10:38.494Z"
+            },
+            {
+              "id": 1782833676199,
+              "tipo": "estado",
+              "mensaje": "Estado cambiado: Cancelado → Confirmado",
+              "fecha": "2026-06-30T15:34:36.199Z"
+            },
+            {
+              "id": 1782833686901,
+              "tipo": "checklist",
+              "mensaje": "Pendiente agregado: hdmi",
+              "fecha": "2026-06-30T15:34:46.900Z"
+            }
+          ],
+          "checklist": [
+            {
+              "id": 1782833686900,
+              "texto": "hdmi",
+              "completado": false
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "id": 1782828638495,
+          "tipo": "estado",
+          "mensaje": "Estado: Cancelado",
+          "fecha": "2026-06-30T14:10:38.494Z"
+        },
+        {
+          "id": 1782833676200,
+          "tipo": "estado",
+          "mensaje": "Estado cambiado: Cancelado → Confirmado",
+          "fecha": "2026-06-30T15:34:36.199Z"
+        },
+        {
+          "id": 1782833686902,
+          "tipo": "checklist",
+          "mensaje": "Pendiente agregado: hdmi",
+          "fecha": "2026-06-30T15:34:46.900Z"
         }
       ]
     },
@@ -696,6 +673,12 @@
           "tipo": "checklist",
           "mensaje": "Pendiente eliminado: Cable hdmi",
           "fecha": "2026-06-29T19:34:34.688Z"
+        },
+        {
+          "id": 1782828428843,
+          "tipo": "estado",
+          "mensaje": "Estado: Finalizado",
+          "fecha": "2026-06-30T14:07:08.842Z"
         }
       ],
       "funciones": [
@@ -850,9 +833,16 @@
               "tipo": "checklist",
               "mensaje": "Pendiente eliminado: Cable hdmi",
               "fecha": "2026-06-29T19:34:34.688Z"
+            },
+            {
+              "id": 1782828428842,
+              "tipo": "estado",
+              "mensaje": "Estado: Finalizado",
+              "fecha": "2026-06-30T14:07:08.842Z"
             }
           ],
-          "activa": true
+          "activa": true,
+          "estado": "finalizado"
         }
       ]
     },

@@ -233,6 +233,16 @@ function crearFuncionAgendaCard(evento, funcion){
     const esFuncion =
         tipoRegistro === "funcion";
 
+    const estadoVisual =
+        (typeof obtenerEstadoVisual === "function")
+            ? obtenerEstadoVisual(funcion)
+            : null;
+
+    const estadoSelectorHTML =
+        (typeof crearSelectorEstadoRegistro === "function")
+            ? crearSelectorEstadoRegistro(evento, funcion)
+            : "";
+
     let detalleHTML = "";
 
     if(esFuncion){
@@ -304,6 +314,14 @@ function crearFuncionAgendaCard(evento, funcion){
             <span class="${funcion.activa ? "status-ok" : "status-off"}">
                 ${funcion.activa ? "🟢 Registro activo" : "🔴 Registro pausado"}
             </span>
+
+            ${
+                estadoVisual
+                ? `<span class="estado-badge ${estadoVisual.clase}">${estadoVisual.icono} ${estadoVisual.nombre}</span>`
+                : ""
+            }
+
+            ${estadoSelectorHTML}
 
             <div class="agenda-categorias-mini">
                 ${detalleHTML}

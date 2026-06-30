@@ -69,6 +69,7 @@ function mostrarToast(
 // Todas las secciones que pueden ocultarse.
 const SECCIONES_APP = [
     "Dashboard",
+    "Hoy",
     "Eventos",
     "Funciones",
     "Ventas",
@@ -79,6 +80,7 @@ const SECCIONES_APP = [
 // Todos los menus del sidebar.
 const MENUS_APP = [
     "Dashboard",
+    "Hoy",
     "Eventos",
     "Funciones",
     "Ventas",
@@ -88,6 +90,7 @@ const MENUS_APP = [
 // Que seccion y que menu se activan para cada vista.
 const MAPA_NAVEGACION = {
     dashboard:     { seccion: "Dashboard",     menu: "Dashboard" },
+    hoy:           { seccion: "Hoy",           menu: "Hoy" },
     eventos:       { seccion: "Eventos",       menu: "Eventos" },
     funciones:     { seccion: "Funciones",     menu: "Funciones" },
     ventas:        { seccion: "Ventas",        menu: "Ventas" },
@@ -126,6 +129,11 @@ function mostrarSeccion(seccion){
         document.getElementById(`menu${destino.menu}`);
 
     if(menuActivo){ menuActivo.classList.add("active"); }
+
+    // ALPHA v1.6: render bajo demanda de la Vista Hoy (usa datos ya cargados).
+    if(destino.seccion === "Hoy" && typeof renderVistaHoy === "function"){
+        renderVistaHoy();
+    }
 }
 
 

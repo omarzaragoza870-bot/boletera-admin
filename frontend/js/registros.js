@@ -663,3 +663,321 @@ async function refrescarDrawerChecklist(eventoId, funcionId){
                 crearFuncionAgendaCard(item.evento, item.funcion);
         });
 }
+
+
+/* ============================================================
+   ALPHA v1.5: ESTADO DE OPERACIÓN
+
+   - Pendiente / Confirmado: lo guardado, antes del día.
+   - En curso: automático cuando llega el día (hoy >= fecha);
+     gana sobre Pendiente y Confirmado.
+   - Finalizado / Cancelado: terminales, mandan siempre.
+   El estado efectivo se calcula aquí al mostrar (no se guarda
+   "en curso"); el backend solo guarda lo que el usuario elige.
+============================================================ */
+
+const ESTADOS_OPERACION = {
+    pendiente:  { valor: "pendiente",  icono: "🟡", nombre: "Pendiente",  clase: "estado-pendiente" },
+    confirmado: { valor: "confirmado", icono: "🔵", nombre: "Confirmado", clase: "estado-confirmado" },
+    en_curso:   { valor: "en_curso",   icono: "🟢", nombre: "En curso",   clase: "estado-encurso" },
+    finalizado: { valor: "finalizado", icono: "⚫", nombre: "Finalizado", clase: "estado-finalizado" },
+    cancelado:  { valor: "cancelado",  icono: "🔴", nombre: "Cancelado",  clase: "estado-cancelado" }
+};
+
+// Fecha de hoy en formato YYYY-MM-DD (hora local).
+function fechaHoyLocal(){
+    const hoy = new Date();
+    const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+    const dia = String(hoy.getDate()).padStart(2, "0");
+    return `${hoy.getFullYear()}-${mes}-${dia}`;
+}
+
+// Estado EFECTIVO (lo que se muestra), combinando lo guardado + la fecha.
+function obtenerEstadoVisual(funcion){
+
+    const guardado =
+        funcion?.estado || "pendiente";
+
+    // Terminales: mandan siempre, sin importar la fecha.
+    if(guardado === "cancelado"){ return ESTADOS_OPERACION.cancelado; }
+    if(guardado === "finalizado"){ return ESTADOS_OPERACION.finalizado; }
+
+    // No terminales: al llegar el día pasa a "En curso" automáticamente.
+    const fecha = funcion?.fecha;
+
+    if(fecha && fechaHoyLocal() >= fecha){
+        return ESTADOS_OPERACION.en_curso;
+    }
+
+    // Antes del día: lo guardado (pendiente / confirmado / en_curso si lo forzó).
+    return ESTADOS_OPERACION[guardado] || ESTADOS_OPERACION.pendiente;
+}
+
+// Selector de 5 estados (resalta el efectivo).
+function crearSelectorEstadoRegistro(evento, funcion){
+
+    const actual =
+        obtenerEstadoVisual(funcion).valor;
+
+    const pills =
+        Object.values(ESTADOS_OPERACION).map(estado => `
+            <button
+                class="estado-pill ${estado.clase} ${estado.valor === actual ? "estado-activo" : ""}"
+                onclick="cambiarEstadoRegistro(${evento.id}, ${funcion.id}, '${estado.valor}')"
+                title="${estado.nombre}">
+                ${estado.icono} ${estado.nombre}
+            </button>
+        `).join("");
+
+    return `
+        <div class="agenda-drawer-bloque">
+            <h4>Estado de operación</h4>
+            <div class="estado-selector">
+                ${pills}
+            </div>
+        </div>
+    `;
+}
+
+// Cambia el estado: guarda, registra timeline y refresca drawer + agenda.
+async function cambiarEstadoRegistro(eventoId, funcionId, estado){
+
+    try{
+
+        const respuesta =
+            await fetch(
+                `${API_URL}/api/eventos/${eventoId}/funciones/${funcionId}/estado`,
+                {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ estado })
+                }
+            );
+
+        const resultado =
+            await respuesta.json();
+
+        if(!respuesta.ok){
+            mostrarToast(resultado.mensaje || "No se pudo cambiar el estado", "error");
+            return;
+        }
+
+        mostrarToast(resultado.mensaje || "Estado actualizado", "success");
+
+        await refrescarDrawerChecklist(eventoId, funcionId);
+
+    }catch(error){
+        mostrarToast("Error de conexión al cambiar el estado", "error");
+    }
+}
+
+
+/* ============================================================
+   ALPHA v1.6: VISTA HOY
+
+   Vista de solo lectura del día actual. Se pinta bajo demanda
+   (mostrarSeccion -> renderVistaHoy) usando eventosActuales ya
+   cargado; no toca cargarEventos ni el backend.
+============================================================ */
+
+// "YYYY-MM-DD HH:MM" en hora local (para comparar próxima operación).
+function ahoraLocal(){
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+// Fecha legible para el encabezado (ej. "Martes 30 de junio de 2026").
+function formatearFechaLarga(fechaISO){
+    try{
+        const [a, m, d] = fechaISO.split("-").map(Number);
+        const fecha = new Date(a, m - 1, d);
+        const txt = fecha.toLocaleDateString("es-MX", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+        return txt.charAt(0).toUpperCase() + txt.slice(1);
+    }catch(error){
+        return fechaISO;
+    }
+}
+
+function tipoVisualHoy(funcion){
+    return (typeof obtenerTipoRegistroVisual === "function")
+        ? obtenerTipoRegistroVisual(funcion)
+        : { icono: "🎭", nombre: "Función" };
+}
+
+// Render principal de la Vista Hoy.
+function renderVistaHoy(){
+
+    if(typeof eventosActuales === "undefined" || !Array.isArray(eventosActuales)){
+        return;
+    }
+
+    const hoy = fechaHoyLocal();
+
+    // Todas las operaciones (evento + función).
+    const todas = [];
+
+    eventosActuales.forEach(evento => {
+        (evento.funciones || []).forEach(funcion => {
+            todas.push({ evento, funcion });
+        });
+    });
+
+    const deHoy =
+        todas.filter(operacion => operacion.funcion.fecha === hoy);
+
+    const elFecha = document.getElementById("hoyFecha");
+    if(elFecha){ elFecha.textContent = formatearFechaLarga(hoy); }
+
+    renderHoyResumen(deHoy);
+    renderHoyProxima(todas);
+    renderHoyOperaciones(deHoy);
+    renderHoyPendientes(deHoy);
+}
+
+// Resumen por estado (de las operaciones de hoy).
+function renderHoyResumen(lista){
+
+    const el = document.getElementById("hoyResumen");
+    if(!el){ return; }
+
+    const conteo = {
+        pendiente: 0,
+        confirmado: 0,
+        en_curso: 0,
+        finalizado: 0,
+        cancelado: 0
+    };
+
+    lista.forEach(operacion => {
+        const estado = obtenerEstadoVisual(operacion.funcion).valor;
+        if(conteo[estado] !== undefined){ conteo[estado]++; }
+    });
+
+    el.innerHTML =
+        Object.values(ESTADOS_OPERACION).map(estado => `
+            <div class="hoy-resumen-item ${estado.clase}">
+                <span class="hoy-resumen-icono">${estado.icono}</span>
+                <span class="hoy-resumen-num">${conteo[estado.valor] || 0}</span>
+                <span class="hoy-resumen-label">${estado.nombre}</span>
+            </div>
+        `).join("");
+}
+
+// Próxima operación (hoy o futuro, la más cercana que no ha pasado).
+function renderHoyProxima(todas){
+
+    const el = document.getElementById("hoyProxima");
+    if(!el){ return; }
+
+    const ahora = ahoraLocal();
+
+    const futuras = todas
+        .filter(operacion => operacion.funcion.fecha)
+        .map(operacion => ({
+            evento: operacion.evento,
+            funcion: operacion.funcion,
+            dt: `${operacion.funcion.fecha} ${operacion.funcion.hora || "00:00"}`
+        }))
+        .filter(operacion => operacion.dt >= ahora)
+        .filter(operacion => {
+            const estado = obtenerEstadoVisual(operacion.funcion).valor;
+            return estado !== "cancelado" && estado !== "finalizado";
+        })
+        .sort((a, b) => a.dt.localeCompare(b.dt));
+
+    if(futuras.length === 0){
+        el.innerHTML = `<p class="hoy-vacio">No hay próximas operaciones.</p>`;
+        return;
+    }
+
+    const prox = futuras[0];
+    const tipoVisual = tipoVisualHoy(prox.funcion);
+    const estado = obtenerEstadoVisual(prox.funcion);
+    const hoy = fechaHoyLocal();
+
+    const fechaTexto =
+        prox.funcion.fecha === hoy
+            ? "Hoy"
+            : formatearFechaLarga(prox.funcion.fecha);
+
+    el.innerHTML = `
+        <div class="hoy-proxima-card">
+            <div class="hoy-proxima-hora">⏰ ${escaparTexto(prox.funcion.hora || "--:--")}</div>
+            <div class="hoy-proxima-info">
+                <h4>${tipoVisual.icono} ${escaparTexto(prox.evento.nombre)}</h4>
+                <p>📍 ${escaparTexto(prox.evento.lugar || "")}</p>
+                <p class="hoy-proxima-fecha">📅 ${escaparTexto(fechaTexto)}</p>
+                <span class="estado-badge ${estado.clase}">${estado.icono} ${estado.nombre}</span>
+            </div>
+        </div>
+    `;
+}
+
+// Operaciones de hoy, ordenadas por hora.
+function renderHoyOperaciones(lista){
+
+    const el = document.getElementById("hoyOperaciones");
+    if(!el){ return; }
+
+    if(lista.length === 0){
+        el.innerHTML = `<p class="hoy-vacio">No hay operaciones para hoy.</p>`;
+        return;
+    }
+
+    const ordenadas =
+        [...lista].sort((a, b) =>
+            String(a.funcion.hora).localeCompare(String(b.funcion.hora))
+        );
+
+    el.innerHTML = ordenadas.map(operacion => {
+        const tipoVisual = tipoVisualHoy(operacion.funcion);
+        const estado = obtenerEstadoVisual(operacion.funcion);
+        return `
+            <div class="hoy-op-fila">
+                <span class="hoy-op-hora">⏰ ${escaparTexto(operacion.funcion.hora || "--:--")}</span>
+                <span class="hoy-op-nombre">${tipoVisual.icono} ${escaparTexto(operacion.evento.nombre)}</span>
+                <span class="hoy-op-lugar">📍 ${escaparTexto(operacion.evento.lugar || "")}</span>
+                <span class="estado-badge ${estado.clase}">${estado.icono} ${estado.nombre}</span>
+            </div>
+        `;
+    }).join("");
+}
+
+// Pendientes (checklist no completado) de hoy, agrupados por operación.
+function renderHoyPendientes(lista){
+
+    const el = document.getElementById("hoyPendientes");
+    if(!el){ return; }
+
+    const conPendientes = lista
+        .map(operacion => ({
+            evento: operacion.evento,
+            funcion: operacion.funcion,
+            pendientes: (operacion.funcion.checklist || []).filter(item => !item.completado)
+        }))
+        .filter(operacion => operacion.pendientes.length > 0);
+
+    if(conPendientes.length === 0){
+        el.innerHTML = `<p class="hoy-vacio">Sin pendientes para hoy. 🎉</p>`;
+        return;
+    }
+
+    el.innerHTML = conPendientes.map(operacion => {
+        const tipoVisual = tipoVisualHoy(operacion.funcion);
+        const items = operacion.pendientes
+            .map(item => `<li>☐ ${escaparTexto(item.texto)}</li>`)
+            .join("");
+        return `
+            <div class="hoy-pend-grupo">
+                <h4>${tipoVisual.icono} ${escaparTexto(operacion.evento.nombre)}</h4>
+                <ul class="hoy-pend-lista">${items}</ul>
+            </div>
+        `;
+    }).join("");
+}

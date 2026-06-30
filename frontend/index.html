@@ -37,6 +37,7 @@
 
         <div class="sidebar-section">Principal</div>
         <div class="menu-item active" id="menuDashboard" onclick="mostrarSeccion('dashboard')">🏠 Dashboard</div>
+        <div class="menu-item" id="menuHoy" onclick="mostrarSeccion('hoy')">☀️ Hoy</div>
         <div class="menu-item" id="menuEventos" onclick="mostrarSeccion('eventos')">🎟️ Eventos</div>
         <div class="menu-item" id="menuFunciones" onclick="mostrarSeccion('funciones')">📅 Agenda</div>
 
@@ -252,6 +253,40 @@
                 </div>
 
             </section>
+
+        </section>
+
+        <!-- ============================= -->
+        <!-- ALPHA v1.6: VISTA HOY -->
+        <!-- ============================= -->
+        <section id="seccionHoy" class="app-section oculto">
+
+            <div class="panel hoy-header">
+                <div>
+                    <h2>☀️ Hoy</h2>
+                    <p class="panel-subtitle" id="hoyFecha">Lo que tienes para hoy.</p>
+                </div>
+            </div>
+
+            <div class="panel hoy-bloque">
+                <h3 class="hoy-titulo">Resumen</h3>
+                <div id="hoyResumen" class="hoy-resumen"></div>
+            </div>
+
+            <div class="panel hoy-bloque">
+                <h3 class="hoy-titulo">Próxima operación</h3>
+                <div id="hoyProxima"></div>
+            </div>
+
+            <div class="panel hoy-bloque">
+                <h3 class="hoy-titulo">Operaciones de hoy</h3>
+                <div id="hoyOperaciones"></div>
+            </div>
+
+            <div class="panel hoy-bloque">
+                <h3 class="hoy-titulo">Pendientes de hoy</h3>
+                <div id="hoyPendientes"></div>
+            </div>
 
         </section>
 

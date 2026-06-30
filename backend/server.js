@@ -146,6 +146,7 @@ app.post("/api/registros", (req, res) => {
         notas: notas || "",
         checklist: crearChecklistBase(tipoFinal),
         timeline: crearTimeline(tipoFinal),
+        estado: "pendiente",
         activa: true
       }
     ]
@@ -249,6 +250,7 @@ app.post("/api/eventos", (req, res) => {
         precio: precioBase,
         boletosDisponibles: boletosTotales,
 
+        estado: "pendiente",
         activa: true
       }
     ]
@@ -935,6 +937,90 @@ app.delete("/api/eventos/:eventoId/funciones/:funcionId/checklist/:itemId", (req
 
   guardarDB(db);
   res.json({ mensaje: "Pendiente eliminado", checklist: funcion.checklist });
+});
+
+
+/* ============================================================
+   ALPHA v1.5: ESTADO DE OPERACIÓN
+
+   El usuario fija el estado manualmente. El estado "en curso"
+   por fecha se calcula en el frontend al mostrar; aquí solo
+   guardamos el valor elegido y registramos el timeline.
+============================================================ */
+
+app.patch("/api/eventos/:eventoId/funciones/:funcionId/estado", (req, res) => {
+
+  const db = leerDB();
+
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const { estado } = req.body;
+
+  const ESTADOS_VALIDOS = ["pendiente", "confirmado", "en_curso", "finalizado", "cancelado"];
+
+  if (!ESTADOS_VALIDOS.includes(estado)) {
+    return res.status(400).json({
+      mensaje: "Estado no válido"
+    });
+  }
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+
+  if (!evento) {
+    return res.status(404).json({
+      mensaje: "Registro no encontrado"
+    });
+  }
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+
+  if (!funcion) {
+    return res.status(404).json({
+      mensaje: "Fecha del registro no encontrada"
+    });
+  }
+
+  const NOMBRES = {
+    pendiente: "Pendiente",
+    confirmado: "Confirmado",
+    en_curso: "En curso",
+    finalizado: "Finalizado",
+    cancelado: "Cancelado"
+  };
+
+  const estadoAnterior =
+    funcion.estado || "pendiente";
+
+  funcion.estado = estado;
+
+  const entrada = {
+    id: Date.now(),
+    tipo: "estado",
+    mensaje: `Estado cambiado: ${NOMBRES[estadoAnterior]} → ${NOMBRES[estado]}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) {
+    funcion.timeline = [];
+  }
+
+  funcion.timeline.push(entrada);
+
+  if (!evento.timeline) {
+    evento.timeline = [];
+  }
+
+  evento.timeline.push({
+    ...entrada,
+    id: Date.now() + 1
+  });
+
+  guardarDB(db);
+
+  res.json({
+    mensaje: "Estado actualizado",
+    estado
+  });
 });
 
 
