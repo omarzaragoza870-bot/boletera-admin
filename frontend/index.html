@@ -263,29 +263,40 @@
 
             <div class="panel hoy-header">
                 <div>
-                    <h2>☀️ Hoy</h2>
+                    <h2 id="hoySaludo">Buenos días</h2>
                     <p class="panel-subtitle" id="hoyFecha">Lo que tienes para hoy.</p>
                 </div>
             </div>
 
             <div class="panel hoy-bloque">
-                <h3 class="hoy-titulo">Resumen</h3>
+                <h3 class="hoy-titulo">Resumen del día</h3>
                 <div id="hoyResumen" class="hoy-resumen"></div>
             </div>
 
-            <div class="panel hoy-bloque">
-                <h3 class="hoy-titulo">Próxima operación</h3>
-                <div id="hoyProxima"></div>
-            </div>
+            <div class="hoy-grid">
+                <div class="panel hoy-bloque">
+                    <h3 class="hoy-titulo">Próxima operación</h3>
+                    <div id="hoyProxima"></div>
+                </div>
 
-            <div class="panel hoy-bloque">
-                <h3 class="hoy-titulo">Operaciones de hoy</h3>
-                <div id="hoyOperaciones"></div>
+                <div class="panel hoy-bloque">
+                    <h3 class="hoy-titulo">Operaciones de hoy</h3>
+                    <div id="hoyOperaciones"></div>
+                </div>
             </div>
 
             <div class="panel hoy-bloque">
                 <h3 class="hoy-titulo">Pendientes de hoy</h3>
                 <div id="hoyPendientes"></div>
+            </div>
+
+            <div class="panel hoy-bloque">
+                <h3 class="hoy-titulo">Acciones rápidas</h3>
+                <div class="hoy-acciones">
+                    <button class="btn-primary" onclick="abrirSelectorNuevoRegistro()">➕ Nuevo registro</button>
+                    <button class="btn-secundario" onclick="mostrarSeccion('funciones')">📅 Agenda</button>
+                    <button class="btn-secundario" onclick="mostrarToast('La vista de Documentos llega en un próximo sprint.', 'success')">📄 Documentos</button>
+                </div>
             </div>
 
         </section>
@@ -727,6 +738,7 @@
                 </button>
 
                 <button
+                    id="btnGuardarRegistroGenerico"
                     class="btn-primary"
                     onclick="guardarRegistroGenerico()">
                     Guardar registro
@@ -1423,6 +1435,22 @@
                 onclick="cerrarPrompt()">
                 Cancelar
             </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================= -->
+<!-- ALPHA v1.11/v1.12: FORMULARIO GENÉRICO (varios campos) -->
+<div id="modalFormulario" class="modal oculto">
+    <div class="modal-contenido">
+        <h2 id="formularioTitulo">Formulario</h2>
+
+        <div id="formularioCampos"></div>
+
+        <div class="modal-acciones">
+            <button id="btnGuardarFormulario" class="btn-primary">Guardar</button>
+            <button class="btn-secundario" onclick="cerrarFormulario()">Cancelar</button>
         </div>
     </div>
 </div>

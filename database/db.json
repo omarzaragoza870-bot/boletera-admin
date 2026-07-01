@@ -291,7 +291,7 @@
         {
           "id": 1,
           "tipoRegistro": "activacion",
-          "fecha": "2026-06-30",
+          "fecha": "2026-07-01",
           "hora": "18:30",
           "categorias": {
             "general": {
@@ -338,13 +338,56 @@
               "tipo": "checklist",
               "mensaje": "Pendiente agregado: hdmi",
               "fecha": "2026-06-30T15:34:46.900Z"
+            },
+            {
+              "id": 1782836573140,
+              "tipo": "material",
+              "mensaje": "Material agregado: canaleta",
+              "fecha": "2026-06-30T16:22:53.139Z"
+            },
+            {
+              "id": 1782836618638,
+              "tipo": "material",
+              "mensaje": "Material listo: canaleta",
+              "fecha": "2026-06-30T16:23:38.638Z"
+            },
+            {
+              "id": 1782836619576,
+              "tipo": "material",
+              "mensaje": "Material pendiente: canaleta",
+              "fecha": "2026-06-30T16:23:39.576Z"
+            },
+            {
+              "id": 1782836620471,
+              "tipo": "checklist",
+              "mensaje": "Completado: hdmi",
+              "fecha": "2026-06-30T16:23:40.471Z"
+            },
+            {
+              "id": 1782836621069,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: hdmi",
+              "fecha": "2026-06-30T16:23:41.069Z"
+            },
+            {
+              "id": 1782836793443,
+              "tipo": "checklist",
+              "mensaje": "Pendiente eliminado: hdmi",
+              "fecha": "2026-06-30T16:26:33.443Z"
+            },
+            {
+              "id": 1782837913508,
+              "tipo": "edicion",
+              "mensaje": "Operación editada",
+              "fecha": "2026-06-30T16:45:13.508Z"
             }
           ],
-          "checklist": [
+          "checklist": [],
+          "material": [
             {
-              "id": 1782833686900,
-              "texto": "hdmi",
-              "completado": false
+              "id": 1782836573139,
+              "nombre": "canaleta",
+              "listo": false
             }
           ]
         }
@@ -367,6 +410,48 @@
           "tipo": "checklist",
           "mensaje": "Pendiente agregado: hdmi",
           "fecha": "2026-06-30T15:34:46.900Z"
+        },
+        {
+          "id": 1782836573141,
+          "tipo": "material",
+          "mensaje": "Material agregado: canaleta",
+          "fecha": "2026-06-30T16:22:53.139Z"
+        },
+        {
+          "id": 1782836618639,
+          "tipo": "material",
+          "mensaje": "Material listo: canaleta",
+          "fecha": "2026-06-30T16:23:38.638Z"
+        },
+        {
+          "id": 1782836619577,
+          "tipo": "material",
+          "mensaje": "Material pendiente: canaleta",
+          "fecha": "2026-06-30T16:23:39.576Z"
+        },
+        {
+          "id": 1782836620471,
+          "tipo": "checklist",
+          "mensaje": "Completado: hdmi",
+          "fecha": "2026-06-30T16:23:40.471Z"
+        },
+        {
+          "id": 1782836621069,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: hdmi",
+          "fecha": "2026-06-30T16:23:41.069Z"
+        },
+        {
+          "id": 1782836793444,
+          "tipo": "checklist",
+          "mensaje": "Pendiente eliminado: hdmi",
+          "fecha": "2026-06-30T16:26:33.443Z"
+        },
+        {
+          "id": 1782837913509,
+          "tipo": "edicion",
+          "mensaje": "Operación editada",
+          "fecha": "2026-06-30T16:45:13.508Z"
         }
       ]
     },
@@ -447,6 +532,12 @@
           "tipo": "checklist",
           "mensaje": "Reabierto: Confirmar material",
           "fecha": "2026-06-29T18:10:02.152Z"
+        },
+        {
+          "id": 1782837935614,
+          "tipo": "estado",
+          "mensaje": "Estado cambiado: Pendiente → Confirmado",
+          "fecha": "2026-06-30T16:45:35.613Z"
         }
       ],
       "funciones": [
@@ -540,9 +631,16 @@
               "tipo": "checklist",
               "mensaje": "Reabierto: Confirmar material",
               "fecha": "2026-06-29T18:10:02.152Z"
+            },
+            {
+              "id": 1782837935613,
+              "tipo": "estado",
+              "mensaje": "Estado cambiado: Pendiente → Confirmado",
+              "fecha": "2026-06-30T16:45:35.613Z"
             }
           ],
-          "activa": true
+          "activa": true,
+          "estado": "confirmado"
         }
       ]
     },
@@ -913,6 +1011,18 @@
           "tipo": "checklist",
           "mensaje": "Reabierto: hdmi",
           "fecha": "2026-06-29T19:07:26.720Z"
+        },
+        {
+          "id": 1782855566047,
+          "tipo": "checklist",
+          "mensaje": "Completado: hdmi",
+          "fecha": "2026-06-30T21:39:26.047Z"
+        },
+        {
+          "id": 1782855567589,
+          "tipo": "checklist",
+          "mensaje": "Reabierto: hdmi",
+          "fecha": "2026-06-30T21:39:27.589Z"
         }
       ],
       "funciones": [
@@ -1002,6 +1112,18 @@
               "tipo": "checklist",
               "mensaje": "Reabierto: hdmi",
               "fecha": "2026-06-29T19:07:26.720Z"
+            },
+            {
+              "id": 1782855566047,
+              "tipo": "checklist",
+              "mensaje": "Completado: hdmi",
+              "fecha": "2026-06-30T21:39:26.047Z"
+            },
+            {
+              "id": 1782855567589,
+              "tipo": "checklist",
+              "mensaje": "Reabierto: hdmi",
+              "fecha": "2026-06-30T21:39:27.589Z"
             }
           ],
           "activa": true

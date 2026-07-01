@@ -561,6 +561,67 @@ app.delete("/api/eventos/:id", (req, res) => {
 
 });
 
+
+/* ============================================================
+   ALPHA v1.8: EDITAR OPERACIÓN
+
+   Edita solo datos básicos del registro (nombre, lugar, fecha,
+   hora, contacto, teléfono, notas). NO toca checklist, material,
+   estado, categorías, descuentos ni ventas. Ruta distinta a la
+   del editor de Función (que vive en PUT .../funciones/:funcionId).
+============================================================ */
+
+app.put("/api/eventos/:eventoId/funciones/:funcionId/datos", (req, res) => {
+
+  const db = leerDB();
+
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  const nombre = String(req.body.nombre || "").trim();
+  const lugar = String(req.body.lugar || "").trim();
+  const fecha = String(req.body.fecha || "").trim();
+  const hora = String(req.body.hora || "").trim();
+
+  if (!nombre || !lugar || !fecha || !hora) {
+    return res.status(400).json({ mensaje: "Completa nombre, lugar, fecha y hora" });
+  }
+
+  // Datos de nivel evento.
+  evento.nombre = nombre;
+  evento.lugar = lugar;
+
+  // Datos de nivel función (operación).
+  funcion.fecha = fecha;
+  funcion.hora = hora;
+  funcion.contacto = String(req.body.contacto || "").trim();
+  funcion.telefono = String(req.body.telefono || "").trim();
+  funcion.notas = String(req.body.notas || "").trim();
+
+  const movimiento = {
+    id: Date.now(),
+    tipo: "edicion",
+    mensaje: "Operación editada",
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 1 });
+
+  guardarDB(db);
+
+  res.json({ mensaje: "Operación actualizada" });
+});
+
+
 app.put("/api/eventos/:id", (req, res) => {
 
   const db = leerDB();
@@ -939,6 +1000,326 @@ app.delete("/api/eventos/:eventoId/funciones/:funcionId/checklist/:itemId", (req
   res.json({ mensaje: "Pendiente eliminado", checklist: funcion.checklist });
 });
 
+
+/* ============================================================
+   ALPHA v1.7: MATERIAL POR OPERACIÓN
+   Material = cosas que llevar/preparar (distinto del checklist).
+   Item: { id, nombre, listo }
+============================================================ */
+
+app.post("/api/eventos/:eventoId/funciones/:funcionId/material", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const nombre = String(req.body.nombre || "").trim();
+
+  if (!nombre) return res.status(400).json({ mensaje: "Escribe el material" });
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.material) funcion.material = [];
+
+  const nuevoItem = { id: Date.now(), nombre, listo: false };
+  funcion.material.push(nuevoItem);
+
+  const movimiento = {
+    id: Date.now() + 1,
+    tipo: "material",
+    mensaje: `Material agregado: ${nombre}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 2 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Material agregado", item: nuevoItem, material: funcion.material });
+});
+
+
+app.patch("/api/eventos/:eventoId/funciones/:funcionId/material/:itemId/toggle", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const itemId = Number(req.params.itemId);
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.material) funcion.material = [];
+
+  const item = funcion.material.find(m => Number(m.id) === itemId);
+  if (!item) return res.status(404).json({ mensaje: "Material no encontrado" });
+
+  item.listo = !item.listo;
+
+  const movimiento = {
+    id: Date.now(),
+    tipo: "material",
+    mensaje: item.listo ? `Material listo: ${item.nombre}` : `Material pendiente: ${item.nombre}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 1 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Material actualizado", material: funcion.material });
+});
+
+
+app.put("/api/eventos/:eventoId/funciones/:funcionId/material/:itemId", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const itemId = Number(req.params.itemId);
+  const nombre = String(req.body.nombre || "").trim();
+
+  if (!nombre) return res.status(400).json({ mensaje: "Escribe el nuevo nombre del material" });
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.material) funcion.material = [];
+
+  const item = funcion.material.find(m => Number(m.id) === itemId);
+  if (!item) return res.status(404).json({ mensaje: "Material no encontrado" });
+
+  const anterior = item.nombre;
+  item.nombre = nombre;
+
+  const movimiento = {
+    id: Date.now(),
+    tipo: "material",
+    mensaje: `Material editado: ${anterior} → ${nombre}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 1 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Material actualizado", material: funcion.material });
+});
+
+
+app.delete("/api/eventos/:eventoId/funciones/:funcionId/material/:itemId", (req, res) => {
+  const db = leerDB();
+  const eventoId = Number(req.params.eventoId);
+  const funcionId = Number(req.params.funcionId);
+  const itemId = Number(req.params.itemId);
+
+  const evento = db.eventos.find(item => item.id === eventoId);
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+
+  const funcion = evento.funciones.find(item => item.id === funcionId);
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.material) funcion.material = [];
+  const index = funcion.material.findIndex(m => Number(m.id) === itemId);
+  if (index === -1) return res.status(404).json({ mensaje: "Material no encontrado" });
+
+  const eliminado = funcion.material.splice(index, 1)[0];
+
+  const movimiento = {
+    id: Date.now(),
+    tipo: "material",
+    mensaje: `Material eliminado: ${eliminado.nombre}`,
+    fecha: new Date().toISOString()
+  };
+
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(movimiento);
+  evento.timeline.push({ ...movimiento, id: Date.now() + 1 });
+
+  guardarDB(db);
+  res.json({ mensaje: "Material eliminado", material: funcion.material });
+});
+
+
+/* ============================================================
+   ALPHA v1.11: DOCUMENTOS POR OPERACIÓN
+   Item: { id, nombre, tipo, url, notas, creadoEn }
+============================================================ */
+
+function timelineDoc(evento, funcion, mensaje){
+  const mov = { id: Date.now(), tipo: "documento", mensaje, fecha: new Date().toISOString() };
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(mov);
+  evento.timeline.push({ ...mov, id: Date.now() + 1 });
+}
+
+app.post("/api/eventos/:eventoId/funciones/:funcionId/documentos", (req, res) => {
+  const db = leerDB();
+  const evento = db.eventos.find(item => item.id === Number(req.params.eventoId));
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+  const funcion = evento.funciones.find(item => item.id === Number(req.params.funcionId));
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  const nombre = String(req.body.nombre || "").trim();
+  if (!nombre) return res.status(400).json({ mensaje: "Escribe el nombre del documento" });
+
+  if (!funcion.documentos) funcion.documentos = [];
+
+  const nuevo = {
+    id: Date.now(),
+    nombre,
+    tipo: String(req.body.tipo || "").trim(),
+    url: String(req.body.url || "").trim(),
+    notas: String(req.body.notas || "").trim(),
+    creadoEn: new Date().toISOString()
+  };
+  funcion.documentos.push(nuevo);
+  timelineDoc(evento, funcion, `Documento agregado: ${nombre}`);
+
+  guardarDB(db);
+  res.json({ mensaje: "Documento agregado", item: nuevo, documentos: funcion.documentos });
+});
+
+app.put("/api/eventos/:eventoId/funciones/:funcionId/documentos/:documentoId", (req, res) => {
+  const db = leerDB();
+  const evento = db.eventos.find(item => item.id === Number(req.params.eventoId));
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+  const funcion = evento.funciones.find(item => item.id === Number(req.params.funcionId));
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.documentos) funcion.documentos = [];
+  const doc = funcion.documentos.find(d => Number(d.id) === Number(req.params.documentoId));
+  if (!doc) return res.status(404).json({ mensaje: "Documento no encontrado" });
+
+  const nombre = String(req.body.nombre || "").trim();
+  if (!nombre) return res.status(400).json({ mensaje: "Escribe el nombre del documento" });
+
+  doc.nombre = nombre;
+  doc.tipo = String(req.body.tipo || "").trim();
+  doc.url = String(req.body.url || "").trim();
+  doc.notas = String(req.body.notas || "").trim();
+  timelineDoc(evento, funcion, `Documento editado: ${nombre}`);
+
+  guardarDB(db);
+  res.json({ mensaje: "Documento actualizado", documentos: funcion.documentos });
+});
+
+app.delete("/api/eventos/:eventoId/funciones/:funcionId/documentos/:documentoId", (req, res) => {
+  const db = leerDB();
+  const evento = db.eventos.find(item => item.id === Number(req.params.eventoId));
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+  const funcion = evento.funciones.find(item => item.id === Number(req.params.funcionId));
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.documentos) funcion.documentos = [];
+  const index = funcion.documentos.findIndex(d => Number(d.id) === Number(req.params.documentoId));
+  if (index === -1) return res.status(404).json({ mensaje: "Documento no encontrado" });
+
+  const eliminado = funcion.documentos.splice(index, 1)[0];
+  timelineDoc(evento, funcion, `Documento eliminado: ${eliminado.nombre}`);
+
+  guardarDB(db);
+  res.json({ mensaje: "Documento eliminado", documentos: funcion.documentos });
+});
+
+
+/* ============================================================
+   ALPHA v1.12: PERSONAS POR OPERACIÓN
+   Item: { id, nombre, rol, telefono, correo, notas, creadoEn }
+============================================================ */
+
+function timelinePersona(evento, funcion, mensaje){
+  const mov = { id: Date.now(), tipo: "persona", mensaje, fecha: new Date().toISOString() };
+  if (!funcion.timeline) funcion.timeline = [];
+  if (!evento.timeline) evento.timeline = [];
+  funcion.timeline.push(mov);
+  evento.timeline.push({ ...mov, id: Date.now() + 1 });
+}
+
+app.post("/api/eventos/:eventoId/funciones/:funcionId/personas", (req, res) => {
+  const db = leerDB();
+  const evento = db.eventos.find(item => item.id === Number(req.params.eventoId));
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+  const funcion = evento.funciones.find(item => item.id === Number(req.params.funcionId));
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  const nombre = String(req.body.nombre || "").trim();
+  if (!nombre) return res.status(400).json({ mensaje: "Escribe el nombre de la persona" });
+
+  if (!funcion.personas) funcion.personas = [];
+
+  const nueva = {
+    id: Date.now(),
+    nombre,
+    rol: String(req.body.rol || "").trim(),
+    telefono: String(req.body.telefono || "").trim(),
+    correo: String(req.body.correo || "").trim(),
+    notas: String(req.body.notas || "").trim(),
+    creadoEn: new Date().toISOString()
+  };
+  funcion.personas.push(nueva);
+  timelinePersona(evento, funcion, `Persona agregada: ${nombre}`);
+
+  guardarDB(db);
+  res.json({ mensaje: "Persona agregada", item: nueva, personas: funcion.personas });
+});
+
+app.put("/api/eventos/:eventoId/funciones/:funcionId/personas/:personaId", (req, res) => {
+  const db = leerDB();
+  const evento = db.eventos.find(item => item.id === Number(req.params.eventoId));
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+  const funcion = evento.funciones.find(item => item.id === Number(req.params.funcionId));
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.personas) funcion.personas = [];
+  const persona = funcion.personas.find(p => Number(p.id) === Number(req.params.personaId));
+  if (!persona) return res.status(404).json({ mensaje: "Persona no encontrada" });
+
+  const nombre = String(req.body.nombre || "").trim();
+  if (!nombre) return res.status(400).json({ mensaje: "Escribe el nombre de la persona" });
+
+  persona.nombre = nombre;
+  persona.rol = String(req.body.rol || "").trim();
+  persona.telefono = String(req.body.telefono || "").trim();
+  persona.correo = String(req.body.correo || "").trim();
+  persona.notas = String(req.body.notas || "").trim();
+  timelinePersona(evento, funcion, `Persona editada: ${nombre}`);
+
+  guardarDB(db);
+  res.json({ mensaje: "Persona actualizada", personas: funcion.personas });
+});
+
+app.delete("/api/eventos/:eventoId/funciones/:funcionId/personas/:personaId", (req, res) => {
+  const db = leerDB();
+  const evento = db.eventos.find(item => item.id === Number(req.params.eventoId));
+  if (!evento) return res.status(404).json({ mensaje: "Registro no encontrado" });
+  const funcion = evento.funciones.find(item => item.id === Number(req.params.funcionId));
+  if (!funcion) return res.status(404).json({ mensaje: "Fecha del registro no encontrada" });
+
+  if (!funcion.personas) funcion.personas = [];
+  const index = funcion.personas.findIndex(p => Number(p.id) === Number(req.params.personaId));
+  if (index === -1) return res.status(404).json({ mensaje: "Persona no encontrada" });
+
+  const eliminada = funcion.personas.splice(index, 1)[0];
+  timelinePersona(evento, funcion, `Persona eliminada: ${eliminada.nombre}`);
+
+  guardarDB(db);
+  res.json({ mensaje: "Persona eliminada", personas: funcion.personas });
+});
 
 /* ============================================================
    ALPHA v1.5: ESTADO DE OPERACIÓN

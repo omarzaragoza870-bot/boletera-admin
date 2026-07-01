@@ -266,6 +266,19 @@ function crearFuncionAgendaCard(evento, funcion){
                 categorias.vip
             );
         }
+
+        // ALPHA v1.7: Material también para Función (no usa el detalle operativo).
+        if(typeof crearMaterialRegistroAgenda === "function"){
+            detalleHTML += crearMaterialRegistroAgenda(evento, funcion);
+        }
+
+        // ALPHA v1.11/v1.12: Documentos y Personas también para Función.
+        if(typeof crearDocumentosRegistroAgenda === "function"){
+            detalleHTML += crearDocumentosRegistroAgenda(evento, funcion);
+        }
+        if(typeof crearPersonasRegistroAgenda === "function"){
+            detalleHTML += crearPersonasRegistroAgenda(evento, funcion);
+        }
     }else{
 
         if(typeof crearDetalleOperativoAgenda === "function"){
@@ -332,7 +345,7 @@ function crearFuncionAgendaCard(evento, funcion){
                     esFuncion
                     ? `<button class="btn-secundario" onclick="cerrarAgendaDia(); abrirEditarFuncion(${evento.id}, ${funcion.id})">✏️ Editar</button>
                        <button class="btn-secundario btn-descuentos-funcion" onclick="cerrarAgendaDia(); abrirGestionDescuentos(${evento.id}, ${funcion.id})">🎁 Descuentos</button>`
-                    : `<button class="btn-secundario" onclick="mostrarToast('La edición de activaciones entra en el siguiente paso.', 'success')">✏️ Editar</button>`
+                    : `<button class="btn-secundario" onclick="cerrarAgendaDia(); abrirEditarOperacion(${evento.id}, ${funcion.id})">✏️ Editar</button>`
                 }
 
                 <button
