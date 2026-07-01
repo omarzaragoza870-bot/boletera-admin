@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="css/sidebar-header-compact.css">
     <link rel="stylesheet" href="css/mobile-real-drawer-compact.css">
     <link rel="stylesheet" href="css/registros-engine.css">
+    <link rel="icon" type="image/png" href="assets/kairen-icon.png">
 </head>
 
 <body>
@@ -33,7 +34,18 @@
 
     <aside class="sidebar">
             <button id="btnCerrarMenuMovil" class="btn-cerrar-menu-movil" onclick="cerrarMenuMovil()">✕</button>
-        <div class="logo" id="nombreSistemaSidebar">🎟️ Boletera Admin</div>
+
+        <div class="sidebar-brand">
+            <img class="sidebar-brand-logo" src="assets/kairen-icon.png" alt="Kairen">
+            <span class="sidebar-brand-nombre" id="nombreSistemaSidebar">Kairen</span>
+            <button class="sidebar-brand-edit" onclick="abrirEditarNombreSistema()" title="Editar nombre">✏️</button>
+        </div>
+        <div class="sidebar-brand-bot">
+            <label class="switch-mini">
+                <input id="botSwitchSidebar" type="checkbox" checked onchange="toggleBotDesdeSidebar(this.checked)">
+                <span></span>
+            </label>
+        </div>
 
         <div class="sidebar-section">Principal</div>
         <div class="menu-item active" id="menuDashboard" onclick="mostrarSeccion('dashboard')">🏠 Dashboard</div>
@@ -43,24 +55,6 @@
 
         <div class="sidebar-section">Operación</div>
         <div class="menu-item" id="menuVentas" onclick="mostrarSeccion('ventas')">💰 Ventas</div>
-        <div class="menu-item" id="menuConfiguracion" onclick="mostrarSeccion('configuracion')">⚙️ Configuración</div>
-
-        <!-- ============================= -->
-        <!-- CONTROL DEL BOT EN LA BARRA LATERAL -->
-        <!-- ============================= -->
-        <div class="sidebar-control-panel">
-            <div class="sidebar-bot-row">
-                <span>Estado del bot</span>
-                <label class="switch-mini">
-                    <input id="botSwitchSidebar" type="checkbox" checked onchange="toggleBotDesdeSidebar(this.checked)">
-                    <span></span>
-                </label>
-            </div>
-
-            <button class="sidebar-edit-btn" onclick="abrirEditarNombreSistema()">
-                ✏️ Editar nombre
-            </button>
-        </div>
     </aside>
 
     <main class="main">
@@ -243,12 +237,6 @@
                             onclick="mostrarSeccion('funciones')">
                             🕒 Ver funciones
                         </button>
-
-                        <button
-                            class="btn-secundario"
-                            onclick="mostrarSeccion('configuracion')">
-                            ⚙️ Configuración
-                        </button>
                     </div>
                 </div>
 
@@ -295,7 +283,6 @@
                 <div class="hoy-acciones">
                     <button class="btn-primary" onclick="abrirSelectorNuevoRegistro()">➕ Nuevo registro</button>
                     <button class="btn-secundario" onclick="mostrarSeccion('funciones')">📅 Agenda</button>
-                    <button class="btn-secundario" onclick="mostrarToast('La vista de Documentos llega en un próximo sprint.', 'success')">📄 Documentos</button>
                 </div>
             </div>
 
@@ -605,45 +592,20 @@
 
             <div class="nuevo-registro-page">
                 <div class="registro-grupo">
-                    <h3>⭐ Más usados</h3>
+                    <h3>⭐ Función (boletaje)</h3>
                     <div class="registro-grid registro-grid-2">
                         <button class="registro-opcion tipo-funcion" onclick="seleccionarTipoRegistro('funcion')">
                             <span>🎭</span><div><strong>Función</strong><small>Obra o presentación abierta al público.</small></div><b>→</b>
                         </button>
-                        <button class="registro-opcion tipo-activacion" onclick="seleccionarTipoRegistro('activacion')">
-                            <span>📍</span><div><strong>Activación</strong><small>Marca, plaza o evento promocional.</small></div><b>→</b>
-                        </button>
                     </div>
                 </div>
 
                 <div class="registro-grupo">
-                    <h3>⚙ Operación</h3>
-                    <div class="registro-grid registro-grid-4">
-                        <button class="registro-opcion tipo-ensayo" onclick="seleccionarTipoRegistro('ensayo')">
-                            <span>🎤</span><div><strong>Ensayo</strong><small>Preparación artística o técnica.</small></div><b>→</b>
-                        </button>
-                        <button class="registro-opcion tipo-grabacion" onclick="seleccionarTipoRegistro('grabacion')">
-                            <span>🎬</span><div><strong>Grabación</strong><small>Video, streaming o contenido.</small></div><b>→</b>
-                        </button>
-                        <button class="registro-opcion tipo-traslado" onclick="seleccionarTipoRegistro('traslado')">
-                            <span>🚚</span><div><strong>Traslado</strong><small>Equipo, staff, utilería o logística.</small></div><b>→</b>
-                        </button>
-                        <button class="registro-opcion tipo-mantenimiento" onclick="seleccionarTipoRegistro('mantenimiento')">
-                            <span>🛠️</span><div><strong>Mantenimiento</strong><small>Reparaciones o revisión técnica.</small></div><b>→</b>
-                        </button>
+                    <div class="registro-grupo-header">
+                        <h3>⚙ Operación</h3>
+                        <button class="btn-secundario btn-agregar-tipo" onclick="agregarTipoRegistro()">➕ Agregar tipo</button>
                     </div>
-                </div>
-
-                <div class="registro-grupo">
-                    <h3>🎓 Formación y especiales</h3>
-                    <div class="registro-grid registro-grid-2">
-                        <button class="registro-opcion tipo-clase" onclick="seleccionarTipoRegistro('clase')">
-                            <span>🎓</span><div><strong>Clase</strong><small>Taller, curso, masterclass o capacitación.</small></div><b>→</b>
-                        </button>
-                        <button class="registro-opcion tipo-especial" onclick="seleccionarTipoRegistro('especial')">
-                            <span>🎪</span><div><strong>Evento especial</strong><small>Actividad única o evento no recurrente.</small></div><b>→</b>
-                        </button>
-                    </div>
+                    <div id="selectorTiposOperacion" class="registro-grid registro-grid-4"></div>
                 </div>
 
                 <div class="registro-info">
@@ -775,9 +737,15 @@
                     id="lugar"
                     placeholder="Lugar">
 
-                <input
-                    id="imagen"
-                    placeholder="URL de imagen del evento">
+                <div class="input-con-upload">
+                    <input
+                        id="imagen"
+                        placeholder="URL de imagen del evento">
+                    <label class="input-upload-icono" title="Subir imagen">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2"/></svg>
+                        <input type="file" accept="image/*" onchange="subirImagenEvento(this, 'imagen')" hidden>
+                    </label>
+                </div>
 
                 <input
                     id="fecha"
@@ -1276,7 +1244,14 @@
         <input id="editarEventoIdGeneral" type="hidden">
         <input id="editarNombreEvento" placeholder="Nombre">
         <input id="editarLugarEvento" placeholder="Lugar">
-        <input id="editarImagenEvento" placeholder="URL de imagen">
+        <div class="input-con-upload">
+            <input id="editarImagenEvento" placeholder="URL de imagen">
+            <label class="input-upload-icono" title="Subir imagen">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2"/></svg>
+                <input type="file" accept="image/*" onchange="subirImagenEvento(this, 'editarImagenEvento')" hidden>
+            </label>
+        </div>
+        <img id="editarImagenEventoPreview" class="evento-imagen-preview" style="display:none" alt="Vista previa">
 
         <div class="modal-acciones">
             <button onclick="guardarEdicionEvento(this)">Guardar</button>

@@ -7,10 +7,31 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "25mb" }));
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-const dbPath = path.join(__dirname, "../database/db.json");
+// ALPHA v1.16: carpeta de datos configurable para persistencia en Railway.
+// En Railway: monta un Volume y pon DATA_DIR=/data -> db.json y uploads
+// viven en el volumen y sobreviven los redeploys.
+// En local: por defecto usa ../database (comportamiento de siempre).
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "../database");
+try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch (e) {}
+
+const dbPath = path.join(DATA_DIR, "db.json");
+const uploadsDir = path.join(DATA_DIR, "uploads");
+try { fs.mkdirSync(uploadsDir, { recursive: true }); } catch (e) {}
+app.use("/uploads", express.static(uploadsDir));
+
+// Si el volumen está vacío (primer arranque), sembrar db.json:
+// copiar la plantilla del repo o crear una estructura mínima.
+if(!fs.existsSync(dbPath)){
+  const plantilla = path.join(__dirname, "../database/db.json");
+  if(fs.existsSync(plantilla) && plantilla !== dbPath){
+    fs.copyFileSync(plantilla, dbPath);
+  }else{
+    fs.writeFileSync(dbPath, JSON.stringify({ eventos: [], configuracion: {}, tiposRegistro: {} }, null, 2));
+  }
+}
 
 function leerDB() {
   const data = fs.readFileSync(dbPath, "utf8");
@@ -1319,6 +1340,138 @@ app.delete("/api/eventos/:eventoId/funciones/:funcionId/personas/:personaId", (r
 
   guardarDB(db);
   res.json({ mensaje: "Persona eliminada", personas: funcion.personas });
+});
+
+
+/* ============================================================
+   ALPHA v1.14: CATÁLOGO DE TIPOS DE REGISTRO (editable)
+
+   Los tipos operativos viven en db.tiposRegistro. "funcion"
+   NO vive aquí: es boletaje y se maneja aparte (protegido).
+   Al eliminar un tipo, los registros que ya lo usan se
+   conservan (el frontend cae a sus defaults para mostrarlos).
+============================================================ */
+
+const TIPOS_REGISTRO_DEFAULT = {
+  activacion:    { icono: "📍", nombre: "Activación",      clase: "tipo-activacion",    descripcion: "Marca, plaza o evento promocional." },
+  clase:         { icono: "🎓", nombre: "Clase",           clase: "tipo-clase",         descripcion: "Taller, curso, masterclass o capacitación." },
+  ensayo:        { icono: "🎤", nombre: "Ensayo",          clase: "tipo-ensayo",        descripcion: "Preparación artística o técnica." },
+  grabacion:     { icono: "🎬", nombre: "Grabación",       clase: "tipo-grabacion",     descripcion: "Video, streaming, contenido o sesión." },
+  especial:      { icono: "🎪", nombre: "Evento especial", clase: "tipo-especial",      descripcion: "Actividad única o evento no recurrente." },
+  traslado:      { icono: "🚚", nombre: "Traslado",        clase: "tipo-traslado",      descripcion: "Equipo, staff, utilería o logística." },
+  mantenimiento: { icono: "🛠️", nombre: "Mantenimiento",   clase: "tipo-mantenimiento", descripcion: "Reparaciones o revisión técnica." }
+};
+
+function asegurarCatalogoTipos(db){
+  if(!db.tiposRegistro || typeof db.tiposRegistro !== "object" || Array.isArray(db.tiposRegistro)){
+    db.tiposRegistro = { ...TIPOS_REGISTRO_DEFAULT };
+    return true;
+  }
+  return false;
+}
+
+function slugTipo(nombre){
+  return String(nombre || "")
+    .toLowerCase()
+    .trim()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+app.get("/api/tipos-registro", (req, res) => {
+  const db = leerDB();
+  if(asegurarCatalogoTipos(db)){ guardarDB(db); }
+  res.json({ tipos: db.tiposRegistro });
+});
+
+app.post("/api/tipos-registro", (req, res) => {
+  const db = leerDB();
+  asegurarCatalogoTipos(db);
+
+  const nombre = String(req.body.nombre || "").trim();
+  if(!nombre){ return res.status(400).json({ mensaje: "Escribe el nombre del tipo" }); }
+
+  const slug = slugTipo(nombre);
+  if(!slug){ return res.status(400).json({ mensaje: "Nombre inválido" }); }
+  if(slug === "funcion"){ return res.status(400).json({ mensaje: "Ese tipo está reservado" }); }
+  if(db.tiposRegistro[slug]){ return res.status(400).json({ mensaje: "Ya existe un tipo con ese nombre" }); }
+
+  db.tiposRegistro[slug] = {
+    icono: (String(req.body.icono || "").trim() || "📌"),
+    nombre,
+    clase: "tipo-" + slug,
+    descripcion: String(req.body.descripcion || "").trim(),
+    custom: true
+  };
+
+  guardarDB(db);
+  res.json({ mensaje: "Tipo agregado", tipos: db.tiposRegistro });
+});
+
+app.delete("/api/tipos-registro/:slug", (req, res) => {
+  const db = leerDB();
+  asegurarCatalogoTipos(db);
+
+  const slug = String(req.params.slug || "");
+  if(slug === "funcion"){ return res.status(400).json({ mensaje: "No se puede eliminar Función" }); }
+  if(!db.tiposRegistro[slug]){ return res.status(404).json({ mensaje: "Tipo no encontrado" }); }
+
+  delete db.tiposRegistro[slug];
+
+  guardarDB(db);
+  res.json({ mensaje: "Tipo eliminado", tipos: db.tiposRegistro });
+});
+
+
+/* ============================================================
+   ALPHA v1.16: SUBIDA DE ARCHIVOS LOCALES
+
+   El cliente manda { dataUrl, nombre }. Guardamos el archivo en
+   disco (database/uploads) y devolvemos una URL /uploads/...
+   Así db.json queda ligero (solo guarda la ruta, no el base64).
+============================================================ */
+
+const MIME_EXT = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/svg+xml": "svg",
+  "application/pdf": "pdf"
+};
+
+app.post("/api/upload", (req, res) => {
+  try{
+    const dataUrl = String(req.body.dataUrl || "");
+    const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+
+    if(!match){
+      return res.status(400).json({ mensaje: "Archivo inválido" });
+    }
+
+    const mime = match[1];
+    const buffer = Buffer.from(match[2], "base64");
+
+    if(buffer.length > 15 * 1024 * 1024){
+      return res.status(413).json({ mensaje: "El archivo es muy grande (máx 15 MB)" });
+    }
+
+    const ext = MIME_EXT[mime] || (String(mime.split("/")[1] || "bin").replace(/[^a-z0-9]/gi, "") || "bin");
+    const nombreArchivo = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+    fs.writeFileSync(path.join(uploadsDir, nombreArchivo), buffer);
+
+    res.json({
+      mensaje: "Archivo subido",
+      url: `/uploads/${nombreArchivo}`,
+      mime,
+      nombre: String(req.body.nombre || "")
+    });
+  }catch(error){
+    res.status(500).json({ mensaje: "No se pudo subir el archivo" });
+  }
 });
 
 /* ============================================================

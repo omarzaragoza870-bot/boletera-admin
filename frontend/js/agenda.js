@@ -166,14 +166,37 @@ function crearDiaAgenda(
     `;
 }
 
-function abrirAgendaDia(fechaISO){
+// ALPHA v1.14.1: contexto de lo que muestra el drawer.
+// OJO: en operativas todas las funciones comparten funcion.id=1,
+// así que el identificador único real es evento.id.
+let AGENDA_DRAWER_CTX = { fecha: null, eventoId: null, funcionId: null };
 
-    const funciones =
+function abrirAgendaDia(fechaISO, eventoId, funcionId){
+
+    let funciones =
         agruparFuncionesPorFecha(eventosActuales)[fechaISO] || [];
+
+    // Si se pide una operación específica, mostrar solo esa
+    // (por evento.id + funcion.id; con fallback al día completo).
+    if(eventoId != null){
+        const filtradas = funciones.filter(item =>
+            Number(item.evento.id) === Number(eventoId) &&
+            (funcionId == null || Number(item.funcion.id) === Number(funcionId))
+        );
+        if(filtradas.length){
+            funciones = filtradas;
+        }
+    }
 
     if(funciones.length === 0){
         return;
     }
+
+    AGENDA_DRAWER_CTX = {
+        fecha: fechaISO,
+        eventoId: (eventoId != null ? Number(eventoId) : null),
+        funcionId: (funcionId != null ? Number(funcionId) : null)
+    };
 
     const titulo =
         document.getElementById("agendaDrawerTitulo");
@@ -188,7 +211,9 @@ function abrirAgendaDia(fechaISO){
         `🎭 ${formatearFechaAgenda(fechaISO)}`;
 
     subtitulo.textContent =
-        `${funciones.length} función${funciones.length === 1 ? "" : "es"} programada${funciones.length === 1 ? "" : "s"}`;
+        (AGENDA_DRAWER_CTX.eventoId != null)
+            ? (funciones[0].evento.nombre || "Operación")
+            : `${funciones.length} función${funciones.length === 1 ? "" : "es"} programada${funciones.length === 1 ? "" : "s"}`;
 
     contenedor.innerHTML = "";
 
@@ -324,9 +349,13 @@ function crearFuncionAgendaCard(evento, funcion){
                 </span>
             </div>
 
-            <span class="${funcion.activa ? "status-ok" : "status-off"}">
-                ${funcion.activa ? "🟢 Registro activo" : "🔴 Registro pausado"}
-            </span>
+            ${
+                esFuncion
+                ? `<span class="${funcion.activa ? "status-ok" : "status-off"}">
+                    ${funcion.activa ? "🟢 Registro activo" : "🔴 Registro pausado"}
+                </span>`
+                : ""
+            }
 
             ${
                 estadoVisual
@@ -348,11 +377,15 @@ function crearFuncionAgendaCard(evento, funcion){
                     : `<button class="btn-secundario" onclick="cerrarAgendaDia(); abrirEditarOperacion(${evento.id}, ${funcion.id})">✏️ Editar</button>`
                 }
 
-                <button
-                    class="btn-secundario"
-                    onclick="toggleFuncion(${evento.id}, ${funcion.id})">
-                    ${funcion.activa ? "⏸️ Pausar" : "▶️ Activar"}
-                </button>
+                ${
+                    esFuncion
+                    ? `<button
+                        class="btn-secundario"
+                        onclick="toggleFuncion(${evento.id}, ${funcion.id})">
+                        ${funcion.activa ? "⏸️ Pausar" : "▶️ Activar"}
+                    </button>`
+                    : ""
+                }
 
                 <button
                     class="btn-danger"

@@ -62,7 +62,29 @@ const TIPOS_REGISTRO = {
     }
 };
 
+// ALPHA v1.14: catálogo editable cargado desde el backend.
+// Si no carga (backend viejo / offline), infoTipo cae a TIPOS_REGISTRO.
+let CATALOGO_TIPOS = {};
+
+async function cargarCatalogoTipos(){
+    try{
+        const respuesta = await fetch(`${API_URL}/api/tipos-registro`);
+        const resultado = await respuesta.json();
+        CATALOGO_TIPOS = (resultado && resultado.tipos) ? resultado.tipos : {};
+    }catch(error){
+        CATALOGO_TIPOS = {};
+    }
+}
+
+// Resuelve la info visual de un tipo: catálogo -> defaults -> activación.
+function infoTipo(tipo){
+    return CATALOGO_TIPOS[tipo] || CATALOGO_TIPOS[tipo] || TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.activacion;
+}
+
+
 function abrirSelectorNuevoRegistro(){
+
+    renderSelectorTipos();
 
     document.body.classList.add("modal-abierto");
 
@@ -136,7 +158,7 @@ function abrirEditarOperacion(eventoId, funcionId, origen){
         funcion.tipoRegistro || evento.tipoRegistro || "activacion";
 
     const info =
-        TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.activacion;
+        CATALOGO_TIPOS[tipo] || TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.activacion;
 
     limpiarFormularioRegistroGenerico();
 
@@ -179,7 +201,7 @@ function abrirEditarOperacion(eventoId, funcionId, origen){
 function abrirModalRegistroGenerico(tipo){
 
     const info =
-        TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.activacion;
+        CATALOGO_TIPOS[tipo] || TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.activacion;
 
     limpiarFormularioRegistroGenerico();
 
@@ -320,7 +342,7 @@ async function guardarRegistroGenerico(){
             modalDrawer && !modalDrawer.classList.contains("oculto");
 
         if(typeof abrirAgendaDia === "function" && fecha && (origen === "drawer" || drawerAbierto)){
-            abrirAgendaDia(fecha);
+            abrirAgendaDia(fecha, eventoId, funcionId);
         }
 
         return;
@@ -366,7 +388,7 @@ function obtenerTipoRegistroVisual(funcion){
     const tipo =
         funcion.tipoRegistro || "funcion";
 
-    return TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.funcion;
+    return CATALOGO_TIPOS[tipo] || TIPOS_REGISTRO[tipo] || TIPOS_REGISTRO.funcion;
 }
 
 function obtenerTipoRegistroDesdeEvento(evento, funcion){
@@ -557,7 +579,7 @@ function crearDetalleOperativoAgenda(evento, funcion){
         funcion?.tipoRegistro || evento?.tipoRegistro || "activacion";
 
     const tipoVisual =
-        TIPOS_REGISTRO[tipoRegistro] || TIPOS_REGISTRO.activacion;
+        CATALOGO_TIPOS[tipoRegistro] || TIPOS_REGISTRO[tipoRegistro] || TIPOS_REGISTRO.activacion;
 
     const config =
         DRAWER_REGISTRO_CONFIG[tipoRegistro] || DRAWER_REGISTRO_CONFIG.activacion;
@@ -783,12 +805,32 @@ async function refrescarDrawerChecklist(eventoId, funcionId){
         return;
     }
 
-    // Repintamos TODOS los registros de ese día con datos frescos,
+    // Repintamos los registros de ese día con datos frescos,
     // directo en el contenedor del drawer (sin reabrir el modal).
-    const delDia =
+    let delDia =
         (typeof agruparFuncionesPorFecha === "function")
             ? (agruparFuncionesPorFecha(eventosActuales)[funcion.fecha] || [])
             : [];
+
+    // Si el drawer está enfocado en UNA operación, mantener solo esa
+    // (por evento.id, que es el identificador único real).
+    if(typeof AGENDA_DRAWER_CTX === "object" && AGENDA_DRAWER_CTX && AGENDA_DRAWER_CTX.eventoId != null){
+        const enfocada = delDia.filter(item =>
+            Number(item.evento.id) === Number(AGENDA_DRAWER_CTX.eventoId) &&
+            (AGENDA_DRAWER_CTX.funcionId == null || Number(item.funcion.id) === Number(AGENDA_DRAWER_CTX.funcionId))
+        );
+        if(enfocada.length){
+            delDia = enfocada;
+        }
+    }
+
+    // Recordar qué secciones estaban expandidas (por título) antes de repintar,
+    // para no volver a colapsarlas al agregar/editar dentro de ellas.
+    const seccionesExpandidas = new Set(
+        Array.from(contenedor.querySelectorAll(".agenda-drawer-bloque"))
+            .filter(bloque => !bloque.classList.contains("colapsado"))
+            .map(bloque => (bloque.querySelector("h4")?.textContent || ""))
+    );
 
     contenedor.innerHTML = "";
 
@@ -798,6 +840,14 @@ async function refrescarDrawerChecklist(eventoId, funcionId){
             contenedor.innerHTML +=
                 crearFuncionAgendaCard(item.evento, item.funcion);
         });
+
+    // Re-aplicar el estado de expansión que tenía el usuario.
+    contenedor.querySelectorAll(".agenda-drawer-bloque").forEach(bloque => {
+        const titulo = bloque.querySelector("h4")?.textContent || "";
+        if(seccionesExpandidas.has(titulo)){
+            bloque.classList.remove("colapsado");
+        }
+    });
 }
 
 
@@ -1077,7 +1127,7 @@ function renderHoyProxima(todas){
             : formatearFechaLarga(prox.funcion.fecha);
 
     el.innerHTML = `
-        <div class="hoy-proxima-card hoy-clickable" onclick="abrirAgendaDia('${prox.funcion.fecha}')">
+        <div class="hoy-proxima-card hoy-clickable" onclick="abrirAgendaDia('${prox.funcion.fecha}', ${prox.evento.id}, ${prox.funcion.id})">
             <div class="hoy-proxima-hora">⏰ ${escaparTexto(prox.funcion.hora || "--:--")}</div>
             <div class="hoy-proxima-info">
                 <h4>${tipoVisual.icono} ${escaparTexto(prox.evento.nombre)}</h4>
@@ -1114,6 +1164,8 @@ function renderHoyOperaciones(lista){
 
         const checklist = Array.isArray(funcion.checklist) ? funcion.checklist : [];
         const material = Array.isArray(funcion.material) ? funcion.material : [];
+        const documentos = Array.isArray(funcion.documentos) ? funcion.documentos : [];
+        const personas = Array.isArray(funcion.personas) ? funcion.personas : [];
         const chkDone = checklist.filter(item => item.completado).length;
         const matDone = material.filter(item => item.listo).length;
 
@@ -1130,11 +1182,13 @@ function renderHoyOperaciones(lista){
                 <div class="hoy-op-indicadores">
                     <span class="hoy-indicador">✅ Tareas ${chkDone}/${checklist.length}</span>
                     <span class="hoy-indicador">🧰 Material ${matDone}/${material.length}</span>
+                    ${documentos.length ? `<span class="hoy-indicador">📎 ${documentos.length}</span>` : ""}
+                    ${personas.length ? `<span class="hoy-indicador">👥 ${personas.length}</span>` : ""}
                 </div>
 
                 <div class="hoy-op-acciones">
                     <button class="btn-secundario" onclick="abrirEditarOperacion(${evento.id}, ${funcion.id}, 'hoy')">✏️ Editar</button>
-                    <button class="btn-secundario" onclick="abrirAgendaDia('${funcion.fecha}')">📂 Abrir</button>
+                    <button class="btn-secundario" onclick="abrirAgendaDia('${funcion.fecha}', ${evento.id}, ${funcion.id})">📂 Abrir</button>
                 </div>
             </div>
         `;
@@ -1214,7 +1268,7 @@ function crearMaterialRegistroAgenda(evento, funcion){
         : `<div class="agenda-material-empty">Agrega el material que debes llevar o preparar.</div>`;
 
     return `
-        <div class="agenda-drawer-bloque">
+        <div class="agenda-drawer-bloque colapsado">
             <h4>🧰 Material (qué llevar)</h4>
 
             <div class="agenda-material-add">
@@ -1377,6 +1431,21 @@ function abrirFormulario(titulo, campos, valores, onGuardar){
             `;
         }
 
+        if(campo.type === "upload"){
+            return `
+                <div class="formulario-label">${escaparTexto(campo.label)}
+                    <div class="input-con-upload">
+                        <input id="form-${campo.key}" type="text" value="${escaparTexto(val)}" placeholder="${escaparTexto(campo.placeholder || "")}">
+                        <label class="input-upload-icono" title="Subir archivo">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2"/></svg>
+                            <input type="file" onchange="subirArchivoFormulario('${escaparTexto(campo.key)}', this)" hidden>
+                        </label>
+                    </div>
+                    <span id="fileestado-${campo.key}" class="formulario-file-estado"></span>
+                </div>
+            `;
+        }
+
         return `
             <label class="formulario-label">${escaparTexto(campo.label)}
                 <input id="form-${campo.key}" type="${campo.inputType || "text"}" value="${escaparTexto(val)}" placeholder="${escaparTexto(campo.placeholder || "")}">
@@ -1439,7 +1508,7 @@ document.addEventListener("DOMContentLoaded", function(){
 const CAMPOS_DOCUMENTO = [
     { key: "nombre", label: "Nombre", placeholder: "Ej. Contrato firmado", required: true },
     { key: "tipo", label: "Tipo", placeholder: "Contrato, cotización, logo, INE..." },
-    { key: "url", label: "URL o enlace", placeholder: "https://...", inputType: "url" },
+    { key: "url", label: "URL o archivo", placeholder: "https://... o sube un archivo", type: "upload", inputType: "url" },
     { key: "notas", label: "Notas", placeholder: "Opcional", type: "textarea" }
 ];
 
@@ -1472,7 +1541,7 @@ function crearDocumentosRegistroAgenda(evento, funcion){
         : `<div class="agenda-material-empty">Agrega contratos, cotizaciones, logos o enlaces de esta operación.</div>`;
 
     return `
-        <div class="agenda-drawer-bloque">
+        <div class="agenda-drawer-bloque colapsado">
             <h4>📎 Documentos</h4>
             <div class="agenda-material-add">
                 <button onclick="agregarDocumentoRegistro(${evento.id}, ${funcion.id})">+ Agregar documento</button>
@@ -1580,7 +1649,7 @@ function crearPersonasRegistroAgenda(evento, funcion){
         : `<div class="agenda-material-empty">Agrega cliente, responsable, staff o proveedores de esta operación.</div>`;
 
     return `
-        <div class="agenda-drawer-bloque">
+        <div class="agenda-drawer-bloque colapsado">
             <h4>👥 Personas</h4>
             <div class="agenda-material-add">
                 <button onclick="agregarPersonaRegistro(${evento.id}, ${funcion.id})">+ Agregar persona</button>
@@ -1631,4 +1700,182 @@ function eliminarPersonaRegistro(eventoId, funcionId, personaId){
         mostrarToast(resultado.mensaje || "Persona eliminada", "success");
         await refrescarDrawerChecklist(eventoId, funcionId);
     });
+}
+
+/* ============================================================
+   ALPHA v1.14: SELECTOR DE TIPOS DINÁMICO (agregar / eliminar)
+============================================================ */
+
+// Pinta los tipos operativos del catálogo en el selector.
+function renderSelectorTipos(){
+
+    const cont = document.getElementById("selectorTiposOperacion");
+    if(!cont){ return; }
+
+    const slugs = Object.keys(CATALOGO_TIPOS || {});
+
+    if(slugs.length === 0){
+        cont.innerHTML = `<p class="registro-vacio">Aún no hay tipos de operación. Agrega el primero con “➕ Agregar tipo”.</p>`;
+        return;
+    }
+
+    cont.innerHTML = slugs.map(slug => {
+        const t = CATALOGO_TIPOS[slug] || {};
+        return `
+            <div class="registro-opcion-wrap">
+                <button class="registro-opcion ${escaparTexto(t.clase || "")}" onclick="seleccionarTipoRegistro('${escaparTexto(slug)}')">
+                    <span>${escaparTexto(t.icono || "📌")}</span>
+                    <div><strong>${escaparTexto(t.nombre || slug)}</strong><small>${escaparTexto(t.descripcion || "")}</small></div>
+                    <b>→</b>
+                </button>
+                <button class="registro-tipo-eliminar" onclick="eliminarTipoRegistro('${escaparTexto(slug)}')" title="Eliminar tipo">🗑️</button>
+            </div>
+        `;
+    }).join("");
+}
+
+// Agregar un nuevo tipo (nombre + emoji + descripción).
+function agregarTipoRegistro(){
+    abrirFormulario("Nuevo tipo de operación", [
+        { key: "nombre", label: "Nombre del tipo", placeholder: "Ej. Junta, Cita, Entrega...", required: true },
+        { key: "icono", label: "Emoji (opcional)", placeholder: "📌" },
+        { key: "descripcion", label: "Descripción (opcional)", placeholder: "Para qué sirve este tipo", type: "textarea" }
+    ], {}, async function(valores){
+        const respuesta = await fetch(`${API_URL}/api/tipos-registro`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(valores)
+        });
+        const resultado = await respuesta.json();
+        if(!respuesta.ok){ mostrarToast(resultado.mensaje || "No se pudo agregar", "error"); return; }
+        mostrarToast(resultado.mensaje || "Tipo agregado", "success");
+        await cargarCatalogoTipos();
+        renderSelectorTipos();
+    });
+}
+
+// Eliminar un tipo (los registros que ya lo usan se conservan).
+function eliminarTipoRegistro(slug){
+    const t = CATALOGO_TIPOS[slug] || {};
+    abrirConfirmacion(
+        "Eliminar tipo",
+        `¿Eliminar el tipo "${t.nombre || slug}"? Los registros que ya lo usan se conservan.`,
+        async function(){
+            const respuesta = await fetch(`${API_URL}/api/tipos-registro/${encodeURIComponent(slug)}`, { method: "DELETE" });
+            const resultado = await respuesta.json();
+            if(!respuesta.ok){ mostrarToast(resultado.mensaje || "No se pudo eliminar", "error"); return; }
+            mostrarToast(resultado.mensaje || "Tipo eliminado", "success");
+            await cargarCatalogoTipos();
+            renderSelectorTipos();
+        }
+    );
+}
+
+
+/* ============================================================
+   ALPHA v1.15: SECCIONES COLAPSABLES DEL DRAWER (acordeón)
+
+   Click en el título (h4) de un .agenda-drawer-bloque lo pliega
+   o despliega. Delegado en document -> funciona con el contenido
+   que se pinta dinámicamente en el drawer.
+============================================================ */
+document.addEventListener("click", function(ev){
+    const h4 = ev.target.closest("h4");
+    if(!h4){ return; }
+    const bloque = h4.parentElement;
+    if(bloque && bloque.classList && bloque.classList.contains("agenda-drawer-bloque")){
+        bloque.classList.toggle("colapsado");
+    }
+});
+
+
+/* ============================================================
+   ALPHA v1.16: SUBIDA DE ARCHIVOS LOCALES (helpers compartidos)
+============================================================ */
+
+// Lee un File -> dataURL. Si es imagen y comprimir=true, la reescala
+// a máx 1000px y la exporta como JPEG (más ligera).
+function archivoADataUrl(file, comprimir){
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            if(comprimir && file.type && file.type.indexOf("image/") === 0){
+                const img = new Image();
+                img.onload = () => {
+                    const maxW = 1000;
+                    const escala = Math.min(1, maxW / img.width);
+                    const canvas = document.createElement("canvas");
+                    canvas.width = Math.round(img.width * escala);
+                    canvas.height = Math.round(img.height * escala);
+                    canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL("image/jpeg", 0.75));
+                };
+                img.onerror = () => resolve(reader.result);
+                img.src = reader.result;
+            }else{
+                resolve(reader.result);
+            }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// Sube un dataURL al backend y devuelve la url guardada (/uploads/...).
+async function subirDataUrl(dataUrl, nombre){
+    const respuesta = await fetch(`${API_URL}/api/upload`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl, nombre: nombre || "" })
+    });
+    const resultado = await respuesta.json();
+    if(!respuesta.ok){ throw new Error(resultado.mensaje || "No se pudo subir"); }
+    return resultado.url;
+}
+
+// Handler para el campo "upload" del formulario genérico (documentos).
+async function subirArchivoFormulario(key, input){
+    const file = input.files && input.files[0];
+    if(!file){ return; }
+
+    const estado = document.getElementById(`fileestado-${key}`);
+    const esImagen = file.type && file.type.indexOf("image/") === 0;
+
+    try{
+        if(estado){ estado.textContent = "Subiendo..."; }
+        const dataUrl = await archivoADataUrl(file, esImagen);
+        const url = await subirDataUrl(dataUrl, file.name);
+        const target = document.getElementById(`form-${key}`);
+        if(target){ target.value = url; }
+        if(estado){ estado.textContent = "✅ " + file.name; }
+    }catch(error){
+        if(estado){ estado.textContent = "❌ " + (error.message || "Error"); }
+        mostrarToast(error.message || "No se pudo subir", "error");
+    }finally{
+        input.value = "";
+    }
+}
+
+// Handler para subir la imagen de un evento (comprime siempre).
+async function subirImagenEvento(input, targetId){
+    const file = input.files && input.files[0];
+    if(!file){ return; }
+
+    try{
+        mostrarToast("Subiendo imagen...", "success");
+        const dataUrl = await archivoADataUrl(file, true);
+        const url = await subirDataUrl(dataUrl, file.name);
+
+        const target = document.getElementById(targetId);
+        if(target){ target.value = url; }
+
+        const preview = document.getElementById(targetId + "Preview");
+        if(preview){ preview.src = url; preview.style.display = "block"; }
+
+        mostrarToast("Imagen lista ✅", "success");
+    }catch(error){
+        mostrarToast(error.message || "No se pudo subir la imagen", "error");
+    }finally{
+        input.value = "";
+    }
 }

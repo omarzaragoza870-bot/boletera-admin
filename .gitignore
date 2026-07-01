@@ -48,3 +48,6 @@ temp/
 #  Si la usas como "base inicial" de ejemplo, déjalo comentado.
 # ============================================================
 # database/db.json
+
+# --- Archivos subidos por usuarios (imagenes, documentos) ---
+database/uploads/

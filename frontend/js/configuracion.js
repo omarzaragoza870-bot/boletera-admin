@@ -42,7 +42,7 @@ function sincronizarNombreSistema(nombreSistema){
 
     if(nombreSidebar){
         nombreSidebar.textContent =
-            `🎟️ ${nombreSistema}`;
+            nombreSistema;
     }
 
     if(nombreTitulo){

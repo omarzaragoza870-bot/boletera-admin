@@ -652,6 +652,13 @@ function abrirEditarEvento(
     document.getElementById("editarImagenEvento").value =
         imagen;
 
+    // ALPHA v1.16: mostrar preview si ya hay imagen.
+    const previewEditar = document.getElementById("editarImagenEventoPreview");
+    if(previewEditar){
+        if(imagen){ previewEditar.src = imagen; previewEditar.style.display = "block"; }
+        else { previewEditar.removeAttribute("src"); previewEditar.style.display = "none"; }
+    }
+
     document
         .getElementById("modalEditarEvento")
         .classList

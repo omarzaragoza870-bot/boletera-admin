@@ -400,8 +400,15 @@ button.agenda-checklist-item:active{
     gap:4px;
     padding:14px 8px;
     border-radius:14px;
-    border:1px solid transparent;
+    background:rgba(148,163,184,.05);
+    border:1px solid rgba(148,163,184,.12);
     text-align:center;
+    transition:border-color .15s ease, transform .15s ease;
+}
+
+.hoy-resumen-item:hover{
+    transform:translateY(-1px);
+    border-color:var(--border-strong, rgba(79,124,255,.26));
 }
 
 .hoy-resumen-icono{
@@ -424,10 +431,16 @@ button.agenda-checklist-item:active{
     display:flex;
     align-items:center;
     gap:16px;
-    padding:16px;
-    border-radius:16px;
-    background:rgba(79,124,255,.08);
-    border:1px solid rgba(79,124,255,.2);
+    padding:18px;
+    border-radius:18px;
+    background:linear-gradient(135deg, rgba(79,124,255,.15), rgba(79,124,255,.05));
+    border:1px solid var(--border-strong, rgba(79,124,255,.26));
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.hoy-proxima-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--glow, 0 18px 40px rgba(37,99,235,.14));
 }
 
 .hoy-proxima-hora{
@@ -456,36 +469,9 @@ button.agenda-checklist-item:active{
 }
 
 /* Operaciones de hoy */
-.hoy-op-fila{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    flex-wrap:wrap;
-    padding:12px 14px;
-    border-radius:12px;
-    background:rgba(148,163,184,.06);
-    border:1px solid rgba(148,163,184,.12);
-    margin-bottom:8px;
-}
-
 .hoy-op-hora{
     font-weight:600;
     white-space:nowrap;
-}
-
-.hoy-op-nombre{
-    font-weight:600;
-    flex:1;
-    min-width:140px;
-}
-
-.hoy-op-lugar{
-    opacity:.75;
-    font-size:13px;
-}
-
-.hoy-op-fila .estado-badge{
-    margin-left:auto;
 }
 
 /* Pendientes de hoy */
@@ -521,9 +507,6 @@ button.agenda-checklist-item:active{
 @media (max-width:720px){
     .hoy-resumen{
         grid-template-columns:repeat(2, 1fr);
-    }
-    .hoy-op-fila .estado-badge{
-        margin-left:0;
     }
 }
 
@@ -682,13 +665,20 @@ button.agenda-checklist-item:active{
 }
 
 .hoy-op-card{
-    padding:14px;
-    border-radius:14px;
-    background:rgba(148,163,184,.06);
-    border:1px solid rgba(148,163,184,.12);
+    padding:16px;
+    border-radius:16px;
+    background:rgba(148,163,184,.07);
+    border:1px solid rgba(148,163,184,.14);
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:9px;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.hoy-op-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--border-strong, rgba(79,124,255,.26));
+    box-shadow:0 10px 26px rgba(0,0,0,.22);
 }
 
 .hoy-op-card-top{
@@ -705,6 +695,8 @@ button.agenda-checklist-item:active{
 .hoy-op-card-nombre{
     margin:0;
     font-size:15px;
+    font-weight:700;
+    line-height:1.25;
 }
 
 .hoy-op-card-lugar{
@@ -721,11 +713,12 @@ button.agenda-checklist-item:active{
 
 .hoy-indicador{
     font-size:12px;
-    padding:4px 10px;
+    font-weight:600;
+    padding:4px 11px;
     border-radius:999px;
-    background:rgba(15,23,42,.5);
-    border:1px solid rgba(148,163,184,.14);
-    color:#cbd5e1;
+    background:rgba(15,23,42,.55);
+    border:1px solid rgba(148,163,184,.16);
+    color:var(--muted, #cbd5e1);
 }
 
 .hoy-op-acciones{
@@ -873,4 +866,258 @@ button.agenda-checklist-item:active{
 .agenda-doc-link:hover,
 .agenda-persona-btn:hover{
     filter:brightness(1.15);
+}
+
+/* ============================================================
+   ALPHA v1.14: SELECTOR DE TIPOS DINÁMICO
+============================================================ */
+
+.registro-grupo-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.registro-grupo-header h3{
+    margin:0;
+}
+
+.btn-agregar-tipo{
+    font-size:13px;
+    padding:6px 12px;
+    white-space:nowrap;
+}
+
+.registro-opcion-wrap{
+    position:relative;
+}
+
+.registro-opcion-wrap .registro-opcion{
+    width:100%;
+}
+
+/* Botón eliminar SIEMPRE visible (mobile-first: no hay hover en móvil) */
+.registro-tipo-eliminar{
+    position:absolute;
+    top:6px;
+    right:6px;
+    border:none;
+    background:rgba(15,23,42,.6);
+    color:#fca5a5;
+    border-radius:8px;
+    padding:4px 7px;
+    font-size:12px;
+    line-height:1;
+    cursor:pointer;
+}
+
+.registro-tipo-eliminar:hover{
+    background:rgba(239,68,68,.25);
+}
+
+.registro-vacio{
+    grid-column:1 / -1;
+    opacity:.6;
+    font-size:14px;
+    margin:6px 0;
+}
+
+
+/* ============================================================
+   ALPHA v1.15: ACORDEÓN DEL DRAWER (secciones colapsables)
+============================================================ */
+
+.agenda-drawer-bloque > h4{
+    cursor:pointer;
+    user-select:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.agenda-drawer-bloque > h4::after{
+    content:"▾";
+    font-size:12px;
+    opacity:.55;
+    font-weight:400;
+}
+
+.agenda-drawer-bloque.colapsado > h4::after{
+    content:"▸";
+}
+
+.agenda-drawer-bloque.colapsado > :not(h4){
+    display:none;
+}
+
+
+/* ============================================================
+   ALPHA v1.16: SUBIDA DE ARCHIVOS LOCALES (ícono dentro del box)
+============================================================ */
+
+/* Input con ícono de subida integrado, estilo iOS.
+   El input ocupa todo el ancho y el ícono se posiciona ENCIMA de su
+   lado derecho, centrado vertical (top/bottom + margin auto). */
+.input-con-upload{
+    position:relative;
+    display:block;
+    width:100%;
+}
+
+.input-con-upload > input{
+    display:block;
+    width:100%;
+    box-sizing:border-box;
+    margin:0 !important;
+    padding-right:50px !important;
+}
+
+.input-upload-icono{
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:12px;
+    margin-top:auto;
+    margin-bottom:auto;
+    width:24px;
+    height:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:2;
+    color:#cbd5e1;
+    background:none;
+    border:none;
+}
+
+.input-upload-icono svg{
+    display:block;
+    fill:none;
+    stroke:currentColor;
+}
+
+.input-upload-icono:hover{
+    color:#ffffff;
+}
+
+/* El file input real siempre oculto (algunas reglas de modal
+   estilizan "input" y anulaban el atributo hidden). */
+.input-upload-icono input[type="file"]{
+    display:none !important;
+}
+
+.formulario-file-estado{
+    display:inline-block;
+    margin-top:6px;
+    font-size:12px;
+    opacity:.85;
+}
+
+.evento-imagen-preview{
+    display:block;
+    max-width:140px;
+    max-height:90px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid rgba(148,163,184,.2);
+    object-fit:cover;
+}
+
+
+/* ============================================================
+   KAIREN: PULIDO VISUAL — EVENTOS
+   (elevación al hover + zoom sutil de imagen, como en Hoy)
+============================================================ */
+
+.evento-card-pro{
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.evento-card-pro:hover{
+    transform:translateY(-3px);
+}
+
+/* Zoom sutil de la foto del evento al pasar el cursor */
+.evento-card-pro-imagen{
+    transition:transform .35s ease;
+}
+
+.evento-card-pro:hover .evento-card-pro-imagen{
+    transform:scale(1.045);
+}
+
+/* Tarjetas de resumen (contadores) con micro-hover */
+.evento-resumen-card{
+    transition:transform .15s ease, border-color .15s ease;
+}
+
+.evento-resumen-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--border-strong, rgba(79,124,255,.26));
+}
+
+/* Stats dentro de la tarjeta: un pelín más de vida */
+.evento-pro-stat{
+    transition:border-color .15s ease;
+}
+
+.evento-card-pro:hover .evento-pro-stat{
+    border-color:rgba(148,163,184,.22);
+}
+
+
+/* ============================================================
+   KAIREN: PULIDO VISUAL — AGENDA / DRAWER
+============================================================ */
+
+/* Día de HOY más visible (tinte suave, no solo borde) */
+.agenda-dia.agenda-dia-hoy{
+    background:rgba(79,124,255,.12);
+    border-color:rgba(79,124,255,.70);
+    box-shadow:0 0 0 1px rgba(79,124,255,.20);
+}
+
+/* Títulos del acordeón: feedback al pasar/tocar + mejor área */
+.agenda-drawer-bloque > h4{
+    padding:3px 2px;
+    border-radius:8px;
+    transition:color .15s ease, background .15s ease;
+}
+
+.agenda-drawer-bloque > h4:hover{
+    color:#ffffff;
+    background:rgba(148,163,184,.08);
+}
+
+/* Tarjetas de resumen (panel derecho) con micro-hover */
+.agenda-resumen-card{
+    transition:transform .15s ease, border-color .15s ease;
+}
+
+.agenda-resumen-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--border-strong, rgba(79,124,255,.26));
+}
+
+/* Próximas operaciones: leve deslizamiento al hover */
+.agenda-proxima-item{
+    transition:transform .15s ease, border-color .15s ease;
+}
+
+.agenda-proxima-item:hover{
+    transform:translateX(3px);
+    border-color:var(--border-strong, rgba(79,124,255,.26));
+}
+
+/* Tarjeta de operación dentro del drawer: borde reactivo */
+.agenda-funcion-card{
+    transition:border-color .15s ease;
+}
+
+.agenda-funcion-card:hover{
+    border-color:rgba(148,163,184,.28);
 }

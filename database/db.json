@@ -1,6 +1,6 @@
 {
   "configuracion": {
-    "nombreSistema": "Re5iliart",
+    "nombreSistema": "Kairen",
     "botActivo": true
   },
   "eventos": [
@@ -1130,5 +1130,49 @@
         }
       ]
     }
-  ]
+  ],
+  "tiposRegistro": {
+    "activacion": {
+      "icono": "📍",
+      "nombre": "Activación",
+      "clase": "tipo-activacion",
+      "descripcion": "Marca, plaza o evento promocional."
+    },
+    "clase": {
+      "icono": "🎓",
+      "nombre": "Clase",
+      "clase": "tipo-clase",
+      "descripcion": "Taller, curso, masterclass o capacitación."
+    },
+    "ensayo": {
+      "icono": "🎤",
+      "nombre": "Ensayo",
+      "clase": "tipo-ensayo",
+      "descripcion": "Preparación artística o técnica."
+    },
+    "grabacion": {
+      "icono": "🎬",
+      "nombre": "Grabación",
+      "clase": "tipo-grabacion",
+      "descripcion": "Video, streaming, contenido o sesión."
+    },
+    "especial": {
+      "icono": "🎪",
+      "nombre": "Evento especial",
+      "clase": "tipo-especial",
+      "descripcion": "Actividad única o evento no recurrente."
+    },
+    "traslado": {
+      "icono": "🚚",
+      "nombre": "Traslado",
+      "clase": "tipo-traslado",
+      "descripcion": "Equipo, staff, utilería o logística."
+    },
+    "mantenimiento": {
+      "icono": "🛠️",
+      "nombre": "Mantenimiento",
+      "clase": "tipo-mantenimiento",
+      "descripcion": "Reparaciones o revisión técnica."
+    }
+  }
 }

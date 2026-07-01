@@ -4,8 +4,9 @@
 
 async function iniciarApp(){
     await cargarConfiguracion();
+    await cargarCatalogoTipos();
     await cargarEventos();
-    mostrarSeccion("dashboard");
+    mostrarSeccion("hoy");
 }
 
 iniciarApp();

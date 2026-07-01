@@ -81,3 +81,60 @@
     .registro-opcion b{font-size:12px !important}
     .registro-info{display:none !important}
 }
+
+/* ============================================================
+   KAIREN: MARCA DEL SIDEBAR (nombre + editar + bot arriba)
+============================================================ */
+
+.sidebar-brand{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding-right:40px;   /* espacio para la X de cerrar */
+    margin-bottom:8px;
+}
+
+.sidebar-brand-logo{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    flex:0 0 auto;
+    object-fit:cover;
+    box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+
+.sidebar-brand-nombre{
+    font-size:22px;
+    font-weight:900;
+    color:#f8fafc;
+    letter-spacing:.2px;
+    line-height:1.1;
+}
+
+.sidebar-brand-edit{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:13px;
+    line-height:1;
+    opacity:.55;
+    padding:5px;
+    border-radius:8px;
+    transition:opacity .15s ease, background .15s ease;
+}
+
+.sidebar-brand-edit:hover{
+    opacity:1;
+    background:rgba(148,163,184,.14);
+}
+
+.sidebar-brand-bot{
+    display:flex;
+    align-items:center;
+    margin:0 0 20px 2px;
+}
+
+/* Popup de editar nombre por encima del sidebar (z-index del drawer = 1300) */
+#modalEditarNombreSistema{
+    z-index:2500;
+}
